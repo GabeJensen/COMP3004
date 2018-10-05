@@ -1,5 +1,8 @@
 package core;
 
+import java.util.Comparator;
+import java.util.HashMap;
+
 public class Tile {
 	private String color;
 	private String value;
@@ -21,7 +24,7 @@ public class Tile {
 			int intV;
 			intV = Integer.parseInt(v);
 			if ((intV > 0) || (intV < 14)) {
-				value = v;
+				this.value = v;
 			}
 			else {
 				throw new IllegalArgumentException("Invalid value out of range: " + c);
@@ -32,8 +35,8 @@ public class Tile {
 		}
 		
 		if (validFlag) {
-			color = c;
-			value = v;
+			this.color = c;
+			this.value = v;
 		}
 		else {
 			throw new IllegalArgumentException("Invalid color: " + c);
@@ -44,4 +47,43 @@ public class Tile {
 		return new String[] {color, value};
 	}
 
+}
+
+class TileComparator implements Comparator<Tile> {
+	public int compare(Tile t1, Tile t2) {
+		HashMap<String, Integer> conv = new HashMap<String, Integer>();
+		conv.put("R", 4);
+		conv.put("B", 3);
+		conv.put("G", 2);
+		conv.put("O", 1);
+		
+		int color1 = conv.get(t1.getInfo()[0]);
+		int color2 = conv.get(t2.getInfo()[0]);
+		int val1 = Integer.parseInt(t1.getInfo()[1]);
+		int val2 = Integer.parseInt(t2.getInfo()[1]);
+		
+		// If Tile 1 is greater than Tile 2 - return 1
+		if (color1 > color2) {
+			return 1;
+		}
+		// If Tile 1 color equals Tile 2 color
+		else if (color1 == color2) {
+			// If Tile 1 value is greater than Tile 2 value
+			if (val1 > val2) {
+				return 1;
+			}
+			// If values are same
+			else if (val1 == val2) {
+				return 0;
+			}
+			// If Tile 1 value is lesser than Tile 2 vale
+			else {
+				return -1;
+			}
+		}
+		// If Tile 1 is lesser than Tile 2 - return -1
+		else { // color1 < color2
+			return -1;
+		}
+	}
 }
