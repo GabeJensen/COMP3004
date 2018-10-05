@@ -3,6 +3,11 @@ package core;
 import junit.framework.TestCase;
 
 public class HandTesting extends TestCase{
+	public void testGetCount() {
+		Hand h = new Hand();
+		assertEquals(0, h.getCount());
+	}
+	
 	public void testAddTiles() {
 		Hand h = new Hand();
 		Tile t1 = new Tile("R", "6");
@@ -13,10 +18,12 @@ public class HandTesting extends TestCase{
 		h.addTile(t2);
 		h.addTile(t3);
 		// assert the tile count of the hand is no longer 0?
-		// assertEquals()
+		assertEquals(3, h.getCount());
 	}
 	
-	public void testRemoveTiles() {
+	/* might not actually exist, this function
+	 * since only end up playing tiles as melds anyways
+	 * public void testRemoveTiles() {
 		Hand h = new Hand();
 		Tile t1 = new Tile("R", "6");
 		Tile t2 = new Tile("O","6");
@@ -27,12 +34,12 @@ public class HandTesting extends TestCase{
 		h.addTile(t3);
 		// assertEquals()
 		
-		for (int i = 0; i < h.getTileCount(); i++) {
+		for (int i = 0; i < h.getCount(); i++) {
 			h.removeTile();
 		}
 		// assert that the tile hand count is now 0 
 		// assertEquals 
-	}
+	}*/
 	
 	public void testSortTiles() {
 		Hand h = new Hand();
