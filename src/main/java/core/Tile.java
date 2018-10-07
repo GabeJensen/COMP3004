@@ -46,7 +46,24 @@ public class Tile {
 	public String[] getInfo() {
 		return new String[] {color, value};
 	}
-
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		
+		if (!(o instanceof Tile)){
+			return false;
+		}
+		
+		Tile t = (Tile) o;
+		if (this.color.equals(t.color) && this.value.equals(t.value)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 }
 
 class TileComparator implements Comparator<Tile> {
