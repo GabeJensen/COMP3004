@@ -4,6 +4,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class Tile {
+	@Override
+	public String toString() {
+		return color + value;
+	}
+
 	private String color;
 	private String value;
 	
