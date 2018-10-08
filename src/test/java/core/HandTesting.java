@@ -1,5 +1,7 @@
 package core;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import junit.framework.TestCase;
 
 public class HandTesting extends TestCase{
@@ -99,19 +101,19 @@ public class HandTesting extends TestCase{
 		hand.addTile(t3);
 		hand.addTile(t4);
 		
-		assertEquals(hand.removeTile(0).getInfo(), t1.getInfo());
+		assertArrayEquals(hand.removeTile(0).getInfo(), t1.getInfo());
 		
 		assertEquals(hand.getCount(), 3);
 		
-		assertEquals(hand.removeTile(0).getInfo(), t2.getInfo());
+		assertArrayEquals(hand.removeTile(0).getInfo(), t2.getInfo());
 		
 		assertEquals(hand.getCount(), 2);
 		
-		assertEquals(hand.removeTile(1).getInfo(), t4.getInfo());
+		assertArrayEquals(hand.removeTile(1).getInfo(), t4.getInfo());
 		
 		assertEquals(hand.getCount(), 1);
 		
-		assertEquals(hand.removeTile(5), null);
+		assertNull(hand.removeTile(5));
 		
 		assertEquals(hand.getCount(), 1);
 		
