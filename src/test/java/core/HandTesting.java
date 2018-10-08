@@ -85,4 +85,36 @@ public class HandTesting extends TestCase{
 		// assertEquals what will be the return of this h.getHandMelds call? string? object?
 		// will be returning R6,O7,B8,G9 in this case
 	}
+	
+	public void testRemoveTile() {
+		Hand hand = new Hand();
+		
+		Tile t1 = new Tile("R", "8");
+		Tile t2 = new Tile("O","4");
+		Tile t3 = new Tile("B", "2");
+		Tile t4 = new Tile("G", "11");
+				
+		hand.addTile(t1);
+		hand.addTile(t2);
+		hand.addTile(t3);
+		hand.addTile(t4);
+		
+		assertEquals(hand.removeTile(0).getInfo(), t1.getInfo());
+		
+		assertEquals(hand.getCount(), 3);
+		
+		assertEquals(hand.removeTile(0).getInfo(), t2.getInfo());
+		
+		assertEquals(hand.getCount(), 2);
+		
+		assertEquals(hand.removeTile(1).getInfo(), t4.getInfo());
+		
+		assertEquals(hand.getCount(), 1);
+		
+		assertEquals(hand.removeTile(5), -1);
+		
+		assertEquals(hand.getCount(), 1);
+		
+		
+	}
 }
