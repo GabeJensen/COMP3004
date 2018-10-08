@@ -2,6 +2,8 @@ package core;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.util.ArrayList;
+
 import junit.framework.TestCase;
 
 public class HandTesting extends TestCase{
@@ -131,5 +133,41 @@ public class HandTesting extends TestCase{
 		assertEquals(hand.getCount(), 1);
 		
 		
+	}
+	
+	public void testRemoveMultipleTiles() {
+		Hand hand = new Hand();
+		
+		Tile t1 = new Tile("R", "8");
+		Tile t2 = new Tile("O","4");
+		Tile t3 = new Tile("B", "2");
+		Tile t4 = new Tile("G", "11");
+		Tile t5 = new Tile("G", "7");
+		Tile t6 = new Tile("B", "5");
+				
+		hand.addTile(t1);
+		hand.addTile(t2);
+		hand.addTile(t3);
+		hand.addTile(t4);
+		hand.addTile(t5);
+		hand.addTile(t6);
+		
+		ArrayList<Integer> indices = new ArrayList<>();
+		
+		indices.add(1);
+		indices.add(3);
+		indices.add(4);
+		
+		ArrayList<Tile> removedTiles = new ArrayList<>();
+		
+		removedTiles.add(t2);
+		removedTiles.add(t4);
+		removedTiles.add(t5);
+		
+		ArrayList<Tile> returnedTiles = hand.removeTiles(indices);
+		
+		for(int i = 0; i < removedTiles.size(); i++) {
+			assertArrayEquals(returnedTiles.get(i).getInfo(), removedTiles.get(i).getInfo());
+		}
 	}
 }
