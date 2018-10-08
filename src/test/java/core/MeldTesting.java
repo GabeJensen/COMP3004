@@ -32,18 +32,20 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tThree2);
 		
 		assertEquals(meld2.createMeld(tiles2), true);
+	}
+	
+	public void testInvalidMelds() {
+		Meld meld = new Meld();
+		ArrayList<Tile> tiles = new ArrayList();
 		
-		Meld meld3 = new Meld();
-		ArrayList<Tile> tiles3 = new ArrayList();
+		Tile tOne = new Tile("R", "5");
+		Tile tTwo = new Tile("R", "2");
+		Tile tThree = new Tile("O", "3");
 		
-		Tile tOne3 = new Tile("R", "5");
-		Tile tTwo3 = new Tile("R", "2");
-		Tile tThree3 = new Tile("O", "3");
+		tiles.add(tOne);
+		tiles.add(tTwo);
+		tiles.add(tThree);
 		
-		tiles3.add(tOne3);
-		tiles3.add(tTwo3);
-		tiles3.add(tThree3);
-		
-		assertEquals(meld3.createMeld(tiles3), false);
+		assertEquals(meld.createMeld(tiles), false);
 	}
 }
