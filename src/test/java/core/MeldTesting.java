@@ -8,7 +8,7 @@ public class MeldTesting extends TestCase {
 	
 	public void testValidMeld() {
 		Meld meld1 = new Meld();
-		ArrayList<Tile> tiles1 = new ArrayList();
+		ArrayList<Tile> tiles1 = new ArrayList<Tile>();
 		
 		Tile tOne1 = new Tile("R", "1");
 		Tile tTwo1 = new Tile("R", "2");
@@ -21,7 +21,7 @@ public class MeldTesting extends TestCase {
 		assertEquals(meld1.createMeld(tiles1), true);
 		
 		Meld meld2 = new Meld();
-		ArrayList<Tile> tiles2 = new ArrayList();
+		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
 		
 		Tile tOne2 = new Tile("R", "2");
 		Tile tTwo2 = new Tile("G", "2");
@@ -36,7 +36,7 @@ public class MeldTesting extends TestCase {
 	
 	public void testInvalidMelds() {
 		Meld meld = new Meld();
-		ArrayList<Tile> tiles = new ArrayList();
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		
 		Tile tOne = new Tile("R", "5");
 		Tile tTwo = new Tile("R", "2");
@@ -50,7 +50,7 @@ public class MeldTesting extends TestCase {
 		
 		// test meld < 2 tiles
 		Meld meld2 = new Meld();
-		ArrayList<Tile> tiles2 = new ArrayList();
+		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
 		
 		Tile tOne2 = new Tile("O", "4");
 		Tile tTwo2 = new Tile("B", "4");
@@ -58,11 +58,11 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tOne2);
 		tiles2.add(tTwo2);
 		
-		assertEquals(meld.createMeld(tiles2), false);
+		assertEquals(meld2.createMeld(tiles2), false);
 		
 		// test a run meld > 4 tiles with one incorrect color
 		Meld meld3 = new Meld();
-		ArrayList<Tile> tiles3 = new ArrayList();
+		ArrayList<Tile> tiles3 = new ArrayList<Tile>();
 		
 		Tile tOne3 = new Tile("B", "4");
 		Tile tTwo3 = new Tile("B", "5");
@@ -78,7 +78,7 @@ public class MeldTesting extends TestCase {
 		
 		// test a set meld with a duplicate colors
 		Meld meld4 = new Meld();
-		ArrayList<Tile> tiles4 = new ArrayList();
+		ArrayList<Tile> tiles4 = new ArrayList<Tile>();
 		
 		Tile tOne4 = new Tile("R", "11");
 		Tile tTwo4 = new Tile("G", "11");
