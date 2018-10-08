@@ -18,7 +18,7 @@ public class MeldTesting extends TestCase {
 		tiles1.add(tTwo1);
 		tiles1.add(tThree1);
 		
-		assertEquals(meld1.createMeld(), true);
+		assertEquals(meld1.createMeld(tiles1), true);
 		
 		Meld meld2 = new Meld();
 		ArrayList<Tile> tiles2 = new ArrayList();
@@ -31,7 +31,7 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tTwo2);
 		tiles2.add(tThree2);
 		
-		assertEquals(meld2.createMeld(), true);
+		assertEquals(meld2.createMeld(tiles2), true);
 		
 		Meld meld3 = new Meld();
 		ArrayList<Tile> tiles3 = new ArrayList();
@@ -44,6 +44,6 @@ public class MeldTesting extends TestCase {
 		tiles3.add(tTwo3);
 		tiles3.add(tThree3);
 		
-		assertEquals(meld3.createMeld(), false);
+		assertEquals(meld3.createMeld(tiles3), false);
 	}
 }
