@@ -23,4 +23,12 @@ public class Hand {
 	public void addTile(Tile t) {
 		hand.add(t);
 	}
+	
+	public Tile removeTile(int index) {
+		if(index + 1 > hand.size()) {
+			return null;
+		} else {
+			return hand.remove(index);
+		}
+	}
 }
