@@ -111,7 +111,7 @@ public class HandTesting extends TestCase{
 		
 		assertEquals(hand.getCount(), 1);
 		
-		assertEquals(hand.removeTile(5), -1);
+		assertEquals(hand.removeTile(5), null);
 		
 		assertEquals(hand.getCount(), 1);
 		
