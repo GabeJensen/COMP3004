@@ -47,5 +47,48 @@ public class MeldTesting extends TestCase {
 		tiles.add(tThree);
 		
 		assertEquals(meld.createMeld(tiles), false);
+		
+		// test meld < 2 tiles
+		Meld meld2 = new Meld();
+		ArrayList<Tile> tiles2 = new ArrayList();
+		
+		Tile tOne2 = new Tile("O", "4");
+		Tile tTwo2 = new Tile("B", "4");
+		
+		tiles2.add(tOne2);
+		tiles2.add(tTwo2);
+		
+		assertEquals(meld.createMeld(tiles2), false);
+		
+		// test a run meld > 4 tiles with one incorrect color
+		Meld meld3 = new Meld();
+		ArrayList<Tile> tiles3 = new ArrayList();
+		
+		Tile tOne3 = new Tile("B", "4");
+		Tile tTwo3 = new Tile("B", "5");
+		Tile tThree3 = new Tile("B", "6");
+		Tile tFour3 = new Tile("G", "7");
+		
+		tiles3.add(tOne3);
+		tiles3.add(tTwo3);
+		tiles3.add(tThree3);
+		tiles3.add(tFour3);
+		
+		assertEquals(meld3.createMeld(tiles3), false);
+		
+		// test a set meld with a duplicate colors
+		Meld meld4 = new Meld();
+		ArrayList<Tile> tiles4 = new ArrayList();
+		
+		Tile tOne4 = new Tile("R", "11");
+		Tile tTwo4 = new Tile("G", "11");
+		Tile tThree4 = new Tile("R", "11");
+		
+		tiles4.add(tOne4);
+		tiles4.add(tTwo4);
+		tiles4.add(tThree4);
+		
+		assertEquals(meld4.createMeld(tiles4), false);
+		
 	}
 }
