@@ -1,8 +1,8 @@
 package core;
 
 public class Player {
-	Hand hand = new Hand();
-	String name;
+	private Hand hand = new Hand();
+	private String name;
 			
 	public Player() {
 		this.name = "No Name";
