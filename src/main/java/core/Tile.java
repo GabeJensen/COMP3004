@@ -84,9 +84,9 @@ class TileComparator implements Comparator<Tile> {
 		int val1 = Integer.parseInt(t1.getInfo()[1]);
 		int val2 = Integer.parseInt(t2.getInfo()[1]);
 		
-		// If Tile 1 is greater than Tile 2 - return 1
+		// If Tile 1 is greater than Tile 2
 		if (color1 > color2) {
-			return 1;
+			return -1;
 		}
 		// If Tile 1 color equals Tile 2 color
 		else if (color1 == color2) {
@@ -103,9 +103,9 @@ class TileComparator implements Comparator<Tile> {
 				return -1;
 			}
 		}
-		// If Tile 1 is lesser than Tile 2 - return -1
+		// If Tile 1 is lesser than Tile 2
 		else { // color1 < color2
-			return -1;
+			return 1;
 		}
 	}
 }
