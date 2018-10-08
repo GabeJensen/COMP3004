@@ -37,4 +37,17 @@ public class Hand {
 			return hand.remove(index);
 		}
 	}
+	
+	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
+		ArrayList<Tile> returnTiles = new ArrayList<>();
+		for (Integer index : indices) {
+			returnTiles.add(hand.get(index));
+		}
+		
+		for (Integer index : indices) {
+			hand.remove(index);
+		}
+		
+		return returnTiles;
+	}
 }
