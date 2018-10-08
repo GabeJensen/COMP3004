@@ -26,5 +26,23 @@ public class TileTesting extends TestCase{
 		assertEquals("G7", t2.toString());
 		assertEquals("O9", t3.toString());
 	}
+	
+	public void testTileEquals() {
+		Tile t = new Tile("R", "13");
+		Tile t1 = new Tile("B", "1");
+		Tile t2 = new Tile("G", "7");
+		Tile t3 = new Tile("O", "9");
+		Tile dup = new Tile("R", "13");
+		Tile dup1 = new Tile("B", "1");
+		Tile dup2 = new Tile("G", "7");
+		Tile dup3 = new Tile("O", "9");
+		
+		assertEquals(t, dup);
+		assertEquals(t1, dup1);
+		assertEquals(t2, dup2);
+		assertEquals(t3, dup3);
+		assertEquals(t, t);
+		assertNotEquals(t, "not a tile");
+	}
 }
 
