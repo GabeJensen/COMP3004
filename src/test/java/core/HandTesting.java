@@ -5,6 +5,10 @@ import static org.junit.Assert.assertArrayEquals;
 import junit.framework.TestCase;
 
 public class HandTesting extends TestCase{
+	private void print(String text) {
+		System.out.println(text);
+	}
+	
 	public void testGetCount() {
 		Hand h = new Hand();
 		assertEquals(0, h.getCount());
@@ -22,26 +26,6 @@ public class HandTesting extends TestCase{
 		// assert the tile count of the hand is no longer 0?
 		assertEquals(3, h.getCount());
 	}
-	
-	/* might not actually exist, this function
-	 * since only end up playing tiles as melds anyways
-	 * public void testRemoveTiles() {
-		Hand h = new Hand();
-		Tile t1 = new Tile("R", "6");
-		Tile t2 = new Tile("O","6");
-		Tile t3 = new Tile("B", "6");
-		
-		h.addTile(t1);
-		h.addTile(t2);
-		h.addTile(t3);
-		// assertEquals()
-		
-		for (int i = 0; i < h.getCount(); i++) {
-			h.removeTile();
-		}
-		// assert that the tile hand count is now 0 
-		// assertEquals 
-	}*/
 	
 	public void testSortTiles() {
 		Hand h = new Hand();
@@ -64,6 +48,35 @@ public class HandTesting extends TestCase{
 		h.sortTiles();
 		
 		// assert after adding a new tile
+	}
+	
+	public void testDisplayHand() {
+		/*
+		 * This cannot be asserted if the for loop just prints.
+		 */
+		print("testDisplayHand start");
+		Hand h = new Hand();
+		Tile t1 = new Tile("R", "6");
+		Tile t2 = new Tile("O","7");
+		Tile t3 = new Tile("B", "8");
+		Tile t4 = new Tile("G", "9");
+		Tile t5 = new Tile("O", "12");
+		Tile t6 = new Tile("B", "2");
+				
+		h.addTile(t1);
+		h.addTile(t2);
+		h.addTile(t3);
+		h.addTile(t4);
+		h.addTile(t5);
+		h.addTile(t6);
+		
+		h.displayHand();
+		
+		h.sortTiles();
+		print("...");
+		
+		h.displayHand();
+		print("testDisplayHand end");
 	}
 	
 	public void testGetHandMelds() {
