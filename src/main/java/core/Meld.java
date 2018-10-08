@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class Meld {
-	ArrayList<Tile> meld = new ArrayList();
+	ArrayList<Tile> meld = new ArrayList<Tile>();
 	
 	public Meld() {
 		
