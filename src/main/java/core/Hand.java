@@ -41,11 +41,19 @@ public class Hand {
 	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
 		ArrayList<Tile> returnTiles = new ArrayList<Tile>();
 		for (Integer index : indices) {
-			returnTiles.add(hand.get(index));
+			if(index+1 > hand.size()) {
+				return null;
+			} else {
+				returnTiles.add(hand.get(index));				
+			}
 		}
 		
 		for (Integer index : indices) {
-			hand.remove(index);
+			if(index+1 > hand.size()) {
+				return null;
+			} else {
+				hand.remove(index);				
+			}
 		}
 		
 		return returnTiles;
