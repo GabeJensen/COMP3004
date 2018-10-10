@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Hand {
-	private ArrayList<Tile> hand = new ArrayList<Tile>();
+	private ArrayList<Tile> hand;
 	
 	public Hand() {
-		// 
+		hand = new ArrayList<Tile>();
 	}
 	
-	// public ??? getHand?
+	public ArrayList<Tile> getHand() {
+		return hand;
+	}
 	
 	public void displayHand() {
 		for (int i = 0; i < hand.size(); i++) {
