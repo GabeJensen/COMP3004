@@ -10,6 +10,15 @@ public class DeckTesting extends TestCase{
 		// The last card to be added from the for loops is O, 13.
 		// The deck deals the cards from the last added, so we should expect O, 13 to be the card here since we don't shuffle upon creation.
 		assertArrayEquals(new String[] {"O", "13"}, d.dealTile().getInfo());
+		
+		int currentTileCount = d.getTileCount();
+		
+		for (int x = 0; x < currentTileCount; x++) {
+			d.dealTile();
+		}
+		
+		// The deck should not be dealing anything if it has no more tiles.
+		assertEquals(null, d.dealTile());
 	}
 	
 	public void testShuffleDeck() {
