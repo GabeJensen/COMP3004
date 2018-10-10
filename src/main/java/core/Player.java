@@ -1,10 +1,11 @@
 package core;
 
 public class Player {
-	private Hand hand = new Hand();
+	private Hand hand;
 	private String name;
 			
 	public Player() {
+		this.hand = new Hand();
 		this.name = "No Name";
 	}
 	
