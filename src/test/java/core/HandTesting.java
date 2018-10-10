@@ -170,4 +170,30 @@ public class HandTesting extends TestCase{
 			assertArrayEquals(returnedTiles.get(i).getInfo(), removedTiles.get(i).getInfo());
 		}
 	}
+	
+	public void testRemoveMultipleTilesInvalid() {
+		Hand hand = new Hand();
+		
+		Tile t1 = new Tile("R", "8");
+		Tile t2 = new Tile("O","4");
+		Tile t3 = new Tile("B", "2");
+		Tile t4 = new Tile("G", "11");
+		Tile t5 = new Tile("G", "7");
+		Tile t6 = new Tile("B", "5");
+				
+		hand.addTile(t1);
+		hand.addTile(t2);
+		hand.addTile(t3);
+		hand.addTile(t4);
+		hand.addTile(t5);
+		hand.addTile(t6);
+		
+		ArrayList<Integer> indices = new ArrayList<>();
+		
+		indices.add(1);
+		indices.add(3);
+		indices.add(10);
+		
+		assertNull(hand.removeTiles(indices));
+	}
 }
