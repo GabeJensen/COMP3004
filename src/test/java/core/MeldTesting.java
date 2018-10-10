@@ -91,4 +91,42 @@ public class MeldTesting extends TestCase {
 		assertEquals(meld4.createMeld(tiles4), false);
 		
 	}
+	
+	public void testGetValue() {
+		Meld meld = new Meld();
+		Tile t = new Tile("B", "7");
+		Tile t1 = new Tile("O", "8");
+		Tile t2 = new Tile("G", "9");
+		Tile t3 = new Tile("R", "10");
+		
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
+		
+		tiles.add(t);
+		tiles.add(t1);
+		tiles.add(t2);
+		tiles.add(t3);
+		
+		meld.createMeld(tiles);
+		
+		assertEquals(34, meld.getValue());
+		
+		Meld meld2 = new Meld();
+		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
+		
+		Tile tOne2 = new Tile("R", "2");
+		Tile tTwo2 = new Tile("G", "2");
+		Tile tThree2 = new Tile("O", "2");
+		
+		tiles2.add(tOne2);
+		tiles2.add(tTwo2);
+		tiles2.add(tThree2);
+		
+		meld2.createMeld(tiles2);
+		
+		assertEquals(6, meld2.getValue());
+		
+		Meld emptyMeld = new Meld();
+		
+		assertEquals(0, emptyMeld.getValue());
+	}
 }
