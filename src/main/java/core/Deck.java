@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-	private ArrayList<Tile> deck = new ArrayList<Tile>();
+	private ArrayList<Tile> deck;
 	
 	public Deck() {
+		deck = new ArrayList<Tile>();
 		String[] colors = {"R", "B", "G", "O"};
 		String[] values = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"};
 		
@@ -26,7 +27,12 @@ public class Deck {
 	}
 	
 	public Tile dealTile() {
-		return deck.remove(deck.size() - 1);
+		if (deck.size() < 1) {
+			return null;
+		}
+		else {
+			return deck.remove(deck.size() - 1);
+		}
 	}
 	
 	public int getTileCount() {

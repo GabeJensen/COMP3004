@@ -4,15 +4,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class Tile {
-	@Override
-	public String toString() {
-		return color + value;
-	}
-
 	private String color;
 	private String value;
 	
+	public boolean handPlayed;
+	public boolean tablePlayed;
+	
 	public Tile(String c, String v) {
+		handPlayed = false;
+		tablePlayed = false;
 		String[] validColors = {"R", "B", "G", "O"};
 		c = c.toUpperCase();
 		boolean validFlag = false;
@@ -46,6 +46,15 @@ public class Tile {
 		else {
 			throw new IllegalArgumentException("Invalid color: " + c);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return color + value;
+	}
+	
+	public int getValue() {
+		return Integer.parseInt(value);
 	}
 	
 	public String[] getInfo() {

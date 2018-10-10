@@ -5,16 +5,24 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class Meld {
-	ArrayList<Tile> meld = new ArrayList<Tile>();
+	ArrayList<Tile> meld; 
 	
 	public Meld() {
-		
+		meld = new ArrayList<Tile>();
 	}
 	
 	public boolean createMeld(ArrayList<Tile> newMeld) {
 		meld = newMeld;
 		
 		return checkValidity();
+	}
+	
+	public int getValue() {
+		int value = 0;
+		for (int i = 0; i < meld.size(); i++) {
+			value += meld.get(i).getValue();
+		}
+		return value;
 	}
 
 	private boolean checkValidity() {
