@@ -129,4 +129,19 @@ public class MeldTesting extends TestCase {
 		
 		assertEquals(0, emptyMeld.getValue());
 	}
+	
+	public void testInvalidRunOrder() {
+		Meld meld = new Meld();
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
+		
+		Tile tOne = new Tile("R", "3");
+		Tile tTwo = new Tile("R", "1");
+		Tile tThree = new Tile("R", "2");
+		
+		tiles.add(tOne);
+		tiles.add(tTwo);
+		tiles.add(tThree);
+		
+		assertEquals(meld.createMeld(tiles), false);
+	}
 }
