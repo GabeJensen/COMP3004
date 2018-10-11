@@ -47,6 +47,7 @@ public class Meld {
 		for (Tile tile : meld) {
 			tileStr = tile.getInfo();
 			values.add(Integer.valueOf(tileStr[1]));
+			//Checks all tile suit's against the first suit
 			if(suit.isEmpty()) {
 				suit = tileStr[0];
 			} else if(suit != tileStr[0]) {
@@ -54,10 +55,9 @@ public class Meld {
 			}
 		}
 		
-		Collections.sort(values);
-		
 		int lastValue = -1;
 		for (Integer integer : values) {
+			//Check that the next value is one greater than the last value
 			if(lastValue == -1) {
 				lastValue = integer;
 			} else if(lastValue + 1 != integer) {
@@ -76,13 +76,16 @@ public class Meld {
 		String value = "";
 		String color;
 		String[] tileStr;
+		
 		for (Tile tile : meld) {
 			tileStr = tile.getInfo();
 			color = tileStr[0];
+			//If the suit already exists then the meld is invalid
 			if(existingSuit.contains(color)) {
 				return false;
 			}
 			existingSuit.add(color);
+			//Set the value from the first tile and compare with every other tile
 			if(value.isEmpty()) {
 				value = tileStr[1];
 			} else if(value != tileStr[1]) {
