@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.Tile;
+import core.Meld;
 
 public class Table implements Subject {
 	private List<Observer> observers;
@@ -30,6 +31,19 @@ public class Table implements Subject {
 			Observer obsvr = (Observer)observers.get(i);
 			obsvr.update(meldsOnTable);
 		}
+	}
+
+	public boolean addMeldToTable(ArrayList<Tile> meldToAdd) {
+		/**
+		 * Returns True if the meldToAdd is a valid meld. Otherwise returns False.
+		 */
+		 if (Meld.checkValidity(meldToAdd)) {
+			 meldsOnTable.add(meldToAdd);
+			 return true;
+		 }else {
+			 // tried to add an invalid meld to table
+			 return false;
+		 }
 	}
 
 }
