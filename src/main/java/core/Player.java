@@ -25,6 +25,7 @@ public class Player implements Observer {
 		this.name = name;
 		this.initial30 = false;
 		this.table = t;
+		t.registerObserver(this);
 	}
 	
 	public void update(List<ArrayList<Tile>> tableMelds) {
