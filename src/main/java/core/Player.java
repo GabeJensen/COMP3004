@@ -11,6 +11,7 @@ public class Player implements Observer {
 	private String name;
 	private boolean initial30;
 	private Subject table;
+	private PlayerStrategy playerStrat;
 			
 	public Player(Subject t) {
 		this.hand = new Hand();
