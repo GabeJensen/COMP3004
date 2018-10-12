@@ -20,13 +20,13 @@ public class Meld {
 		
 		//Check for run
 		//Check for set
-		if(!set() && !run()) {
+		if(!set(meld) && !run(meld)) {
 			return false;
 		}
 		return true;
 	}
 
-	private static boolean run() {
+	private static boolean run(ArrayList<Tile> meld) {
 		//Same suit ordered value
 		String suit = "";
 		String[] tileStr;
@@ -58,7 +58,7 @@ public class Meld {
 		return true;
 	}
 
-	private static boolean set() {
+	private static boolean set(ArrayList<Tile> meld) {
 		//Same value different suit
 		HashSet<String> existingSuit = new HashSet<>();
 		String value = "";
