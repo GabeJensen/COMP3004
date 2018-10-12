@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 public class MeldTesting extends TestCase {
 	
 	public void testValidMeld() {
-		Meld meld1 = new Meld();
 		ArrayList<Tile> tiles1 = new ArrayList<Tile>();
 		
 		Tile tOne1 = new Tile("R", "1");
@@ -18,9 +17,8 @@ public class MeldTesting extends TestCase {
 		tiles1.add(tTwo1);
 		tiles1.add(tThree1);
 		
-		assertEquals(meld1.createMeld(tiles1), true);
+		assertEquals(Meld.checkValidity(tiles1), true);
 		
-		Meld meld2 = new Meld();
 		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
 		
 		Tile tOne2 = new Tile("R", "2");
@@ -31,11 +29,10 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tTwo2);
 		tiles2.add(tThree2);
 		
-		assertEquals(meld2.createMeld(tiles2), true);
+		assertEquals(Meld.checkValidity(tiles2), true);
 	}
 	
 	public void testInvalidMelds() {
-		Meld meld = new Meld();
 		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		
 		Tile tOne = new Tile("R", "5");
@@ -46,10 +43,9 @@ public class MeldTesting extends TestCase {
 		tiles.add(tTwo);
 		tiles.add(tThree);
 		
-		assertEquals(meld.createMeld(tiles), false);
+		assertEquals(Meld.checkValidity(tiles), false);
 		
 		// test meld < 2 tiles
-		Meld meld2 = new Meld();
 		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
 		
 		Tile tOne2 = new Tile("O", "4");
@@ -58,10 +54,9 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tOne2);
 		tiles2.add(tTwo2);
 		
-		assertEquals(meld2.createMeld(tiles2), false);
+		assertEquals(Meld.checkValidity(tiles2), false);
 		
 		// test a run meld > 4 tiles with one incorrect color
-		Meld meld3 = new Meld();
 		ArrayList<Tile> tiles3 = new ArrayList<Tile>();
 		
 		Tile tOne3 = new Tile("B", "4");
@@ -74,10 +69,9 @@ public class MeldTesting extends TestCase {
 		tiles3.add(tThree3);
 		tiles3.add(tFour3);
 		
-		assertEquals(meld3.createMeld(tiles3), false);
+		assertEquals(Meld.checkValidity(tiles3), false);
 		
 		// test a set meld with a duplicate colors
-		Meld meld4 = new Meld();
 		ArrayList<Tile> tiles4 = new ArrayList<Tile>();
 		
 		Tile tOne4 = new Tile("R", "11");
@@ -88,12 +82,11 @@ public class MeldTesting extends TestCase {
 		tiles4.add(tTwo4);
 		tiles4.add(tThree4);
 		
-		assertEquals(meld4.createMeld(tiles4), false);
+		assertEquals(Meld.checkValidity(tiles4), false);
 		
 	}
 	
 	public void testGetValue() {
-		Meld meld = new Meld();
 		Tile t = new Tile("B", "7");
 		Tile t1 = new Tile("O", "8");
 		Tile t2 = new Tile("G", "9");
@@ -106,9 +99,7 @@ public class MeldTesting extends TestCase {
 		tiles.add(t2);
 		tiles.add(t3);
 		
-		meld.createMeld(tiles);
-		
-		assertEquals(34, meld.getValue());
+		assertEquals(34, Meld.getValue(tiles));
 		
 		Meld meld2 = new Meld();
 		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
@@ -120,18 +111,13 @@ public class MeldTesting extends TestCase {
 		tiles2.add(tOne2);
 		tiles2.add(tTwo2);
 		tiles2.add(tThree2);
+
+		assertEquals(6, Meld.getValue(tiles2));
 		
-		meld2.createMeld(tiles2);
-		
-		assertEquals(6, meld2.getValue());
-		
-		Meld emptyMeld = new Meld();
-		
-		assertEquals(0, emptyMeld.getValue());
+		assertEquals(0, Meld.getValue(new ArrayList<Tile>()));
 	}
 	
 	public void testInvalidRunOrder() {
-		Meld meld = new Meld();
 		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		
 		Tile tOne = new Tile("R", "3");
@@ -142,6 +128,6 @@ public class MeldTesting extends TestCase {
 		tiles.add(tTwo);
 		tiles.add(tThree);
 		
-		assertEquals(meld.createMeld(tiles), false);
+		assertEquals(Meld.checkValidity(tiles), false);
 	}
 }
