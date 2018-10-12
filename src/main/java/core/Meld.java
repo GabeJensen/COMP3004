@@ -5,19 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class Meld {
-	ArrayList<Tile> meld; 
-	
-	public Meld() {
-		meld = new ArrayList<Tile>();
-	}
-	
-	public boolean createMeld(ArrayList<Tile> newMeld) {
-		meld = newMeld;
-		
-		return checkValidity();
-	}
-	
-	public int getValue() {
+	public static int getValue(ArrayList<Tile> meld) {
 		int value = 0;
 		for (int i = 0; i < meld.size(); i++) {
 			value += meld.get(i).getValue();
@@ -25,7 +13,7 @@ public class Meld {
 		return value;
 	}
 
-	private boolean checkValidity() {
+	public static boolean checkValidity(ArrayList<Tile> meld) {
 		if(meld.size()<3) {
 			return false;
 		}
@@ -38,7 +26,7 @@ public class Meld {
 		return true;
 	}
 
-	private boolean run() {
+	private static boolean run() {
 		//Same suit ordered value
 		String suit = "";
 		String[] tileStr;
@@ -70,7 +58,7 @@ public class Meld {
 		return true;
 	}
 
-	private boolean set() {
+	private static boolean set() {
 		//Same value different suit
 		HashSet<String> existingSuit = new HashSet<>();
 		String value = "";
