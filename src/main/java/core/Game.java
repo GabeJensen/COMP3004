@@ -3,18 +3,18 @@ package core;
 import tableObserver.Table;
 
 public class Game {
-	Table table;
-	Player user;
-	Player p1;
-	Player p2;
-	Player p3;
+	public Table table;
+	public Player user;
+	public Player p1;
+	public Player p2;
+	public Player p3;
 	
 	public Game() {
 		this.table = new Table();
-		this.user = new Player(table, "User");
-		this.p1 = new Player(table, "P1");
-		this.p2 = new Player(table, "P2");
-		this.p3 = new Player(table, "P3");
+		this.user = new Player(table, "User", new Strat0());
+		this.p1 = new Player(table, "P1", new Strat1());
+		this.p2 = new Player(table, "P2", new Strat2());
+		this.p3 = new Player(table, "P3", new Strat3());
 	}
 	
 	public void playGame() {

@@ -14,17 +14,19 @@ public class Player implements Observer {
 	private List<ArrayList<Tile>> tableTiles;
 	private PlayerStrategy playerStrat;
 			
-	public Player(Subject t) {
+	public Player(Subject t, PlayerStrategy s) {
 		this.hand = new Hand();
 		this.name = "No Name";
 		this.initial30 = false;
+		this.playerStrat = s;
 		this.table = t;
 		this.table.registerObserver(this);
 	}
 	
-	public Player(Subject t, String name) {
+	public Player(Subject t, String name, PlayerStrategy s) {
 		this.name = name;
 		this.initial30 = false;
+		this.playerStrat = s;
 		this.table = t;
 		this.table.registerObserver(this);
 	}
@@ -36,6 +38,12 @@ public class Player implements Observer {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public int performStrategy() {
+		playerStrat.strat(hand, initial30, tableTiles);
+		// Need to have some distinction for when the player is able to play cards or not, so that in Game.java, it will draw deck based on this function's return.
+		return 0;
 	}
 	
 	public void setStrategy(PlayerStrategy s) {
