@@ -11,6 +11,7 @@ public class Player implements Observer {
 	private String name;
 	private boolean initial30;
 	private Subject table;
+	private List<ArrayList<Tile>> tableTiles;
 	private PlayerStrategy playerStrat;
 			
 	public Player(Subject t) {
@@ -18,22 +19,27 @@ public class Player implements Observer {
 		this.name = "No Name";
 		this.initial30 = false;
 		this.table = t;
-		t.registerObserver(this);
+		this.table.registerObserver(this);
 	}
 	
 	public Player(Subject t, String name) {
 		this.name = name;
 		this.initial30 = false;
 		this.table = t;
-		t.registerObserver(this);
+		this.table.registerObserver(this);
 	}
 	
 	public void update(List<ArrayList<Tile>> tableMelds) {
 		// Player will use this table in some way, either to play hand melds and/or table melds.
+		this.tableTiles = tableMelds;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setStrategy(PlayerStrategy s) {
+		this.playerStrat = s;
 	}
 	
 	public boolean getInit30Flag() {
