@@ -2,12 +2,19 @@ package core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Hand {
 	private ArrayList<Tile> hand;
 	
 	public Hand() {
 		hand = new ArrayList<Tile>();
+	}
+	
+	public List<ArrayList<Tile>> getHandMelds() {
+		List<ArrayList<Tile>> userMelds;
+		
+		return userMelds;
 	}
 	
 	public ArrayList<Tile> getHand() {
