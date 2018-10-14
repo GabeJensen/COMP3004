@@ -40,6 +40,10 @@ public class Player implements Observer {
 		return name;
 	}
 	
+	public ArrayList<Tile> getTiles(){
+		return hand.getHand();
+	}
+	
 	public int performStrategy() {
 		playerStrat.strat(hand, initial30, tableTiles);
 		// Need to have some distinction for when the player is able to play cards or not, so that in Game.java, it will draw deck based on this function's return.
@@ -56,5 +60,9 @@ public class Player implements Observer {
 	
 	public void playedInit30() {
 		this.initial30 = true;
+	}
+	
+	public void addTile(Tile tile) {
+		hand.addTile(tile);
 	}
 }
