@@ -1,5 +1,7 @@
 package tableObserver;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.util.ArrayList;
 
 import core.Tile;
@@ -71,5 +73,32 @@ public class TableTesting extends TestCase{
 		assertEquals(false, tb.addMeldToTable(meld3));
 		assertEquals(false, tb.addMeldToTable(meld4));
 		assertEquals(false, tb.addMeldToTable(meld5));
+	}
+	
+	public void testGettingTable() {
+		Table tb = new Table();
+		ArrayList<Tile> meld1 = new ArrayList<Tile>();
+		ArrayList<Tile> meld2 = new ArrayList<Tile>();
+		
+		meld1.add(new Tile("R", "6"));
+		meld1.add(new Tile("O", "6"));
+		meld1.add(new Tile("G", "6"));
+		
+		meld2.add(new Tile("B", "8"));
+		meld2.add(new Tile("B", "9"));
+		meld2.add(new Tile("B", "10"));
+		
+		ArrayList<ArrayList<Tile>> tableMelds = new ArrayList<ArrayList<Tile>>();
+		
+		tb.addMeldToTable(meld1);
+		tb.addMeldToTable(meld2);
+		
+		tableMelds = tb.getTable();
+		
+		for(int i = 0; i < tableMelds.size(); i++) {
+			for(int j = 0; j < tableMelds.get(i).size(); j++) {
+				assertArrayEquals(meld1.get(j).getInfo(), tableMelds.get(i).get(j).getInfo());
+			}
+		}
 	}
 }
