@@ -3,6 +3,7 @@ package core;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -97,9 +98,18 @@ public class HandTesting extends TestCase{
 		h.addTile(t5);
 		h.addTile(t6);
 		
+		// This would be more for display purposes and for the user only. Not needed for the computer players.
 		h.sortTiles();
 		
-		// assertEquals what will be the return of this h.getHandMelds call? string? object?
+		List<ArrayList<Tile>> melds = new ArrayList<>();
+		ArrayList<Tile> meld1 = new ArrayList<Tile>();
+		meld1.add(t1);
+		meld1.add(t2);
+		meld1.add(t3);
+		meld1.add(t4);
+		melds.add(meld1);
+		// In this case, we only should have the one meld.
+		assertEquals(melds.get(0), h.getHandMelds().get(0));
 		// will be returning R6,O7,B8,G9 in this case
 	}
 	
@@ -195,5 +205,5 @@ public class HandTesting extends TestCase{
 		indices.add(10);
 		
 		assertNull(hand.removeTiles(indices));
-	}
+	}	
 }

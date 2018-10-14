@@ -101,7 +101,6 @@ public class MeldTesting extends TestCase {
 		
 		assertEquals(34, Meld.getValue(tiles));
 		
-		Meld meld2 = new Meld();
 		ArrayList<Tile> tiles2 = new ArrayList<Tile>();
 		
 		Tile tOne2 = new Tile("R", "2");
