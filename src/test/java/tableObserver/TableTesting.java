@@ -3,6 +3,7 @@ package tableObserver;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import core.Tile;
 import junit.framework.TestCase;
@@ -88,16 +89,20 @@ public class TableTesting extends TestCase{
 		meld2.add(new Tile("B", "9"));
 		meld2.add(new Tile("B", "10"));
 		
-		ArrayList<ArrayList<Tile>> tableMelds = new ArrayList<ArrayList<Tile>>();
+		List<ArrayList<Tile>> tableMelds = new ArrayList<ArrayList<Tile>>();
+		List<ArrayList<Tile>> melds = new ArrayList<ArrayList<Tile>>();
 		
 		tb.addMeldToTable(meld1);
 		tb.addMeldToTable(meld2);
+		
+		melds.add(meld1);
+		melds.add(meld2);
 		
 		tableMelds = tb.getTable();
 		
 		for(int i = 0; i < tableMelds.size(); i++) {
 			for(int j = 0; j < tableMelds.get(i).size(); j++) {
-				assertArrayEquals(meld1.get(j).getInfo(), tableMelds.get(i).get(j).getInfo());
+				assertArrayEquals(melds.get(i).get(j).getInfo(), tableMelds.get(i).get(j).getInfo());
 			}
 		}
 	}
