@@ -32,6 +32,10 @@ public class Table implements Subject {
 			obsvr.update(meldsOnTable);
 		}
 	}
+	
+	public List<ArrayList<Tile>> getTable(){
+		return meldsOnTable;
+	}
 
 	public boolean addMeldToTable(ArrayList<Tile> meldToAdd) {
 		/**
