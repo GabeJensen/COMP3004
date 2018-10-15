@@ -33,7 +33,7 @@ public class GameplayTesting extends TestCase{
 		Tile[] tiles = {tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9, tile10, tile11, tile12, tile13};
 		Tile[] tableTiles = {tile1, tile2, tile3, tile4, tile5, tile6, tile7};
 		Tile[] meld1 = {tile1, tile2, tile3};
-		Tile[] meld2 = {tile7, tile5, tile6, tile4};
+		Tile[] meld2 = {tile4, tile5, tile6, tile7};
 		
 		for(int i = 0; i < 13; i++) {
 			p1.addTile(tiles[i]);
