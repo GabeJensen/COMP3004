@@ -5,6 +5,7 @@ import java.util.List;
 
 import tableObserver.Observer;
 import tableObserver.Subject;
+import tableObserver.Table;
 
 public class Player implements Observer {
 	private Hand hand;
@@ -21,14 +22,17 @@ public class Player implements Observer {
 		this.playerStrat = s;
 		this.table = t;
 		this.table.registerObserver(this);
+		this.tableTiles = new ArrayList<ArrayList<Tile>>();
 	}
 	
 	public Player(Subject t, String name, PlayerStrategy s) {
+		this.hand = new Hand();
 		this.name = name;
 		this.initial30 = false;
 		this.playerStrat = s;
 		this.table = t;
 		this.table.registerObserver(this);
+		this.tableTiles = new ArrayList<ArrayList<Tile>>();
 	}
 	
 	public void update(List<ArrayList<Tile>> tableMelds) {
@@ -45,9 +49,22 @@ public class Player implements Observer {
 	}
 	
 	public int performStrategy() {
-		playerStrat.strat(hand, initial30, tableTiles);
+		int returnValue;
+		
+		returnValue = playerStrat.strat(hand, initial30, tableTiles);
+		
+		if(returnValue != 0 && !initial30) {
+			initial30 = true;
+		}
+		
+		if(!tableTiles.isEmpty()) {
+			for (ArrayList<Tile> tileList : tableTiles) {
+				((Table)table).addMeldToTable(tileList);
+				
+			}
+		}
 		// Need to have some distinction for when the player is able to play cards or not, so that in Game.java, it will draw deck based on this function's return.
-		return 0;
+		return returnValue;
 	}
 	
 	public void setStrategy(PlayerStrategy s) {
