@@ -25,13 +25,19 @@ public class Strat1 implements PlayerStrategy {
 		Hand tableHand = new Hand();
 		Boolean tableMeldUsedNothing = true;
 		
+		//If there are no melds possible then return 0
 		if(playerHand.isEmpty()) {
 			return 0;
 		}
+		//If this is the first play
 		if(!initialMeld) {
 			
+			//Loop is intended to go over every possible meld by getting the largest meld
+			//removing it from the hand and looking for the next largest meld until no more 
+			//melds can be made
 			while(!playerHand.isEmpty()) {
 				for(int i = 0; i < playerHand.size(); i++) {
+					//Checks for largest meld
 					if(largestMeld.isEmpty()) {
 						largestMeld = playerHand.get(i);
 					} else {
@@ -41,17 +47,23 @@ public class Strat1 implements PlayerStrategy {
 					}
 				}
 				
+				//Adds tile to table
 				tableTiles.add(largestMeld);
+				//Gets the exisiting hand of player
 				playerHandList = h.getHand();
 				
+				//Removes the meld tiles from the player's hand
 				for(int i = 0; i < largestMeld.size(); i++) {
 					h.removeTile(playerHandList.indexOf(largestMeld.get(i)));
 				}
 				
+				//Regenerates melds in player's hand
 				playerHand = h.getHandMelds();
+				//Resets largestMeld
 				largestMeld = new ArrayList<Tile>();
 			}
 		} else {
+			//For now this repeats what was done above
 			while(!playerHand.isEmpty()) {
 //				tableMeldUsedNothing = false;
 				for(int i = 0; i < playerHand.size(); i++) {

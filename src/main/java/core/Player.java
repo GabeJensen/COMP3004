@@ -64,6 +64,7 @@ public class Player implements Observer {
 			}
 		}
 		// Need to have some distinction for when the player is able to play cards or not, so that in Game.java, it will draw deck based on this function's return.
+		//Returning 0 means no melds played, 1 means cards were played
 		return returnValue;
 	}
 	
