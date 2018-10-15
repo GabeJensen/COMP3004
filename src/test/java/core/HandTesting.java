@@ -84,6 +84,8 @@ public class HandTesting extends TestCase{
 	
 	public void testGetHandMelds() {
 		Hand h = new Hand();
+		List<ArrayList<Tile>> melds = new ArrayList<>();
+		
 		Tile t1 = new Tile("R", "6");
 		Tile t2 = new Tile("R","7");
 		Tile t3 = new Tile("R", "8");
@@ -92,6 +94,10 @@ public class HandTesting extends TestCase{
 		Tile t6 = new Tile("B", "2");
 		Tile t7 = new Tile("R", "12");
 		Tile t8 = new Tile("G", "12");
+		Tile t9 = new Tile("B", "4");
+		Tile t10 = new Tile("B", "5");
+		Tile t11 = new Tile("B", "6");
+		Tile t12 = new Tile("R", "6");
 				
 		h.addTile(t1);
 		h.addTile(t2);
@@ -101,35 +107,35 @@ public class HandTesting extends TestCase{
 		h.addTile(t6);
 		h.addTile(t7);
 		h.addTile(t8);
+		h.addTile(t9);
+		h.addTile(t10);
+		h.addTile(t11);
+		h.addTile(t12);
 		
-		// This would be more for display purposes and for the user only. Not needed for the computer players.
+		// every hand needs to be sorted
 		h.sortTiles();
 		
-		List<ArrayList<Tile>> melds = new ArrayList<>();
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
-		meld1.add(t1);
-		meld1.add(t2);
-		meld1.add(t3);
+		// B4, B5, B6
+		meld1.add(t9);
+		meld1.add(t10);
+		meld1.add(t11);
 		melds.add(meld1);
-		
+
 		ArrayList<Tile> meld2 = new ArrayList<Tile>();
+		// R6, R7, R8, R9
+		meld2.add(t1);
 		meld2.add(t2);
 		meld2.add(t3);
 		meld2.add(t4);
 		melds.add(meld2);
 		
 		ArrayList<Tile> meld3 = new ArrayList<Tile>();
+		// R12, G12, O12
 		meld3.add(t7); // Red first
 		meld3.add(t8); // Then green
 		meld3.add(t5); // Then orange
 		melds.add(meld3);
-		
-		ArrayList<Tile> meld4 = new ArrayList<Tile>();
-		meld4.add(t1);
-		meld4.add(t2);
-		meld4.add(t3);
-		meld4.add(t4);
-		melds.add(meld4);
 		
 		assertEquals(melds, h.getHandMelds());
 	}
