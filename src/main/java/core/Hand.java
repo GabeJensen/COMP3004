@@ -56,6 +56,17 @@ public class Hand {
 		}
 	}
 	
+	public Tile removeTile(Tile remove) {
+		int index = hand.indexOf(remove);
+		if(index == -1) {
+			return null;
+		} else {
+			Tile rmTile = hand.remove(index);
+			determineHandMeldsAndTilesForTableMelds();
+			return rmTile;
+		}
+	}
+	
 	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
 		ArrayList<Tile> returnTiles = new ArrayList<Tile>();
 		for (Integer index : indices) {
