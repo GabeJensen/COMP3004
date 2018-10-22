@@ -268,4 +268,84 @@ public class HandTesting extends TestCase{
 		
 		assertNull(hand.removeTile(t8));
 	}
+	
+	public void testPlayTableMeld() {    
+	    /*
+	    Table melds:
+	    [R3 R4 R5], [O4 O5 O6 O7 O8]
+	    PLayer hand:
+	    [R2 R6 O6]
+	    */
+	    
+	    ArrayList<ArrayList<Tile>> table = new ArrayList<ArrayList<Tile>>();
+	    ArrayList<Tile> meld1 = new ArrayList<Tile>();
+	    ArrayList<Tile> meld2 = new ArrayList<Tile>();
+	    
+	    Tile t1 = new Tile("R", "3");
+	    Tile t2 = new Tile("R","4");
+	    Tile t3 = new Tile("R", "5");
+	    
+	    meld1.add(t1);
+	    meld1.add(t2);
+	    meld1.add(t3);
+	    
+	    Tile t4 = new Tile("O", "4");
+	    Tile t5 = new Tile("O", "5");
+	    Tile t6 = new Tile("O", "6");
+	    Tile t7 = new Tile("O", "7");
+	    Tile t8 = new Tile("O", "8");
+	    
+	    meld2.add(t4);
+	    meld2.add(t5);
+	    meld2.add(t6);
+	    meld2.add(t7);
+	    meld2.add(t8); 
+	    
+	    table.add(meld1);
+	    table.add(meld2);
+	    
+	    Hand h = new Hand();
+	            
+	    Tile t9 = new Tile("R", "2");
+	    Tile t10 = new Tile("R","6");
+	    Tile t11 = new Tile("O", "6");
+
+	    h.addTile(t9);
+	    h.addTile(t10);
+	    h.addTile(t11);
+
+	    h.playTableMeld(table);
+	    
+	    ArrayList<Tile> correctMeld1 = new ArrayList<Tile>();
+	    
+	    correctMeld1.add(t9);
+	    correctMeld1.add(t1);
+	    correctMeld1.add(t2);
+	    correctMeld1.add(t3);
+	    correctMeld1.add(t10);
+	    
+	    ArrayList<Tile> correctMeld2 = new ArrayList<Tile>();
+	    
+	    correctMeld2.add(t4);
+	    correctMeld2.add(t5);
+	    correctMeld2.add(t11);
+	    
+	    ArrayList<Tile> correctMeld3 = new ArrayList<Tile>();
+	    
+	    correctMeld3.add(t6);
+	    correctMeld3.add(t7);
+	    correctMeld3.add(t8);
+	    
+	    assertEquals(table.get(0), correctMeld1);
+	    assertEquals(table.get(1), correctMeld2);
+	    assertEquals(table.get(2), correctMeld3);
+	    
+	    assertEquals(0, h.getCount());
+	    
+	    Tile t12 = new Tile("B", "2");
+	    h.addTile(t12);
+	    h.playTableMeld(table);
+	    
+	    assertEquals(1, h.getCount());
+	}
 }
