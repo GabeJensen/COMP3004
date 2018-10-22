@@ -221,4 +221,33 @@ public class HandTesting extends TestCase{
 		
 		assertNull(hand.removeTiles(indices));
 	}	
+
+	public void testRemoveTileByTileInfo() {
+		Hand hand = new Hand();
+		
+		Tile t1 = new Tile("R", "8");
+		Tile t2 = new Tile("O","4");
+		Tile t3 = new Tile("B", "2");
+		Tile t4 = new Tile("G", "11");
+		Tile t5 = new Tile("G", "7");
+		Tile t6 = new Tile("B", "5");
+		Tile t7 = new Tile("B", "5");
+		Tile t8 = new Tile("O", "1");
+		
+		hand.addTile(t1);
+		hand.addTile(t2);
+		hand.addTile(t3);
+		hand.addTile(t4);
+		hand.addTile(t5);
+		hand.addTile(t6);
+		
+		assertArrayEquals(hand.removeTile(t1).getInfo(), t1.getInfo());
+		
+		assertEquals(hand.getCount(), 5);
+		
+		//Can remove tiles that aren't explicitly in the hand but are of the same value
+		assertArrayEquals(hand.removeTile(t7).getInfo(), t6.getInfo());
+		
+		assertNull(hand.removeTile(t8));
+	}
 }
