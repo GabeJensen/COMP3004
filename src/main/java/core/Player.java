@@ -48,6 +48,13 @@ public class Player implements Observer {
 		return hand.getHand();
 	}
 	
+	public List<ArrayList<Tile>> getHandMelds(){
+		return hand.getHandMelds();
+	}
+	public ArrayList<Tile> getTilesForTableMelds() {
+		return hand.getTilesForTableMelds();
+	}
+	
 	public int performStrategy() {
 		int returnValue;
 		
