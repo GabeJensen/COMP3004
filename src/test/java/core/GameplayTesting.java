@@ -19,10 +19,10 @@ public class GameplayTesting extends TestCase{
 		Tile tile1 = new Tile("R", "1");
 		Tile tile2 = new Tile("R", "2");
 		Tile tile3 = new Tile("R", "3");
-		Tile tile4 = new Tile("O", "10");
+		Tile tile4 = new Tile("R", "10");
 		Tile tile5 = new Tile("B", "10");
 		Tile tile6 = new Tile("G", "10");
-		Tile tile7 = new Tile("R", "10");
+		Tile tile7 = new Tile("O", "10");
 		Tile tile8 = new Tile("B", "5");
 		Tile tile9 = new Tile("O", "7");
 		Tile tile10 = new Tile("R", "5");
@@ -54,6 +54,7 @@ public class GameplayTesting extends TestCase{
 		for(int i = 0; i < 3; i++) {
 			assertArrayEquals(meld1[i].getInfo(), tableGetter.get(1).get(i).getInfo());
 		}
+		
 		table.notifyObservers();
 //		stratResult = p1.performStrategy();
 //		table.notifyObservers();

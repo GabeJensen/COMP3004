@@ -9,14 +9,76 @@ import java.util.List;
 
 public class Hand {
 	private ArrayList<Tile> hand;
+	private List<ArrayList<Tile>> handMelds;
+	private ArrayList<Tile> tilesForTableMelds;
 	
 	public Hand() {
 		hand = new ArrayList<Tile>();
+		handMelds = new ArrayList<ArrayList<Tile>>();
+		tilesForTableMelds = new ArrayList<Tile>();
 	}
 	
-	public List<ArrayList<Tile>> getHandMelds() {
+	public ArrayList<Tile> getHand() {
+		return hand;
+	}
+	
+	public List<ArrayList<Tile>> getHandMelds(){
+		return handMelds;
+	}
+	
+	public ArrayList<Tile> getTilesForTableMelds(){
+		return tilesForTableMelds;
+	}
+	
+	public void displayHand() {
+		for (int i = 0; i < hand.size(); i++) {
+			System.out.println(hand.get(i).toString());
+		}
+	}
+	
+	public int getCount() {
+		return hand.size();
+	}
+	
+	public void addTile(Tile t) {
+		hand.add(t);
+		sortTiles();
+		determineHandMeldsAndTilesForTableMelds();
+	}
+	
+	public Tile removeTile(int index) {
+		if(index + 1 > hand.size()) {
+			return null;
+		} else {
+			Tile rmTile = hand.remove(index);
+			determineHandMeldsAndTilesForTableMelds();
+			return rmTile;
+		}
+	}
+	
+	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
+		ArrayList<Tile> returnTiles = new ArrayList<Tile>();
+		for (Integer index : indices) {
+			if(index+1 > hand.size()) {
+				return null;
+			} else {
+				returnTiles.add(hand.get(index));	
+				hand.remove(index);
+			}
+		}
+		
+		determineHandMeldsAndTilesForTableMelds();
+		return returnTiles;
+	}
+	
+	private void sortTiles() {
+		Collections.sort(hand, new TileComparator());
+	}
+	
+	private void determineHandMeldsAndTilesForTableMelds() {
 		HashMap<Integer, ArrayList<Tile>> handTiles = new HashMap<Integer, ArrayList<Tile>>(13);
 		List<ArrayList<Tile>> validMelds = new ArrayList<ArrayList<Tile>>();
+		ArrayList<Tile> remainingTiles = new ArrayList<Tile>();
 		
 		//add hand tiles to a map
 		for (int idx = 0; idx < hand.size(); ++idx) {
@@ -92,7 +154,20 @@ public class Hand {
 			}
 		}
 		
-		return validMelds;
+		// gather the remaining tiles that will be used for table melds
+		Iterator<Integer> itr = handTiles.keySet().iterator();
+		while (itr.hasNext()) {
+			int key = itr.next();
+			
+			if (!handTiles.get(key).isEmpty()) {
+				for (Tile t: handTiles.get(key)) {
+					remainingTiles.add(t);
+				}
+			}
+		}
+		
+		handMelds = validMelds;
+		tilesForTableMelds = remainingTiles;
 	}
 	
 	private void checkNextTileValue(int nextTileValue, String tileColour, HashMap<Integer, ArrayList<Tile>> handTiles, ArrayList<Tile> tempMeld) {
@@ -115,56 +190,5 @@ public class Hand {
 				}
 			}
 		}
-	}
-	
-	public ArrayList<Tile> getHand() {
-		return hand;
-	}
-	
-	public void displayHand() {
-		for (int i = 0; i < hand.size(); i++) {
-			System.out.println(hand.get(i).toString());
-		}
-	}
-	
-	public void sortTiles() {
-		Collections.sort(hand, new TileComparator());
-	}
-	
-	public int getCount() {
-		return hand.size();
-	}
-	
-	public void addTile(Tile t) {
-		hand.add(t);
-	}
-	
-	public Tile removeTile(int index) {
-		if(index + 1 > hand.size()) {
-			return null;
-		} else {
-			return hand.remove(index);
-		}
-	}
-	
-	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
-		ArrayList<Tile> returnTiles = new ArrayList<Tile>();
-		for (Integer index : indices) {
-			if(index+1 > hand.size()) {
-				return null;
-			} else {
-				returnTiles.add(hand.get(index));				
-			}
-		}
-		
-		for (Integer index : indices) {
-			if(index+1 > hand.size()) {
-				return null;
-			} else {
-				hand.remove(index);				
-			}
-		}
-		
-		return returnTiles;
 	}
 }

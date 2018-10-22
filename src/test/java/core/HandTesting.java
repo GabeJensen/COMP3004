@@ -42,13 +42,9 @@ public class HandTesting extends TestCase{
 		h.addTile(t3);
 		h.addTile(t4);
 		
-		h.sortTiles();
-		
 		// how to assert the sort? 
 		
 		h.addTile(new Tile("R", "6"));
-		
-		h.sortTiles();
 		
 		// assert after adding a new tile
 	}
@@ -72,11 +68,6 @@ public class HandTesting extends TestCase{
 		h.addTile(t4);
 		h.addTile(t5);
 		h.addTile(t6);
-		
-		h.displayHand();
-		
-		h.sortTiles();
-		print("...");
 		
 		h.displayHand();
 		print("testDisplayHand end");
@@ -112,9 +103,6 @@ public class HandTesting extends TestCase{
 		h.addTile(t11);
 		h.addTile(t12);
 		
-		// every hand needs to be sorted
-		h.sortTiles();
-		
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
 		// B4, B5, B6
 		meld1.add(t9);
@@ -144,9 +132,9 @@ public class HandTesting extends TestCase{
 		Hand hand = new Hand();
 		
 		Tile t1 = new Tile("R", "8");
-		Tile t2 = new Tile("O","4");
-		Tile t3 = new Tile("B", "2");
-		Tile t4 = new Tile("G", "11");
+		Tile t2 = new Tile("B", "2");
+		Tile t3 = new Tile("G", "11");
+		Tile t4 = new Tile("O","4");
 				
 		hand.addTile(t1);
 		hand.addTile(t2);
@@ -176,11 +164,11 @@ public class HandTesting extends TestCase{
 		Hand hand = new Hand();
 		
 		Tile t1 = new Tile("R", "8");
-		Tile t2 = new Tile("O","4");
-		Tile t3 = new Tile("B", "2");
-		Tile t4 = new Tile("G", "11");
-		Tile t5 = new Tile("G", "7");
-		Tile t6 = new Tile("B", "5");
+		Tile t2 = new Tile("B", "2");
+		Tile t3 = new Tile("B", "5");
+		Tile t4 = new Tile("G", "7");
+		Tile t5 = new Tile("G", "11");
+		Tile t6 = new Tile("O","4");
 				
 		hand.addTile(t1);
 		hand.addTile(t2);
@@ -189,13 +177,13 @@ public class HandTesting extends TestCase{
 		hand.addTile(t5);
 		hand.addTile(t6);
 		
-		ArrayList<Integer> indices = new ArrayList<>();
+		ArrayList<Integer> indices = new ArrayList<Integer>();
 		
 		indices.add(1);
 		indices.add(3);
 		indices.add(4);
 		
-		ArrayList<Tile> removedTiles = new ArrayList<>();
+		ArrayList<Tile> removedTiles = new ArrayList<Tile>();
 		
 		removedTiles.add(t2);
 		removedTiles.add(t4);
