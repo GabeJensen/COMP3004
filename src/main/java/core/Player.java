@@ -55,6 +55,14 @@ public class Player implements Observer {
 		return hand.getTilesForTableMelds();
 	}
 	
+	public Tile removeTile(int index) {
+		return hand.removeTile(index);
+	}
+	
+	public Tile removeTile(Tile remove) {
+		return hand.removeTile(remove);
+	}
+	
 	public int performStrategy() {
 		int returnValue;
 		
