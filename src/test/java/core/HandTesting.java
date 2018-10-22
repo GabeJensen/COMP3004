@@ -49,8 +49,8 @@ public class HandTesting extends TestCase{
 		h2.addTile(t1);
 		h2.addTile(t2);
 		
-		h.displayHand();
-		h2.displayHand();
+		//h.displayHand();
+		//h2.displayHand();
 		// This would not be equal if they were not sorted.
 		assertEquals(h.getHand(), h2.getHand());
 		
