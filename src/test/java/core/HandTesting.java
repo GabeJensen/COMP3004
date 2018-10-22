@@ -38,15 +38,33 @@ public class HandTesting extends TestCase{
 		Tile t4 = new Tile("G", "11");
 				
 		h.addTile(t1);
+		h.addTile(t4);
 		h.addTile(t2);
 		h.addTile(t3);
-		h.addTile(t4);
+	
+		Hand h2 = new Hand();
 		
-		// how to assert the sort? 
+		h2.addTile(t3);
+		h2.addTile(t4);
+		h2.addTile(t1);
+		h2.addTile(t2);
 		
-		h.addTile(new Tile("R", "6"));
+		h.displayHand();
+		h2.displayHand();
+		// This would not be equal if they were not sorted.
+		assertEquals(h.getHand(), h2.getHand());
 		
-		// assert after adding a new tile
+		/*
+		 * Neither of these asserts would work because nonEqualHand is not in the correct order.
+		ArrayList<Tile> nonEqualHand = new ArrayList<Tile>();
+		nonEqualHand.add(t1);
+		nonEqualHand.add(t4);
+		nonEqualHand.add(t2);
+		nonEqualHand.add(t3);
+		
+		assertEquals(h.getHand(), nonEqualHand);
+		assertEquals(h2.getHand(), nonEqualHand);
+		*/
 	}
 	
 	public void testDisplayHand() {
