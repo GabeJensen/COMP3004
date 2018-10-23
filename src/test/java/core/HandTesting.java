@@ -348,4 +348,133 @@ public class HandTesting extends TestCase{
 	    
 	    assertEquals(1, h.getCount());
 	}
+	
+	public void testPlayHandMeld() {
+		ArrayList<ArrayList<Tile>> table = new ArrayList<ArrayList<Tile>>();
+	    ArrayList<Tile> meld1 = new ArrayList<Tile>();
+	    ArrayList<Tile> meld2 = new ArrayList<Tile>();
+	    ArrayList<Tile> remainingTiles = new ArrayList<Tile>();
+	    Hand h = new Hand();
+	    
+	    Tile t1 = new Tile("R", "3");
+	    Tile t2 = new Tile("G","3");
+	    Tile t3 = new Tile("B", "3");
+	    
+	    meld1.add(t1);
+	    meld1.add(t3);
+	    meld1.add(t2);
+	    h.addTile(t1);
+	    h.addTile(t2);
+	    h.addTile(t3);
+	    
+	    Tile t4 = new Tile("O", "4");
+	    Tile t5 = new Tile("O", "5");
+	    Tile t6 = new Tile("O", "6");
+	    Tile t7 = new Tile("O", "7");
+	    Tile t8 = new Tile("O", "8");
+	    
+	    meld2.add(t4);
+	    meld2.add(t5);
+	    meld2.add(t6);
+	    meld2.add(t7);
+	    meld2.add(t8); 
+	    h.addTile(t4);
+	    h.addTile(t5);
+	    h.addTile(t6);
+	    h.addTile(t7);
+	    h.addTile(t8);
+	            
+	    Tile t9 = new Tile("B", "2");
+	    Tile t10 = new Tile("G","6");
+	    Tile t11 = new Tile("O", "12");
+
+	    remainingTiles.add(t9);
+	    remainingTiles.add(t10);
+	    remainingTiles.add(t11);
+	    h.addTile(t9);
+	    h.addTile(t10);
+	    h.addTile(t11);
+
+	    //True argument means play the minimum amount of tiles to reach 30
+	    h.playHandMeld(table, true);
+	    
+	    ArrayList<Tile> firstPlayTiles = new ArrayList<Tile>();
+	    firstPlayTiles.add(t1);
+	    firstPlayTiles.add(t9);
+	    firstPlayTiles.add(t3);
+	    firstPlayTiles.add(t2);
+	    firstPlayTiles.add(t10);
+	    firstPlayTiles.add(t11);
+	    assertEquals(table.get(0), meld2);
+	    assertEquals(firstPlayTiles, h.getHand());
+	    
+	    assertEquals(6, h.getCount());
+	    
+	    //False argument means play what you have remaining
+	    h.playHandMeld(table, false);
+	    
+	    assertEquals(meld1, table.get(1));
+	    assertEquals(remainingTiles, h.getHand());
+	    assertEquals(3, h.getCount());
+	    
+	    Tile t12 = new Tile("B", "13");
+	    h.addTile(t12);
+	    h.playHandMeld(table, false);
+	    
+	    assertEquals(4, h.getCount());
+	}
+	
+	public void testPlayHandMeldMinimum() {
+		ArrayList<ArrayList<Tile>> table = new ArrayList<ArrayList<Tile>>();
+	    ArrayList<Tile> meld1 = new ArrayList<Tile>();
+	    ArrayList<Tile> meld2 = new ArrayList<Tile>();
+	    ArrayList<Tile> remainingTiles = new ArrayList<Tile>();
+	    Hand h = new Hand();
+	    
+	    Tile t1 = new Tile("R", "9");
+	    Tile t2 = new Tile("G","9");
+	    Tile t3 = new Tile("B", "9");
+	    Tile t4 = new Tile("R", "1");
+	    Tile t5 = new Tile("G","1");
+	    Tile t6 = new Tile("B", "1");
+	    Tile t7 = new Tile("O", "5");
+	    Tile t8 = new Tile("O", "6");
+	    Tile t9 = new Tile("O", "7");
+	    Tile t10 = new Tile("O", "8");
+	    Tile t11 = new Tile("O", "9");
+	   
+	    h.addTile(t1);
+	    h.addTile(t2);
+	    h.addTile(t3);
+	    h.addTile(t4);
+	    h.addTile(t5);
+	    h.addTile(t6);
+	    h.addTile(t7);
+	    h.addTile(t8);
+	    h.addTile(t9);
+	    h.addTile(t10);
+	    h.addTile(t11);
+	    
+	    meld1.add(t1);
+	    meld1.add(t3);
+	    meld1.add(t2);
+	    
+	    meld2.add(t4);
+	    meld2.add(t6);
+	    meld2.add(t5);
+	    
+	    remainingTiles.add(t7);
+	    remainingTiles.add(t8);
+	    remainingTiles.add(t9);
+	    remainingTiles.add(t10);
+	    remainingTiles.add(t11);
+	    
+	    h.playHandMeld(table, true);
+	    
+	    assertEquals(5, h.getCount());
+	    assertEquals(meld1, table.get(1));
+	    assertEquals(meld2, table.get(0));
+	    assertEquals(remainingTiles, h.getHand());
+	    
+	}
 }

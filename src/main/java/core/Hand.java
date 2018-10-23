@@ -203,6 +203,100 @@ public class Hand {
 		}
 	}
 	
+	public void playHandMeld(ArrayList<ArrayList<Tile>> tableTiles, boolean minimum) {
+		if(minimum) {
+			ArrayList<Integer> values = new ArrayList<Integer>();
+			int sum = 0;
+			//Gets the sum of all melds 
+			for(ArrayList<Tile> meld : handMelds) {
+				for(Tile tile : meld) {
+					sum += tile.getValue();
+				}
+				values.add(sum);
+				sum = 0;
+			}
+			
+			int min = Integer.MAX_VALUE - 1;
+			int value;
+			ArrayList<Integer> minIndex = new ArrayList<Integer>();
+			minIndex.add(-1);
+			ArrayList<Integer> sub30 = new ArrayList<Integer>();
+			ArrayList<Integer> sub30Index = new ArrayList<Integer>();
+			//Find the minimum amongst all meld values
+			for(int i = 0; i < values.size(); i++) {
+				value = values.get(i);
+				if(value >= 30) {
+					if (value < min) {
+						min = value;
+						minIndex.set(0, i);
+					}
+				} else {
+					sub30.add(value);
+					sub30Index.add(i);
+				}
+			}
+			
+			//Check the combinations of melds less than 30
+			//Reference: https://www.geeksforgeeks.org/finding-all-subsets-of-a-given-set-in-java/
+			ArrayList<ArrayList<Integer>> combinations = new ArrayList<ArrayList<Integer>>();
+			ArrayList<Integer> combo = new ArrayList<Integer>();
+			int sub30PowerSetSize = (int)Math.pow(2,sub30.size());
+			for(int i = 0; i < sub30PowerSetSize; i++) {
+	            for (int j = 0; j < sub30.size(); j++) {
+	            	 
+	                if ((i & (1 << j)) > 0) {
+	                	combo.add(j);
+	                	
+	                }
+
+	            }
+	            combinations.add(combo);
+	            combo = new ArrayList<Integer>();
+			}
+			for(ArrayList<Integer> comboIndex : combinations) {
+				sum = 0;
+				for(int index : comboIndex) {
+					sum += sub30.get(index);
+				}
+				if(sum >= 30 && sum < min) {
+					min = sum;
+					minIndex.clear();
+					for(int index : comboIndex) {
+						minIndex.add(sub30Index.get(index));
+					}
+				}
+			}
+			
+			ArrayList<ArrayList<Tile>> melds = new ArrayList<ArrayList<Tile>>();
+			ArrayList<Tile> meld;
+			for(int index : minIndex) {
+				meld = handMelds.get(index);
+				melds.add(meld);
+				tableTiles.add(meld);
+			}
+			
+			for(ArrayList<Tile> rmMeld : melds) {
+				for(Tile tile : rmMeld) {
+					removeTile(tile);
+				}
+			}
+			
+		} else {
+			//Remove all melds
+			for(ArrayList<Tile> meld : handMelds) {
+				tableTiles.add(meld);
+				for(Tile tile : meld) {
+					removeTile(tile);
+				}
+			}
+			
+			
+		}
+		
+		sortTiles();
+		determineHandMeldsAndTilesForTableMelds();
+	}
+	
 	public void playTableMeld(ArrayList<ArrayList<Tile>> tableTiles) {
 		for(int i = 0; i < tableTiles.size(); i++){
 	        // The first melds in the table will be prioritized this way (having tiles added to them if possible)
