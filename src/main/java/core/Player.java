@@ -44,6 +44,10 @@ public class Player implements Observer {
 		return name;
 	}
 	
+	public int getHandCount() {
+		return hand.getCount();
+	}
+	
 	public ArrayList<Tile> getTiles(){
 		return hand.getHand();
 	}

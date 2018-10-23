@@ -12,6 +12,8 @@ public class MainScreen extends Application {
 	
 	private Pane canvas;
 	private Scene scene;
+	TextArea console;
+	Button start;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -27,7 +29,7 @@ public class MainScreen extends Application {
 		this.canvas = canvas;
 		canvas.setId("pane");
 		
-		initCanvasElements(canvas);
+		initCanvasElements();
 		
 		Scene scene = new Scene(canvas, 1450, 900);
 		scene.getStylesheets().addAll(this.getClass().getResource("./style.css").toExternalForm());
@@ -45,9 +47,9 @@ public class MainScreen extends Application {
 		console.appendText(s + "\n");
 	}
 
-	private void initCanvasElements(Pane canvas) {
+	private void initCanvasElements() {
 		// Console (side text are)
-		TextArea console = new TextArea();
+		console = new TextArea();
 		console.setPrefHeight(900);
 		console.setPrefWidth(300);
 		console.relocate(1155,5);
@@ -63,7 +65,7 @@ public class MainScreen extends Application {
 		});
 		
 		// Start Button
-		Button start = new Button("Start Game");
+		start = new Button("Start Game");
 		start.relocate(1155/2, 900/2);
 		
 		start.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
