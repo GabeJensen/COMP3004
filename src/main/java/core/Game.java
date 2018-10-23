@@ -8,6 +8,7 @@ public class Game {
 	public Player p1;
 	public Player p2;
 	public Player p3;
+	private Deck deck;
 	
 	public Game() {
 		this.table = new Table();
@@ -26,8 +27,19 @@ public class Game {
 		 * */
 		
 		//Create deck
+		deck = new Deck();
+		deck.shuffleDeck();
+		
 		//Set tiles for users using deck
-		/* allUsers = {user, p1, p2, p3}
+		Player[] allPlayers = new Player[] {user, p1, p2, p3};
+		
+		for (Player player : allPlayers) {
+			for (int c = 0; c < 14; c++) {
+				player.addTile(deck.dealTile());
+			}
+		}
+		
+		/* 
 		 * while true
 		 * 	foreach(player in allUsers)
 		 * 		tiles = player.strat()
@@ -37,11 +49,5 @@ public class Game {
 		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
 		 * 		GUI.update()
 		 * 	*/
-	}
-	
-	public static void main(String args[]) {
-		Game game = new Game();
-		
-		game.playGame();
 	}
 }
