@@ -361,8 +361,8 @@ public class HandTesting extends TestCase{
 	    Tile t3 = new Tile("B", "3");
 	    
 	    meld1.add(t1);
-	    meld1.add(t2);
 	    meld1.add(t3);
+	    meld1.add(t2);
 	    h.addTile(t1);
 	    h.addTile(t2);
 	    h.addTile(t3);
@@ -398,17 +398,23 @@ public class HandTesting extends TestCase{
 	    //True argument means play the minimum amount of tiles to reach 30
 	    h.playHandMeld(table, true);
 	    
-	    ArrayList<Tile> firstPlayTiles = new ArrayList<Tile>(meld1);
+	    ArrayList<Tile> firstPlayTiles = new ArrayList<Tile>();
+	    firstPlayTiles.add(t1);
+	    firstPlayTiles.add(t9);
+	    firstPlayTiles.add(t3);
+	    firstPlayTiles.add(t2);
+	    firstPlayTiles.add(t10);
+	    firstPlayTiles.add(t11);
 	    assertEquals(table.get(0), meld2);
-	    assertEquals(h.getHand(), firstPlayTiles.addAll(remainingTiles));
+	    assertEquals(firstPlayTiles, h.getHand());
 	    
 	    assertEquals(6, h.getCount());
 	    
 	    //False argument means play what you have remaining
 	    h.playHandMeld(table, false);
 	    
-	    assertEquals(table.get(1), meld1);
-	    assertEquals(h.getHand(), remainingTiles);
+	    assertEquals(meld1, table.get(1));
+	    assertEquals(remainingTiles, h.getHand());
 	    assertEquals(3, h.getCount());
 	    
 	    Tile t12 = new Tile("B", "13");
@@ -450,12 +456,12 @@ public class HandTesting extends TestCase{
 	    h.addTile(t11);
 	    
 	    meld1.add(t1);
-	    meld1.add(t2);
 	    meld1.add(t3);
+	    meld1.add(t2);
 	    
 	    meld2.add(t4);
-	    meld2.add(t5);
 	    meld2.add(t6);
+	    meld2.add(t5);
 	    
 	    remainingTiles.add(t7);
 	    remainingTiles.add(t8);
@@ -466,8 +472,8 @@ public class HandTesting extends TestCase{
 	    h.playHandMeld(table, true);
 	    
 	    assertEquals(5, h.getCount());
-	    assertEquals(meld1, table.get(0));
-	    assertEquals(meld2, table.get(1));
+	    assertEquals(meld1, table.get(1));
+	    assertEquals(meld2, table.get(0));
 	    assertEquals(remainingTiles, h.getHand());
 	    
 	}
