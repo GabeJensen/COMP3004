@@ -121,26 +121,7 @@ public class MainScreen extends Application {
 		clearDisplayHand();
 		ArrayList<Tile> userHand = user.getTiles();
 		for (Tile userTile : userHand) {
-			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());
-//			ImageView iv = new ImageView();
-//			iv.setImage(tile);
-//			iv.setFitWidth(55);
-//			iv.setPreserveRatio(true);
-			
-//			iv.addEventFilter(MouseEvent.DRAG_DETECTED, ev -> {
-//				System.out.println("Drag Detected " + ev.toString());
-//				System.out.println("getX() - " + ev.getX());
-//				System.out.println("getY() - " + ev.getY());
-//				System.out.println("getZ() - " + ev.getZ());
-//				System.out.println("getSceneX() - " + ev.getSceneX());
-//				System.out.println("getSceneY() - " + ev.getSceneY());
-//				System.out.println("getScreenX() - " + ev.getScreenX());
-//				System.out.println("getScreenY() - " + ev.getScreenY());
-//				
-//			});
-			
-//			userTiles.getChildren().addAll(iv);
-			
+			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
 			DisplayTile dTile = new DisplayTile(tile);
 			userTiles.getChildren().addAll(dTile.iv);
 		}
