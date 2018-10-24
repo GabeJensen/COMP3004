@@ -126,6 +126,11 @@ public class MainScreen extends Application {
 			iv.setImage(tile);
 			iv.setFitWidth(55);
 			iv.setPreserveRatio(true);
+			
+			iv.addEventFilter(MouseEvent.DRAG_DETECTED, ev -> {
+				System.out.println(ev.toString());
+			});
+			
 			userTiles.getChildren().addAll(iv);
 		}
 	}
