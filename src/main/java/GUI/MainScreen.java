@@ -1,6 +1,7 @@
 package GUI;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -10,11 +11,14 @@ import core.Strat0;
 import core.Strat1;
 import core.Strat2;
 import core.Strat3;
+import core.Tile;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -100,6 +104,7 @@ public class MainScreen extends Application {
 			}
 		}
 		
+		updateDisplayHand();
 		/* 
 		 * while true
 		 * 	foreach(player in allUsers)
@@ -110,6 +115,23 @@ public class MainScreen extends Application {
 		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
 		 * 		GUI.update()
 		 * 	*/
+	}
+	
+	private void updateDisplayHand() {
+		clearDisplayHand();
+		ArrayList<Tile> userHand = user.getTiles();
+		for (Tile userTile : userHand) {
+			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());
+			ImageView iv = new ImageView();
+			iv.setImage(tile);
+			iv.setFitWidth(55);
+			iv.setPreserveRatio(true);
+			userTiles.getChildren().addAll(iv);
+		}
+	}
+	
+	private void clearDisplayHand() {
+		userTiles.getChildren().clear();
 	}
 	
 	private void initGameElements() {
@@ -136,10 +158,20 @@ public class MainScreen extends Application {
 		playGrid.setHgap(2);
 		playGrid.setPrefRows(8);
 		
+		end.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+			displayToConsole("DEBUG: to end turn");
+		});
+		
+		undo.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+			displayToConsole("This feature is unlockable via DLC.");
+		});
+		
 		canvas.setCenter(playGrid);
 		canvas.setTop(topCommands);
 		canvas.setBottom(userTiles);
 		//userTiles.getChildren().addAll();
+		
+		playGame();
 	}
 
 	private void initCanvasElements() {
