@@ -4,7 +4,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import core.Game;
+import core.Deck;
+import core.Player;
+import core.Strat0;
+import core.Strat1;
+import core.Strat2;
+import core.Strat3;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,9 +20,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import tableObserver.Table;
 
 public class MainScreen extends Application {
-	private Game game;
+	public Table table;
+	public Player user;
+	public Player p1;
+	public Player p2;
+	public Player p3;
+	private Deck deck;
+	
 	private BorderPane canvas;
 	private Scene scene;
 	private HashMap<String, String> imageLoc;
@@ -35,7 +47,12 @@ public class MainScreen extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		game = new Game();
+		// Init things here.
+		this.table = new Table();
+		this.user = new Player(table, "User", new Strat0());
+		this.p1 = new Player(table, "P1", new Strat1());
+		this.p2 = new Player(table, "P2", new Strat2());
+		this.p3 = new Player(table, "P3", new Strat3());
 		initWindow(primaryStage);
 	}
 
@@ -60,6 +77,39 @@ public class MainScreen extends Application {
 	private void displayToConsole(String s) {
 		TextArea console = (TextArea) scene.lookup("#console");
 		console.appendText(s + "\n");
+	}
+	
+	public void playGame() {
+		//Create and initialize GUI
+		/* Create buttons for:
+		 * - Starting the game
+		 * - Reseting table to start of turn
+		 * - Ending your turn (checking melds)
+		 * */
+		
+		//Create deck
+		deck = new Deck();
+		deck.shuffleDeck();
+		
+		//Set tiles for users using deck
+		Player[] allPlayers = new Player[] {user, p1, p2, p3};
+		
+		for (Player player : allPlayers) {
+			for (int c = 0; c < 14; c++) {
+				player.addTile(deck.dealTile());
+			}
+		}
+		
+		/* 
+		 * while true
+		 * 	foreach(player in allUsers)
+		 * 		tiles = player.strat()
+		 * 		table.addMeldsToTable(tiles)
+		 * 		if player tiles == 0
+		 * 			end game
+		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
+		 * 		GUI.update()
+		 * 	*/
 	}
 	
 	private void initGameElements() {
@@ -129,7 +179,6 @@ public class MainScreen extends Application {
 			displayToConsole("Started a game of Tile Rummy!");
 			canvas.setCenter(null);
 			initGameElements();
-			game.playGame();
 		});
 		
 		// Set elements on the BorderPane areas
