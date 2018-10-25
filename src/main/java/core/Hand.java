@@ -108,7 +108,7 @@ public class Hand {
 		}
 		
 		//find run melds
-		for (int tileValue = 1; tileValue <= 10; ++tileValue) {
+		for (int tileValue = 1; tileValue <= 11; ++tileValue) {
 			if (handTiles.containsKey(tileValue)) {
 				Iterator<Tile> iter = handTiles.get(tileValue).iterator();
 				
