@@ -76,11 +76,14 @@ public class Player implements Observer {
 			initial30 = true;
 		}
 		
+		ArrayList<ArrayList<Tile>> tempTiles = new ArrayList<ArrayList<Tile>>(tableTiles);
+		
+		//TODO: FIx this to empty table and readd tiles
 		if(!tableTiles.isEmpty()) {
-			for (ArrayList<Tile> tileList : tableTiles) {
-				((Table)table).addMeldToTable(tileList);
-				
+			for(int i = 0; i < tempTiles.size(); i++) {
+				((Table)table).addMeldToTable(tempTiles.get(i));
 			}
+
 		}
 		// Need to have some distinction for when the player is able to play cards or not, so that in Game.java, it will draw deck based on this function's return.
 		//Returning 0 means no melds played, 1 means cards were played

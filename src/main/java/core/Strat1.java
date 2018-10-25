@@ -17,107 +17,30 @@ public class Strat1 implements PlayerStrategy {
 		 * 		else
 		 * 			// player initial30 is false and the presented melds if any are not at least 30 value
 		 */
-		ArrayList<Tile> largestMeld = new ArrayList<Tile>();
-		List<ArrayList<Tile>> playerHand;
-		ArrayList<Tile> playerHandList;
-		playerHand = h.getHandMelds();
-		ArrayList<Tile> tableMelds = new ArrayList<>();
-		Hand tableHand = new Hand();
-		Boolean tableMeldUsedNothing = true;
+		ArrayList<ArrayList<Tile>> handMelds = new ArrayList<ArrayList<Tile>>(h.getHandMelds());
+		ArrayList<Tile> beforeTableTiles = new ArrayList<Tile>(h.getTilesForTableMelds());
+		int sum = 0;
 		
-		//If there are no melds possible then return 0
-		if(playerHand.isEmpty()) {
-			return 0;
+		for(ArrayList<Tile> meld : handMelds) {
+			for(Tile tile : meld) {
+				sum += tile.getValue();
+			}
 		}
-		//If this is the first play
 		if(!initialMeld) {
-			
-			//Loop is intended to go over every possible meld by getting the largest meld
-			//removing it from the hand and looking for the next largest meld until no more 
-			//melds can be made
-			while(!playerHand.isEmpty()) {
-				for(int i = 0; i < playerHand.size(); i++) {
-					//Checks for largest meld
-					if(largestMeld.isEmpty()) {
-						largestMeld = playerHand.get(i);
-					} else {
-						if(Meld.getValue(largestMeld) < Meld.getValue(playerHand.get(i))) {
-							largestMeld = playerHand.get(i);
-						}
-					}
-				}
-				
-				//Adds tile to table
-				tableTiles.add(largestMeld);
-				//Gets the exisiting hand of player
-				playerHandList = h.getHand();
-				
-				//Removes the meld tiles from the player's hand
-				for(int i = 0; i < largestMeld.size(); i++) {
-					h.removeTile(playerHandList.indexOf(largestMeld.get(i)));
-				}
-				
-				//Regenerates melds in player's hand
-				playerHand = h.getHandMelds();
-				//Resets largestMeld
-				largestMeld = new ArrayList<Tile>();
+			if(sum >= 30) {
+				h.playHandMeld((ArrayList)tableTiles, false);
+				return 1;
 			}
 		} else {
-			//For now this repeats what was done above
-			while(!playerHand.isEmpty()) {
-//				tableMeldUsedNothing = false;
-				for(int i = 0; i < playerHand.size(); i++) {
-					if(largestMeld.isEmpty()) {
-						largestMeld = playerHand.get(i);
-					} else {
-						if(Meld.getValue(largestMeld) < Meld.getValue(playerHand.get(i))) {
-							largestMeld = playerHand.get(i);
-						}
-					}
-				}
-				
-				tableTiles.add(largestMeld);
-				playerHandList = h.getHand();
-				
-				for(int i = 0; i < largestMeld.size(); i++) {
-					h.removeTile(playerHandList.indexOf(largestMeld.get(i)));
-				}
-				
-				playerHand = h.getHandMelds();
-				largestMeld = new ArrayList<Tile>();
+			h.playHandMeld((ArrayList)tableTiles, false);
+			h.playTableMeld((ArrayList)tableTiles);
+			if(h.getTilesForTableMelds().equals(beforeTableTiles)) {
+				return 0;
 			}
-			
-//			for(int j = 0; j < tableTiles.size(); j++) {
-//				tableMelds.addAll(h.getHand());
-//				tableMelds.addAll(tableTiles.get(j));
-//				for (Tile tile : tableMelds) {
-//					tableHand.addTile(tile);
-//				}
-//				playerHand = tableHand.getHandMelds();
-//				if(!playerHand.isEmpty()) {
-//					tableMeldUsedNothing = false;
-//					for(int i = 0; i < playerHand.size(); i++) {
-//						if(largestMeld.isEmpty()) {
-//							largestMeld = playerHand.get(i);
-//						} else {
-//							if(Meld.getValue(largestMeld) < Meld.getValue(playerHand.get(i))) {
-//								largestMeld = playerHand.get(i);
-//							}
-//						}
-//					}
-//					
-//					tableTiles.set(j, largestMeld);
-//				}
-//				
-//				tableHand = new Hand();
-//				tableMelds = new ArrayList<Tile>();
-//			}
-			
-//			if(tableMeldUsedNothing) {
-//				return 0;
-//			}
+			return 1;
 		}
 		
-		return 1;
+		return 0;
+		
 	}
 }
