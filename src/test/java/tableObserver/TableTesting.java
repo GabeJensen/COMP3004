@@ -106,4 +106,42 @@ public class TableTesting extends TestCase{
 			}
 		}
 	}
+	
+	public void testSetTable() {
+		Table table = new Table();
+		ArrayList<Tile> meld1 = new ArrayList<Tile>();
+		ArrayList<Tile> meld2 = new ArrayList<Tile>();
+		ArrayList<Tile> meld3 = new ArrayList<Tile>();
+		ArrayList<Tile> meld4 = new ArrayList<Tile>();
+		
+		meld1.add(new Tile("R", "6"));
+		meld1.add(new Tile("O", "6"));
+		meld1.add(new Tile("G", "6"));
+		
+		meld2.add(new Tile("B", "8"));
+		meld2.add(new Tile("B", "9"));
+		meld2.add(new Tile("B", "10"));
+		
+		meld3.add(new Tile("R", "12"));
+		meld3.add(new Tile("O", "12"));
+		meld3.add(new Tile("G", "12"));
+		meld3.add(new Tile("B", "12"));
+		
+		meld4.add(new Tile("O", "1"));
+		meld4.add(new Tile("O", "2"));
+		meld4.add(new Tile("O", "3"));
+		meld4.add(new Tile("O", "4"));
+		
+		table.addMeldToTable(meld1);
+		table.addMeldToTable(meld2);
+		table.addMeldToTable(meld3);
+		
+		assertEquals(meld3, table.set(2, meld4));
+		
+		ArrayList<ArrayList<Tile>> tableTiles = new ArrayList<ArrayList<Tile>>(table.getTable());
+		assertEquals(meld4,tableTiles.get(2));
+		
+		assertNull(table.set(5, meld3));
+		
+	}
 }
