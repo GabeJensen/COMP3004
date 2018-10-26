@@ -36,6 +36,13 @@ public class Table implements Subject {
 	public List<ArrayList<Tile>> getTable(){
 		return meldsOnTable;
 	}
+	
+	public ArrayList<Tile> set(int index, ArrayList<Tile> setMeld){
+		if(index >= meldsOnTable.size()) {
+			return null;
+		}
+		return meldsOnTable.set(index,setMeld);
+	}
 
 	public boolean addMeldToTable(ArrayList<Tile> meldToAdd) {
 		/**
