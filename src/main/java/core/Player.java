@@ -85,12 +85,12 @@ public class Player implements Observer {
 		//Since the AI never reduces the number of melds on the table
 		//The existing meld positions are looped through and set with the modified melds
 		for(int i = 0; i < tempTableSize; i++) {
-			((Table)table).set(i,tableTiles.get(i));
+			((Table)table).set(i,tempTableTiles.get(i));
 		}
 		
 		//If tableTiles is larger then the remaining melds are added onto the table
 		for(int i = tempTableSize; i < tempTableTilesSize; i++) {
-			((Table)table).addMeldToTable(tableTiles.get(i));
+			((Table)table).addMeldToTable(tempTableTiles.get(i));
 		}
 		
 
