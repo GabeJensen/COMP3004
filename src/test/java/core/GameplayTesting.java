@@ -101,7 +101,7 @@ public class GameplayTesting extends TestCase{
 		Tile[] meldOnTable3 = {new Tile("R", "8"), new Tile("B", "8"), new Tile("G", "8")};
 		Tile[] initialMeldTiles = {tile4, tile5, tile6, tile7};
 		Tile[] p2FirstTableMelding = {tile8, new Tile("B", "6"), new Tile("B", "7"), new Tile("B", "8")};
-		Tile[] p2SecondTableMelding = {new Tile("R", "8"), new Tile("B", "8"), new Tile("G", "8"), tile13};
+		Tile[] p2SecondTableMelding = {tile13, new Tile("R", "8"), new Tile("B", "8"), new Tile("G", "8")};
 		
 		ArrayList<Tile> firstMeldOnTable = new ArrayList<Tile>();
 		ArrayList<Tile> secondMeldOnTable = new ArrayList<Tile>();
@@ -141,7 +141,7 @@ public class GameplayTesting extends TestCase{
 		
 		//another player has played their initial meld > 30
 		table.addMeldToTable(firstMeldOnTable);
-		
+		table.notifyObservers();
 		//p2's turn, table is not empty, hand has meld > 30, play that meld
 		stratResult = p2.performStrategy();
 		assertEquals(1, stratResult);
@@ -154,7 +154,7 @@ public class GameplayTesting extends TestCase{
 		//other players played 2 additional melds
 		table.addMeldToTable(secondMeldOnTable);
 		table.addMeldToTable(thirdMeldOnTable);
-		
+		table.notifyObservers();
 		//p2's turn
 		stratResult = p2.performStrategy();
 		assertEquals(1, stratResult);
@@ -191,7 +191,7 @@ public class GameplayTesting extends TestCase{
 		Tile tile13 = new Tile("O", "4");
 		
 		Tile[] handTiles = {tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9, tile10, tile11, tile12};
-		Tile[] initialMeldTiles = {tile4, tile5, tile6, tile7};
+		Tile[] initialMeldTiles = {tile8, tile9, tile10, tile4, tile5, tile6, tile7};
 		Tile[] meld1 = {tile1, tile2, tile3};
 		Tile[] meld2 = {tile8, tile9, tile10};
 		Tile[] meld3 = {tile11, tile12, tile13};
@@ -231,7 +231,7 @@ public class GameplayTesting extends TestCase{
 		
 		//another player has played their initial meld > 30
 		table.addMeldToTable(meldOnTable1);
-		
+		table.notifyObservers();
 		//p2's turn, table is not empty, hand has meld > 30, play that meld
 		stratResult = p2.performStrategy();
 		assertEquals(1, stratResult);
@@ -248,8 +248,7 @@ public class GameplayTesting extends TestCase{
 		//check if performStrategy() play all of the melds in hand b/c it can win
 		meldsOnTheTable = table.getTable();
 		assertEquals(meldToPlay1, meldsOnTheTable.get(2)); //might need to loop through the arrays to assertEquals each tile
-		assertEquals(meldToPlay2, meldsOnTheTable.get(3)); //might need to loop through the arrays to assertEquals each tile
-		assertEquals(meldToPlay3, meldsOnTheTable.get(4)); //might need to loop through the arrays to assertEquals each tile
+		assertEquals(meldToPlay3, meldsOnTheTable.get(3)); //might need to loop through the arrays to assertEquals each tile
 	}
 	
 	public void testStrat2c() {
