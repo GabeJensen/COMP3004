@@ -19,6 +19,31 @@ public class Strat2 implements PlayerStrategy{
 		 *else
 		 *	play cards that require table melds 	
 		 * */
+		ArrayList<ArrayList<Tile>> handMelds = new ArrayList<ArrayList<Tile>>(h.getHandMelds());
+		ArrayList<Tile> beforeTableTiles = new ArrayList<Tile>(h.getTilesForTableMelds());
+		int sum = 0;
+		
+		for(ArrayList<Tile> meld : handMelds) {
+			for(Tile tile : meld) {
+				sum += tile.getValue();
+			}
+		}
+		if(!initialMeld) {
+			if(!tableTiles.isEmpty() && sum >= 30) {
+				h.playHandMeld((ArrayList)tableTiles, true);
+				return 1;
+			}
+			
+		} else {
+			if(beforeTableTiles.isEmpty()) {
+				h.playHandMeld((ArrayList)tableTiles, false);
+				return 1;
+			}
+			h.playTableMeld((ArrayList)tableTiles);
+			if(!h.getTilesForTableMelds().equals(beforeTableTiles)) {
+				return 1;
+			}
+		}
 		return 0;
 	}
 }
