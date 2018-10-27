@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import core.Deck;
+import core.Meld;
 import core.Player;
 import core.Strat0;
 import core.Strat1;
@@ -42,6 +43,7 @@ public class MainScreen extends Application {
 	private BorderPane canvas;
 	private Scene scene;
 	private HashMap<String, String> imageLoc;
+	private HashMap<ImageView, Tile> associatedHandTiles;
 	private TextArea console;
 	private Button start;
 	private Button end;
@@ -128,25 +130,28 @@ public class MainScreen extends Application {
 	private void updateDisplayHand() {
 		clearDisplayHand();
 		ArrayList<Tile> userHand = user.getTiles();
+		associatedHandTiles = new HashMap<ImageView, Tile>();
 		for (Tile userTile : userHand) {
 			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
 			DisplayTile dTile = new DisplayTile(tile, userTile);
 			dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 				if (dTile.isOrigin) {
 					// In original spot
-					dTile.setOriginCoordinates(ev.getSceneX(), ev.getSceneY());
+					//dTile.lastIndex = userTiles.getChildren().indexOf(ev.getSource());
+					//dTile.setOriginCoordinates(ev.getSceneX(), ev.getSceneY());
 					dTile.isOrigin = !dTile.isOrigin;
-					userTiles.getChildren().remove(dTile.iv);
-					meldArea.getChildren().addAll(dTile.iv);
+					//userTiles.getChildren().remove(dTile.iv);
+					meldArea.getChildren().add(dTile.iv);
 				}
 				else {
 					// Not in original spot, move it back there
-					meldArea.getChildren().remove(dTile.iv);
-					userTiles.getChildren().addAll(dTile.iv);
+					//meldArea.getChildren().remove(dTile.iv);
+					userTiles.getChildren().add(dTile.iv);
 					dTile.isOrigin = !dTile.isOrigin;
 				}
 			});
 			userTiles.getChildren().addAll(dTile.iv);
+			associatedHandTiles.put(dTile.iv, userTile);
 		}
 	}
 	
@@ -177,10 +182,20 @@ public class MainScreen extends Application {
 		meldArea.setPadding(new Insets(20,0,0,25));
 		playMeld = new Button("   Play Meld   ");
 		playMeld.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			// need to get all tiles dragged in this area and check if it is a meld
-			// however we consider them in an area to be grouped together
-			// Meld.checkValidity
-			displayToConsole("DEBUG: play meld if valid, otherwise invalid");
+			ArrayList<Tile> meldTiles = new ArrayList<Tile>();
+			// Start from 1, since that's always the Play Meld button.
+			for (int c = 1; c < meldArea.getChildren().size(); c++) {
+				meldTiles.add(associatedHandTiles.get(meldArea.getChildren().get(c)));
+			}
+			if (Meld.checkValidity(meldTiles)) {
+				// Valid meld
+				// move to table?
+			}
+			else {
+				// Invalid meld
+				displayToConsole("That meld is not valid.");
+			}
+			
 		});
 		
 		meldArea.getChildren().addAll(playMeld);

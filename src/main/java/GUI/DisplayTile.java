@@ -9,6 +9,7 @@ public class DisplayTile {
 	public ImageView iv;
 	public Tile tile;
 	public boolean isOrigin;
+	public int lastIndex;
 	private double lastX;
 	private double lastY;
 	
