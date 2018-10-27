@@ -2,6 +2,7 @@ package GUI;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,10 @@ import core.Strat2;
 import core.Strat3;
 import core.Tile;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -23,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tableObserver.Table;
 
@@ -41,8 +46,9 @@ public class MainScreen extends Application {
 	private Button start;
 	private Button end;
 	private Button undo;
+	private Button sort;
 	private Button playMeld;
-	private HBox meldArea;
+	private VBox meldArea;
 	private HBox userTiles;
 	private HBox topCommands;
 	private TilePane playGrid;
@@ -124,7 +130,22 @@ public class MainScreen extends Application {
 		ArrayList<Tile> userHand = user.getTiles();
 		for (Tile userTile : userHand) {
 			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
-			DisplayTile dTile = new DisplayTile(tile);
+			DisplayTile dTile = new DisplayTile(tile, userTile);
+			dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+				if (dTile.isOrigin) {
+					// In original spot
+					dTile.setOriginCoordinates(ev.getSceneX(), ev.getSceneY());
+					dTile.isOrigin = !dTile.isOrigin;
+					userTiles.getChildren().remove(dTile.iv);
+					meldArea.getChildren().addAll(dTile.iv);
+				}
+				else {
+					// Not in original spot, move it back there
+					meldArea.getChildren().remove(dTile.iv);
+					userTiles.getChildren().addAll(dTile.iv);
+					dTile.isOrigin = !dTile.isOrigin;
+				}
+			});
 			userTiles.getChildren().addAll(dTile.iv);
 		}
 	}
@@ -145,15 +166,16 @@ public class MainScreen extends Application {
 		topCommands.setSpacing(10);
 		end = new Button("End Turn");
 		undo = new Button("Undo Turn");
+		sort = new Button ("Sort Hand");
 		// Memento pattern. 
 		undo.setDisable(true);
 		// Remove the above button when undo is actually implemented.
-		topCommands.getChildren().addAll(end, undo);
+		topCommands.getChildren().addAll(end, undo, sort);
 		
 		// Left borderPane column for melds
-		meldArea = new HBox();
-		meldArea.setPadding(new Insets(20,0,0,5));
-		playMeld = new Button("Play Meld");
+		meldArea = new VBox();
+		meldArea.setPadding(new Insets(20,0,0,25));
+		playMeld = new Button("   Play Meld   ");
 		playMeld.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			// need to get all tiles dragged in this area and check if it is a meld
 			// however we consider them in an area to be grouped together
@@ -176,6 +198,12 @@ public class MainScreen extends Application {
 		
 		undo.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			displayToConsole("This feature is unlockable via DLC.");
+		});
+		
+		sort.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+			ObservableList<Node> uT = FXCollections.observableArrayList();
+			uT = userTiles.getChildren();
+			System.out.println(uT);
 		});
 		
 		meldArea.setPrefWidth(350);
