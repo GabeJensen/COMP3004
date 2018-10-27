@@ -41,6 +41,8 @@ public class MainScreen extends Application {
 	private Button start;
 	private Button end;
 	private Button undo;
+	private Button playMeld;
+	private HBox meldArea;
 	private HBox userTiles;
 	private HBox topCommands;
 	private TilePane playGrid;
@@ -148,6 +150,19 @@ public class MainScreen extends Application {
 		// Remove the above button when undo is actually implemented.
 		topCommands.getChildren().addAll(end, undo);
 		
+		// Left borderPane column for melds
+		meldArea = new HBox();
+		meldArea.setPadding(new Insets(20,0,0,5));
+		playMeld = new Button("Play Meld");
+		playMeld.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+			// need to get all tiles dragged in this area and check if it is a meld
+			// however we consider them in an area to be grouped together
+			// Meld.checkValidity
+			displayToConsole("DEBUG: play meld if valid, otherwise invalid");
+		});
+		
+		meldArea.getChildren().addAll(playMeld);
+		
 		// Grid in middle
 		playGrid = new TilePane();
 		playGrid.setPadding(new Insets(10, 2, 10, 2));
@@ -163,9 +178,12 @@ public class MainScreen extends Application {
 			displayToConsole("This feature is unlockable via DLC.");
 		});
 		
+		meldArea.setPrefWidth(350);
+		
 		canvas.setCenter(playGrid);
 		canvas.setTop(topCommands);
 		canvas.setBottom(userTiles);
+		canvas.setLeft(meldArea);
 		//userTiles.getChildren().addAll();
 		
 		playGame();
