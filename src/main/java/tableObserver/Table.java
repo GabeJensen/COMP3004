@@ -50,6 +50,7 @@ public class Table implements Subject {
 		 */
 		 if (Meld.checkValidity(meldToAdd)) {
 			 meldsOnTable.add(meldToAdd);
+			 notifyObservers();
 			 return true;
 		 }else {
 			 // tried to add an invalid meld to table
