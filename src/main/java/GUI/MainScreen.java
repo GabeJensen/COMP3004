@@ -27,6 +27,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -114,7 +115,35 @@ public class MainScreen extends Application {
 			}
 		}
 		
+		ArrayList<Tile> m = new ArrayList<Tile>();
+		m.add(new Tile("R", "6"));
+		m.add(new Tile("R", "7"));
+		m.add(new Tile("R", "8"));
+		ArrayList<Tile> m1 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m2 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m3 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m4 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m5 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m6 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m7 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m8 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m9 = new ArrayList<Tile>(m);
+		ArrayList<Tile> m0 = new ArrayList<Tile>(m);
+		
+		table.addMeldToTable(m);
+		table.addMeldToTable(m1);
+		table.addMeldToTable(m2);
+		table.addMeldToTable(m3);
+		table.addMeldToTable(m4);
+		table.addMeldToTable(m5);
+		table.addMeldToTable(m6);
+		table.addMeldToTable(m7);
+		table.addMeldToTable(m8);
+		table.addMeldToTable(m9);
+		table.addMeldToTable(m0);
+		
 		updateDisplayHand();
+		updateDisplayTable();
 		/* 
 		 * while true
 		 * 	foreach(player in allUsers)
@@ -125,6 +154,35 @@ public class MainScreen extends Application {
 		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
 		 * 		GUI.update()
 		 * 	*/
+	}
+	
+	private void updateDisplayTable() {
+		clearDisplayTable();
+		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) table.getTable();
+		for (ArrayList<Tile> meld : tableMelds) {
+			for (Tile meldTile : meld) {
+				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
+				DisplayTile dTile = new DisplayTile(tile, meldTile);
+				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+					// different method of putting the tile back onto the table is needed
+					/*if (dTile.isOrigin) {
+						dTile.isOrigin = !dTile.isOrigin;
+						meldArea.getChildren().add(dTile.iv);
+					}
+					else {
+						playGrid.getChildren().add(dTile.iv);
+						dTile.isOrigin = !dTile.isOrigin;
+					}*/
+				});
+				playGrid.getChildren().add(dTile.iv);
+			}
+			playGrid.getChildren().add(new Region());
+		}
+		// Also loop through the "temporary melds" as mentioned below in the playMeld's click handler
+	}
+	
+	private void clearDisplayTable () {
+		playGrid.getChildren().clear();
 	}
 	
 	private void updateDisplayHand() {
@@ -190,6 +248,7 @@ public class MainScreen extends Application {
 			if (Meld.checkValidity(meldTiles)) {
 				// Valid meld
 				// move to table?
+				// Add to a temporary potential meld container list that will be added to table when user ends turn
 			}
 			else {
 				// Invalid meld
