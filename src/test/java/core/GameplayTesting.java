@@ -183,9 +183,9 @@ public class GameplayTesting extends TestCase{
 		Tile tile5 = new Tile("B", "9");
 		Tile tile6 = new Tile("B", "10");
 		Tile tile7 = new Tile("B", "11");
-		Tile tile8 = new Tile("B", "5");
-		Tile tile9 = new Tile("B", "6");
-		Tile tile10 = new Tile("B", "7");
+		Tile tile8 = new Tile("G", "5");
+		Tile tile9 = new Tile("G", "6");
+		Tile tile10 = new Tile("G", "7");
 		Tile tile11 = new Tile("O", "2");
 		Tile tile12 = new Tile("O", "3");
 		Tile tile13 = new Tile("O", "4");
