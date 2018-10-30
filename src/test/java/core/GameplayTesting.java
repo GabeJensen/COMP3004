@@ -254,7 +254,7 @@ public class GameplayTesting extends TestCase{
 	public void testStrat2c() {
 		//This test is specifically for "if it can play all its tiles, it does" case (**using any table melds)
 		int stratResult;
-		Table table = new Table();
+		Game table = new Game();
 		Player player = new Player(table, "P2", new Strat2());
 		
 		Tile t1 = new Tile("R", "1");
