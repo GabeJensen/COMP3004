@@ -29,9 +29,14 @@ public class Strat2 implements PlayerStrategy{
 			}
 		}
 		if(!initialMeld) {
-			if(!tableTiles.isEmpty() && sum >= 30) {
-				h.playHandMeld((ArrayList)tableTiles, true);
-				return 1;
+			if(!tableTiles.isEmpty()) {
+				if(beforeTableTiles.isEmpty()) {
+					h.playHandMeld((ArrayList)tableTiles, false);
+					return 1;
+				} else if(sum >= 30) {
+					h.playHandMeld((ArrayList)tableTiles, true);
+					return 1;
+				}
 			}
 			
 		} else {
