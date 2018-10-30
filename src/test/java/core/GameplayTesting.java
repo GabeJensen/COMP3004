@@ -253,8 +253,51 @@ public class GameplayTesting extends TestCase{
 	
 	public void testStrat2c() {
 		//This test is specifically for "if it can play all its tiles, it does" case (**using any table melds)
-	
+		int stratResult;
+		Table table = new Table();
+		Player player = new Player(table, "P2", new Strat2());
 		
+		Tile t1 = new Tile("R", "1");
+		Tile t2 = new Tile("R", "2");
+		Tile t3 = new Tile("R", "3");
+		Tile t4 = new Tile("R", "4");
+		Tile t5 = new Tile("O", "9");
+		Tile t6 = new Tile("O", "5");
+		Tile t7 = new Tile("G", "10");
+		Tile t8 = new Tile("O", "10");
+		Tile t9 = new Tile("B", "10");
+		
+		Tile[] playerHand = {t1, t2, t3, t4, t5, t6, t7, t8, t9};
+		
+		for(Tile t : playerHand) {
+			player.addTile(t);
+		}
+		
+		ArrayList<Tile> meld1 = new ArrayList<Tile>();
+		
+		Tile m1 = new Tile("O", "6");
+		Tile m2 = new Tile("O", "7");
+		Tile m3 = new Tile("O", "8");
+		
+		Tile[] firstMeld = {m1, m2, m3};
+		
+		for(Tile tile : firstMeld) {
+			meld1.add(tile);			
+		}
+		
+		table.addMeldToTable(meld1);
+		
+		stratResult = player.performStrategy();
+		
+		assertEquals(1, stratResult);
+		
+		assertEquals(6, player.getHandCount());
+		
+		stratResult = player.performStrategy();
+		
+		assertEquals(1, stratResult);
+		
+		assertEquals(0, player.getHandCount());
 	}
 	
 	public void testStrat2d() {
@@ -309,5 +352,17 @@ public class GameplayTesting extends TestCase{
 		assertEquals(1, stratResult);
 		assertEquals(0, player.getHandCount());
 			
+	}
+	
+	public void testStrat3a() {
+		//Test play all tiles
+	}
+	
+	public void testStrat3b() {
+		//Test play table tiles when having 3 more tiles than another player
+	}
+	
+	public void testStrat3c() {
+		//Test play all tiles when they dont have 3 more tiles than any other player
 	}
 }
