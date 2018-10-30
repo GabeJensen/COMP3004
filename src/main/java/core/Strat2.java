@@ -40,12 +40,15 @@ public class Strat2 implements PlayerStrategy{
 			}
 			
 		} else {
-			if(beforeTableTiles.isEmpty()) {
-				h.playHandMeld((ArrayList)tableTiles, false);
-				return 1;
-			}
 			h.playTableMeld((ArrayList)tableTiles);
 			if(!h.getTilesForTableMelds().equals(beforeTableTiles)) {
+				if(h.getTilesForTableMelds().isEmpty()) {
+					h.playHandMeld((ArrayList)tableTiles, false);
+				}
+				return 1;
+			}
+			if(beforeTableTiles.isEmpty()) {
+				h.playHandMeld((ArrayList)tableTiles, false);
 				return 1;
 			}
 		}
