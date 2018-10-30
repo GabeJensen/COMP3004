@@ -183,15 +183,15 @@ public class GameplayTesting extends TestCase{
 		Tile tile5 = new Tile("B", "9");
 		Tile tile6 = new Tile("B", "10");
 		Tile tile7 = new Tile("B", "11");
-		Tile tile8 = new Tile("B", "5");
-		Tile tile9 = new Tile("B", "6");
-		Tile tile10 = new Tile("B", "7");
+		Tile tile8 = new Tile("G", "5");
+		Tile tile9 = new Tile("G", "6");
+		Tile tile10 = new Tile("G", "7");
 		Tile tile11 = new Tile("O", "2");
 		Tile tile12 = new Tile("O", "3");
 		Tile tile13 = new Tile("O", "4");
 		
 		Tile[] handTiles = {tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9, tile10, tile11, tile12};
-		Tile[] initialMeldTiles = {tile8, tile9, tile10, tile4, tile5, tile6, tile7};
+		Tile[] initialMeldTiles = {tile4, tile5, tile6, tile7};
 		Tile[] meld1 = {tile1, tile2, tile3};
 		Tile[] meld2 = {tile8, tile9, tile10};
 		Tile[] meld3 = {tile11, tile12, tile13};
@@ -238,7 +238,7 @@ public class GameplayTesting extends TestCase{
 		
 		//check if performStrategy() play the correct initial meld
 		List<ArrayList<Tile>> meldsOnTheTable = table.getTable();
-		assertEquals(initialMeldToPlay, meldsOnTheTable.get(1)); //might need to loop through the arrays to assertEquals each tile
+		assertEquals(initialMeldToPlay, meldsOnTheTable.get(4)); //might need to loop through the arrays to assertEquals each tile
 		
 		//nobody else plays any melds or adds tiles to table melds
 		//p2's turn
@@ -247,12 +247,67 @@ public class GameplayTesting extends TestCase{
 		
 		//check if performStrategy() play all of the melds in hand b/c it can win
 		meldsOnTheTable = table.getTable();
-		assertEquals(meldToPlay1, meldsOnTheTable.get(2)); //might need to loop through the arrays to assertEquals each tile
-		assertEquals(meldToPlay3, meldsOnTheTable.get(3)); //might need to loop through the arrays to assertEquals each tile
+		assertEquals(meldToPlay1, meldsOnTheTable.get(1)); //might need to loop through the arrays to assertEquals each tile
+		assertEquals(meldToPlay3, meldsOnTheTable.get(2)); //might need to loop through the arrays to assertEquals each tile
 	}
 	
 	public void testStrat2c() {
 		//This test is specifically for "if it can play all its tiles, it does" case (**using any table melds)
-		//TODO: implement this test scenario
+	
+		
+	}
+	
+	public void testStrat2d() {
+		//Tests playing entire hand at first possible chance
+		int stratResult;
+		Table table = new Table();
+		Player player = new Player(table, "P2", new Strat2());
+		
+		Tile t1 = new Tile("R", "9");
+		Tile t2 = new Tile("R", "10");
+		Tile t3 = new Tile("R", "11");
+		Tile t4 = new Tile("R", "12");
+		Tile t5 = new Tile("R", "4");
+		Tile t6 = new Tile("O", "5");
+		Tile t7 = new Tile("B", "5");
+		Tile t8 = new Tile("G", "5");
+		Tile t9 = new Tile("R", "5");
+		Tile t10 = new Tile("O", "13");
+		Tile t11 = new Tile("R", "6");
+		Tile t12 = new Tile("G", "13");
+		Tile t13 = new Tile("B", "13");
+		
+		Tile[] playerHand = {t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13};
+		
+		for(Tile t : playerHand) {
+			player.addTile(t);
+		}
+		
+		stratResult = player.performStrategy();
+		
+		assertEquals(0, stratResult);
+		
+		player.addTile(new Tile("R", "13"));
+		
+		ArrayList<Tile> meld1 = new ArrayList<Tile>();
+		
+		Tile m1 = new Tile("O", "8");
+		Tile m2 = new Tile("R", "8");
+		Tile m3 = new Tile("G", "8");
+		Tile m4 = new Tile("B", "8");
+		
+		Tile[] firstMeld = {m1, m2, m3, m4};
+		
+		for(Tile tile : firstMeld) {
+			meld1.add(tile);			
+		}
+		
+		table.addMeldToTable(meld1);
+		
+		stratResult = player.performStrategy();
+		
+		assertEquals(1, stratResult);
+		assertEquals(0, player.getHandCount());
+			
 	}
 }
