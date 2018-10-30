@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import tableObserver.Table;
+import observer.Game;
 
 public class GameplayTesting extends TestCase{
 	
 	public void testStrat1() {
-		Table table = new Table();
+		Game table = new Game();
 		Player p1 = new Player(table, "P1", new Strat1());
 
 		Tile tile1 = new Tile("R", "1");
@@ -78,7 +78,7 @@ public class GameplayTesting extends TestCase{
 	public void testStrat2a() {
 		//This test does not test for "if it can play all its tiles, it does" case
 		int stratResult;
-		Table table = new Table();
+		Game table = new Game();
 		Player p2 = new Player(table, "P2", new Strat2());
 
 		Tile tile1 = new Tile("R", "1");
@@ -173,7 +173,7 @@ public class GameplayTesting extends TestCase{
 	public void testStrat2b() {
 		//This test is specifically for "if it can play all its tiles, it does" case (**not using any table melds)
 		int stratResult;
-		Table table = new Table();
+		Game table = new Game();
 		Player p2 = new Player(table, "P2", new Strat2());
 		
 		Tile tile1 = new Tile("R", "1");
@@ -260,7 +260,7 @@ public class GameplayTesting extends TestCase{
 	public void testStrat2d() {
 		//Tests playing entire hand at first possible chance
 		int stratResult;
-		Table table = new Table();
+		Game table = new Game();
 		Player player = new Player(table, "P2", new Strat2());
 		
 		Tile t1 = new Tile("R", "9");

@@ -7,11 +7,11 @@ import java.util.List;
 
 import core.Tile;
 import junit.framework.TestCase;
-import tableObserver.Table;
+import observer.Game;
 
 public class TableTesting extends TestCase{
 	public void testAddingValidMelds() {
-		Table tb = new Table();
+		Game tb = new Game();
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
 		ArrayList<Tile> meld2 = new ArrayList<Tile>();
 		ArrayList<Tile> meld3 = new ArrayList<Tile>();
@@ -42,7 +42,7 @@ public class TableTesting extends TestCase{
 	}
 	
 	public void testAddingInvalidMelds() {
-		Table tb = new Table();
+		Game tb = new Game();
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
 		ArrayList<Tile> meld2 = new ArrayList<Tile>();
 		ArrayList<Tile> meld3 = new ArrayList<Tile>();
@@ -77,7 +77,7 @@ public class TableTesting extends TestCase{
 	}
 	
 	public void testGettingTable() {
-		Table tb = new Table();
+		Game tb = new Game();
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
 		ArrayList<Tile> meld2 = new ArrayList<Tile>();
 		
@@ -108,7 +108,7 @@ public class TableTesting extends TestCase{
 	}
 	
 	public void testSetTable() {
-		Table table = new Table();
+		Game table = new Game();
 		ArrayList<Tile> meld1 = new ArrayList<Tile>();
 		ArrayList<Tile> meld2 = new ArrayList<Tile>();
 		ArrayList<Tile> meld3 = new ArrayList<Tile>();
@@ -136,12 +136,12 @@ public class TableTesting extends TestCase{
 		table.addMeldToTable(meld2);
 		table.addMeldToTable(meld3);
 		
-		assertEquals(meld3, table.set(2, meld4));
+		assertEquals(meld3, table.setMeldOnTable(2, meld4));
 		
 		ArrayList<ArrayList<Tile>> tableTiles = new ArrayList<ArrayList<Tile>>(table.getTable());
 		assertEquals(meld4,tableTiles.get(2));
 		
-		assertNull(table.set(5, meld3));
+		assertNull(table.setMeldOnTable(5, meld3));
 		
 	}
 }

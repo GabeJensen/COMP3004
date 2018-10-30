@@ -1,4 +1,4 @@
-package tableObserver;
+package observer;
 
 public interface Subject {
 	public void registerObserver(Observer o);

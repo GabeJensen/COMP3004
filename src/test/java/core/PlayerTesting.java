@@ -5,12 +5,12 @@ import static org.junit.Assert.assertArrayEquals;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
-import tableObserver.Table;
+import observer.Game;
 
 public class PlayerTesting extends TestCase{
 	
 	public void testPlayerName() {
-		Table t = new Table();
+		Game t = new Game();
 		Player jim = new Player(t, "Jim", new Strat1());
 		Player noName = new Player(t, new Strat2());
 		
@@ -19,7 +19,7 @@ public class PlayerTesting extends TestCase{
 	}
 	
 	public void testAddTiles() {
-		Table t = new Table();
+		Game t = new Game();
 		Player player = new Player(t, new Strat0());
 		Tile tile1 = new Tile("R", "5");
 		Tile tile2 = new Tile("B", "5");

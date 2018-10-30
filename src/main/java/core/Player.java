@@ -3,41 +3,43 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-import tableObserver.Observer;
-import tableObserver.Subject;
-import tableObserver.Table;
+import observer.Observer;
+import observer.Subject;
+import observer.Game;
 
 public class Player implements Observer {
 	private Hand hand;
 	private String name;
 	private boolean initial30;
-	private Subject table;
+	private Subject game;
 	private List<ArrayList<Tile>> tableTiles;
 	private PlayerStrategy playerStrat;
 			
-	public Player(Subject t, PlayerStrategy s) {
+	public Player(Subject g, PlayerStrategy s) {
 		this.hand = new Hand();
 		this.name = "No Name";
 		this.initial30 = false;
 		this.playerStrat = s;
-		this.table = t;
-		this.table.registerObserver(this);
+		this.game = g;
+		this.game.registerObserver(this);
 		this.tableTiles = new ArrayList<ArrayList<Tile>>();
 	}
 	
-	public Player(Subject t, String name, PlayerStrategy s) {
+	public Player(Subject g, String name, PlayerStrategy s) {
 		this.hand = new Hand();
 		this.name = name;
 		this.initial30 = false;
 		this.playerStrat = s;
-		this.table = t;
-		this.table.registerObserver(this);
+		this.game = g;
+		this.game.registerObserver(this);
 		this.tableTiles = new ArrayList<ArrayList<Tile>>();
 	}
 	
-	public void update(List<ArrayList<Tile>> tableMelds) {
+	@Override
+	public void update() {
 		// Player will use this table in some way, either to play hand melds and/or table melds.
-		this.tableTiles = tableMelds;
+		Game g = (Game) game;
+		this.tableTiles = g.getTable();
 	}
 	
 	public String getName() {
@@ -77,7 +79,7 @@ public class Player implements Observer {
 		}
 		
 		ArrayList<ArrayList<Tile>> tempTableTiles = new ArrayList<ArrayList<Tile>>(tableTiles);
-		ArrayList<ArrayList<Tile>> tempTable = new ArrayList<ArrayList<Tile>>(((Table)table).getTable());
+		ArrayList<ArrayList<Tile>> tempTable = new ArrayList<ArrayList<Tile>>(((Game)game).getTable());
 		
 		int tempTableTilesSize = tempTableTiles.size();
 		int tempTableSize = tempTable.size();
@@ -85,12 +87,12 @@ public class Player implements Observer {
 		//Since the AI never reduces the number of melds on the table
 		//The existing meld positions are looped through and set with the modified melds
 		for(int i = 0; i < tempTableSize; i++) {
-			((Table)table).set(i,tempTableTiles.get(i));
+			((Game)game).setMeldOnTable(i,tempTableTiles.get(i));
 		}
 		
 		//If tableTiles is larger then the remaining melds are added onto the table
 		for(int i = tempTableSize; i < tempTableTilesSize; i++) {
-			((Table)table).addMeldToTable(tempTableTiles.get(i));
+			((Game)game).addMeldToTable(tempTableTiles.get(i));
 		}
 		
 

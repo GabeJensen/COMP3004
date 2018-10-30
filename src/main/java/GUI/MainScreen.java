@@ -31,10 +31,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import tableObserver.Table;
+import observer.Game;
 
 public class MainScreen extends Application {
-	public Table table;
+	public Game table;
 	public Player user;
 	public Player p1;
 	public Player p2;
@@ -63,7 +63,7 @@ public class MainScreen extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Init things here.
-		this.table = new Table();
+		this.table = new Game();
 		this.user = new Player(table, "User", new Strat0());
 		this.p1 = new Player(table, "P1", new Strat1());
 		this.p2 = new Player(table, "P2", new Strat2());
