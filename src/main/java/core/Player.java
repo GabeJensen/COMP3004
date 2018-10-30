@@ -14,6 +14,7 @@ public class Player implements Observer {
 	private Subject game;
 	private List<ArrayList<Tile>> tableTiles;
 	private PlayerStrategy playerStrat;
+	private int smallestHandSizeInGame;
 			
 	public Player(Subject g, PlayerStrategy s) {
 		this.hand = new Hand();
@@ -23,6 +24,7 @@ public class Player implements Observer {
 		this.game = g;
 		this.game.registerObserver(this);
 		this.tableTiles = new ArrayList<ArrayList<Tile>>();
+		this.smallestHandSizeInGame = 0;
 	}
 	
 	public Player(Subject g, String name, PlayerStrategy s) {
@@ -33,6 +35,7 @@ public class Player implements Observer {
 		this.game = g;
 		this.game.registerObserver(this);
 		this.tableTiles = new ArrayList<ArrayList<Tile>>();
+		this.smallestHandSizeInGame = 0;
 	}
 	
 	@Override
@@ -40,6 +43,7 @@ public class Player implements Observer {
 		// Player will use this table in some way, either to play hand melds and/or table melds.
 		Game g = (Game) game;
 		this.tableTiles = g.getTable();
+		this.smallestHandSizeInGame = g.getSmallestHandSize();
 	}
 	
 	public String getName() {
