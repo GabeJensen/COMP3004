@@ -44,12 +44,12 @@ public class MainScreen extends Application {
 	private BorderPane canvas;
 	private Scene scene;
 	private HashMap<String, String> imageLoc;
-	private HashMap<ImageView, Tile> associatedHandTiles;
+	private HashMap<ImageView, Tile> associatedTiles;
 	private TextArea console;
 	private Button start;
 	private Button end;
 	private Button undo;
-	private Button sort;
+	//private Button sort;
 	private Button playMeld;
 	private VBox meldArea;
 	private HBox userTiles;
@@ -142,6 +142,7 @@ public class MainScreen extends Application {
 		table.addMeldToTable(m9);
 		table.addMeldToTable(m0);
 		
+		associatedTiles.clear();		
 		updateDisplayHand();
 		updateDisplayTable();
 		/* 
@@ -164,17 +165,19 @@ public class MainScreen extends Application {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
 				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-					// different method of putting the tile back onto the table is needed
-					/*if (dTile.isOrigin) {
+					if (dTile.isOrigin) {
 						dTile.isOrigin = !dTile.isOrigin;
+						dTile.lastIndex = playGrid.getChildren().indexOf(ev.getSource());
+						playGrid.getChildren().set(dTile.lastIndex, new Region());
 						meldArea.getChildren().add(dTile.iv);
 					}
 					else {
-						playGrid.getChildren().add(dTile.iv);
+						playGrid.getChildren().set(dTile.lastIndex, dTile.iv);
 						dTile.isOrigin = !dTile.isOrigin;
-					}*/
+					}
 				});
 				playGrid.getChildren().add(dTile.iv);
+				associatedTiles.put(dTile.iv, meldTile);
 			}
 			playGrid.getChildren().add(new Region());
 		}
@@ -188,28 +191,27 @@ public class MainScreen extends Application {
 	private void updateDisplayHand() {
 		clearDisplayHand();
 		ArrayList<Tile> userHand = user.getTiles();
-		associatedHandTiles = new HashMap<ImageView, Tile>();
 		for (Tile userTile : userHand) {
 			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
 			DisplayTile dTile = new DisplayTile(tile, userTile);
 			dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 				if (dTile.isOrigin) {
 					// In original spot
-					//dTile.lastIndex = userTiles.getChildren().indexOf(ev.getSource());
+					dTile.lastIndex = userTiles.getChildren().indexOf(ev.getSource());
 					//dTile.setOriginCoordinates(ev.getSceneX(), ev.getSceneY());
 					dTile.isOrigin = !dTile.isOrigin;
-					//userTiles.getChildren().remove(dTile.iv);
+					userTiles.getChildren().set(dTile.lastIndex, new Region());
 					meldArea.getChildren().add(dTile.iv);
 				}
 				else {
 					// Not in original spot, move it back there
 					//meldArea.getChildren().remove(dTile.iv);
-					userTiles.getChildren().add(dTile.iv);
+					userTiles.getChildren().set(dTile.lastIndex, dTile.iv);
 					dTile.isOrigin = !dTile.isOrigin;
 				}
 			});
 			userTiles.getChildren().addAll(dTile.iv);
-			associatedHandTiles.put(dTile.iv, userTile);
+			associatedTiles.put(dTile.iv, userTile);
 		}
 	}
 	
@@ -229,11 +231,11 @@ public class MainScreen extends Application {
 		topCommands.setSpacing(10);
 		end = new Button("End Turn");
 		undo = new Button("Undo Turn");
-		sort = new Button ("Sort Hand");
+		//sort = new Button ("Sort Hand");
 		// Memento pattern. 
 		undo.setDisable(true);
 		// Remove the above button when undo is actually implemented.
-		topCommands.getChildren().addAll(end, undo, sort);
+		topCommands.getChildren().addAll(end, undo);
 		
 		// Left borderPane column for melds
 		meldArea = new VBox();
@@ -243,9 +245,10 @@ public class MainScreen extends Application {
 			ArrayList<Tile> meldTiles = new ArrayList<Tile>();
 			// Start from 1, since that's always the Play Meld button.
 			for (int c = 1; c < meldArea.getChildren().size(); c++) {
-				meldTiles.add(associatedHandTiles.get(meldArea.getChildren().get(c)));
+				meldTiles.add(associatedTiles.get(meldArea.getChildren().get(c)));
 			}
 			if (Meld.checkValidity(meldTiles)) {
+				displayToConsole("debug: valid meld");
 				// Valid meld
 				// move to table?
 				// Add to a temporary potential meld container list that will be added to table when user ends turn
@@ -274,11 +277,11 @@ public class MainScreen extends Application {
 			displayToConsole("This feature is unlockable via DLC.");
 		});
 		
-		sort.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+		/*sort.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			ObservableList<Node> uT = FXCollections.observableArrayList();
 			uT = userTiles.getChildren();
 			System.out.println(uT);
-		});
+		});*/
 		
 		meldArea.setPrefWidth(350);
 		
@@ -313,7 +316,7 @@ public class MainScreen extends Application {
 		File tileLoc = new File(tileResources);
 		File[] tileImages = tileLoc.listFiles();
 		imageLoc = new HashMap<String, String>();
-		
+		associatedTiles = new HashMap<ImageView, Tile>();
 		for (int i = 0; i < tileImages.length; i++) {
 			String fileName = tileImages[i].getName();
 			String[] imgInf = fileName.split(Pattern.quote("."));
