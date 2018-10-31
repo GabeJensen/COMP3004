@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import core.Deck;
@@ -31,7 +32,7 @@ import javafx.stage.Stage;
 import observer.Game;
 
 public class MainScreen extends Application {
-	public Game table;
+	public Game game;
 	public Player user;
 	public Player p1;
 	public Player p2;
@@ -53,6 +54,7 @@ public class MainScreen extends Application {
 	private TilePane playGrid;
 	
 	private ArrayList<ArrayList<Tile>> currentTurnMelds;
+	private ArrayList<Tile> currentTurnUserUsedTiles;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -61,11 +63,11 @@ public class MainScreen extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Init things here.
-		this.table = new Game();
-		this.user = new Player(table, "User", new Strat0());
-		this.p1 = new Player(table, "P1", new Strat1());
-		this.p2 = new Player(table, "P2", new Strat2());
-		this.p3 = new Player(table, "P3", new Strat3());
+		this.game = new Game();
+		this.user = new Player(game, "User", new Strat0());
+		this.p1 = new Player(game, "P1", new Strat1());
+		this.p2 = new Player(game, "P2", new Strat2());
+		this.p3 = new Player(game, "P3", new Strat3());
 		initWindow(primaryStage);
 	}
 
@@ -92,6 +94,7 @@ public class MainScreen extends Application {
 		
 		// Init the user's temporary display meld array
 		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+		currentTurnUserUsedTiles = new ArrayList<Tile>();
 		
 		// temp - for testing only
 		ArrayList<Tile> m = new ArrayList<Tile>();
@@ -103,7 +106,20 @@ public class MainScreen extends Application {
 		m.add(new Tile("R", "11"));
 		m.add(new Tile("R", "12"));
 		m.add(new Tile("R", "13"));
-		table.addMeldToTable(m);
+		game.addMeldToTable(m);
+		/*m.add(new Tile("O", "3"));
+		m.add(new Tile("O", "4"));
+		m.add(new Tile("O", "5"));
+		m.add(new Tile("O", "6"));
+		m.add(new Tile("O", "7"));
+		m.add(new Tile("O", "8"));
+		m.add(new Tile("O", "9"));*/
+		
+		//ArrayList<Tile> m = new ArrayList<Tile>(m);
+		//ArrayList<Tile> m2 = new ArrayList<Tile>(m);
+		game.addMeldToTable(m);
+		//table.addMeldToTable(m1);
+		//table.addMeldToTable(m2);
 	
 		// move these 3 lines into the game loop
 		associatedTiles.clear();		
@@ -254,7 +270,54 @@ public class MainScreen extends Application {
 		
 		endButton = new Button("End Turn");
 		endButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			displayToConsole("DEBUG: to end turn");
+			//TODO: make sure that the tiles on the table is valid before continuing (Note: currentTurnMelds are in the GUI table) (complete)
+			boolean validPlayGrid = checkPlayGrid();
+			
+			if (validPlayGrid) {
+				List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
+				
+				//generate the new table for Game
+				ArrayList<Tile> meld = new ArrayList<Tile>();
+				for (int i = 0; i < playGrid.getChildren().size(); ++i) {
+					//hit blank space, add to newTable if size != 0
+					if (playGrid.getChildren().get(i) instanceof Region) {
+						if (meld.size() == 0) {
+							continue;
+						} else {
+							newTable.add(meld);
+							meld = new ArrayList<Tile>();
+						}
+					}else if (playGrid.getChildren().get(i) instanceof ImageView) {
+						//add tile to meld
+						ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
+						meld.add(associatedTiles.get(tileIV));
+					}
+				}
+				
+				//TODO: each tile, make an indication that these are the recently changed tiles for the next player
+//				for (int i = 0; i < currentTurnMelds.size(); ++i) {
+//					ArrayList<Tile> turnMeld = currentTurnMelds.get(i);
+//	
+//					for (int j = 0; j < turnMeld.size(); ++j) {
+//						continue
+//					}
+//				}
+				
+				//remove the user used tiles from user hand
+				for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
+					user.removeTile(currentTurnUserUsedTiles.get(i));
+				}
+
+				game.setTable(newTable);
+				updateDisplayTable();
+				updateDisplayHand();
+			} else {
+				//TODO: reset play grid when it's invalid? (e.g., play grid has an invalid meld like R6, R7)
+				displayToConsole("DEBUG: play grid is invalid");
+			}
+			
+			currentTurnMelds.clear();
+			currentTurnUserUsedTiles.clear();
 		});
 		
 		undoButton = new Button("Undo Turn");
@@ -279,18 +342,18 @@ public class MainScreen extends Application {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
-				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-					if (dTile.isOrigin) {
-						dTile.isOrigin = !dTile.isOrigin;
-						dTile.lastIndex = playGrid.getChildren().indexOf(ev.getSource());
-						playGrid.getChildren().set(dTile.lastIndex, new Region());
-						playMeldBox.getChildren().add(dTile.iv);
-					}
-					else {
-						playGrid.getChildren().set(dTile.lastIndex, dTile.iv);
-						dTile.isOrigin = !dTile.isOrigin;
-					}
-				});
+//				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+//					if (dTile.isOrigin) {
+//						dTile.isOrigin = !dTile.isOrigin;
+//						dTile.lastIndex = playGrid.getChildren().indexOf(ev.getSource());
+//						playGrid.getChildren().set(dTile.lastIndex, new Region());
+//						playMeldBox.getChildren().add(dTile.iv);
+//					}
+//					else {
+//						playGrid.getChildren().set(dTile.lastIndex, dTile.iv);
+//						dTile.isOrigin = !dTile.isOrigin;
+//					}
+//				});
 				playGrid.getChildren().add(dTile.iv);
 				associatedTiles.put(dTile.iv, meldTile);
 			}
@@ -300,7 +363,7 @@ public class MainScreen extends Application {
 	
 	private void updateDisplayTable() {
 		clearDisplayTable();
-		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) table.getTable();
+		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) game.getTable();
 		for (ArrayList<Tile> meld : tableMelds) {
 			for (Tile meldTile : meld) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
@@ -342,12 +405,14 @@ public class MainScreen extends Application {
 					dTile.isOrigin = !dTile.isOrigin;
 					userTilesBox.getChildren().set(dTile.lastIndex, new Region());
 					playMeldBox.getChildren().add(dTile.iv);
+					currentTurnUserUsedTiles.add(dTile.tile);
 				}
 				else {
 					// Not in original spot, move it back there
 					//playMeldBox.getChildren().remove(dTile.iv);
 					userTilesBox.getChildren().set(dTile.lastIndex, dTile.iv);
 					dTile.isOrigin = !dTile.isOrigin;
+					currentTurnUserUsedTiles.remove(dTile.tile);
 				}
 			});
 			userTilesBox.getChildren().addAll(dTile.iv);
@@ -357,5 +422,29 @@ public class MainScreen extends Application {
 	
 	private void clearDisplayHand() {
 		userTilesBox.getChildren().clear();
+	}
+	
+	private boolean checkPlayGrid() {
+		ArrayList<Tile> checkMeld = new ArrayList<Tile>();
+		for (int i = 0; i < playGrid.getChildren().size(); ++i) {
+			//hit a blank space
+			if (playGrid.getChildren().get(i) instanceof Region) {
+				//haven't added tiles to checkMeld or valid meld
+				if (checkMeld.size() == 0 || Meld.checkValidity(checkMeld)) {
+					checkMeld.clear();
+					continue;
+				} else {
+					//invalid meld
+					return false;
+				}
+			}else if (playGrid.getChildren().get(i) instanceof ImageView) {
+				//add tile to checkMeld
+				ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
+				checkMeld.add(associatedTiles.get(tileIV));
+			}
+		}
+		
+		//play grid all good
+		return true;
 	}
 }

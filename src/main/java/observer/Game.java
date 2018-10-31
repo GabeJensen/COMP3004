@@ -89,4 +89,9 @@ public class Game implements Subject {
 			 return false;
 		 }
 	}
+
+	public void setTable(List<ArrayList<Tile>> newTable) {
+		this.table = newTable;
+		notifyObservers();
+	}
 }

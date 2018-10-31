@@ -105,4 +105,8 @@ public class Player implements Observer {
 	public void addTile(Tile tile) {
 		hand.addTile(tile);
 	}
+	
+	public Tile removeTile(Tile remove) {
+		return hand.removeTile(remove);
+	}
 }
