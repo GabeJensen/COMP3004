@@ -24,7 +24,6 @@ public class Game implements Subject {
 		this.p3 = p3;
 	}
 	
-	@Deprecated
 	public Game() {
 		this.observers = new ArrayList<Observer>();
 		this.table = new ArrayList<ArrayList<Tile>>();
@@ -46,6 +45,13 @@ public class Game implements Subject {
 			Observer obsvr = (Observer)observers.get(i);
 			obsvr.update();
 		}
+	}
+	
+	public void setPlayers(Player user, Player p1, Player p2, Player p3) {
+		this.user = user;
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
 	}
 	
 	public List<ArrayList<Tile>> getTable(){
