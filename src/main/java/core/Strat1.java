@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Strat1 implements PlayerStrategy {
-	public int strat(Hand h, boolean initialMeld, List<ArrayList<Tile>> tableTiles) {
+	public int strat(Hand h, boolean initialMeld, List<ArrayList<Tile>> tableTiles, int min) {
 		// Strategy 1.
 		// Aggressively/hastily plays everything when possible.
 		/*
@@ -34,7 +34,7 @@ public class Strat1 implements PlayerStrategy {
 		} else {
 			h.playHandMeld((ArrayList)tableTiles, false);
 			h.playTableMeld((ArrayList)tableTiles);
-			if(h.getTilesForTableMelds().equals(beforeTableTiles)) {
+			if(h.getTilesForTableMelds().equals(beforeTableTiles) && h.getHandMelds().equals(handMelds)) {
 				return 0;
 			}
 			return 1;
