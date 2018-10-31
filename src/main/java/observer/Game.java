@@ -24,7 +24,6 @@ public class Game implements Subject {
 		this.p3 = p3;
 	}
 	
-	@Deprecated
 	public Game() {
 		this.observers = new ArrayList<Observer>();
 		this.table = new ArrayList<ArrayList<Tile>>();
@@ -48,6 +47,13 @@ public class Game implements Subject {
 		}
 	}
 	
+	public void setPlayers(Player user, Player p1, Player p2, Player p3) {
+		this.user = user;
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+	}
+	
 	public List<ArrayList<Tile>> getTable(){
 		return table;
 	}
@@ -55,7 +61,7 @@ public class Game implements Subject {
 	public int getSmallestHandSize() {
 		// returns the smallest hand size in the game
 		if (user == null || p1 == null || p2 == null || p3 == null) {
-			return 0;
+			return -1;
 		} else {
 			return Math.min(user.getHandCount(), Math.min(p1.getHandCount(), Math.min(p2.getHandCount(), p3.getHandCount())));
 		}
