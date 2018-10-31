@@ -61,7 +61,7 @@ public class Game implements Subject {
 	public int getSmallestHandSize() {
 		// returns the smallest hand size in the game
 		if (user == null || p1 == null || p2 == null || p3 == null) {
-			return 0;
+			return -1;
 		} else {
 			return Math.min(user.getHandCount(), Math.min(p1.getHandCount(), Math.min(p2.getHandCount(), p3.getHandCount())));
 		}
