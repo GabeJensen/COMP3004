@@ -15,10 +15,7 @@ import core.Strat2;
 import core.Strat3;
 import core.Tile;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -55,6 +52,8 @@ public class MainScreen extends Application {
 	private HBox userTiles;
 	private HBox topCommands;
 	private TilePane playGrid;
+	
+	private ArrayList<ArrayList<Tile>> currentTurnMelds;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -115,33 +114,34 @@ public class MainScreen extends Application {
 			}
 		}
 		
+		// Init the user's temporary display meld array
+		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+		
+		// temp
 		ArrayList<Tile> m = new ArrayList<Tile>();
 		m.add(new Tile("R", "6"));
 		m.add(new Tile("R", "7"));
 		m.add(new Tile("R", "8"));
-		ArrayList<Tile> m1 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m2 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m3 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m4 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m5 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m6 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m7 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m8 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m9 = new ArrayList<Tile>(m);
-		ArrayList<Tile> m0 = new ArrayList<Tile>(m);
+		m.add(new Tile("R", "9"));
+		m.add(new Tile("R", "10"));
+		m.add(new Tile("R", "11"));
+		m.add(new Tile("R", "12"));
+		m.add(new Tile("R", "13"));
+		/*m.add(new Tile("O", "3"));
+		m.add(new Tile("O", "4"));
+		m.add(new Tile("O", "5"));
+		m.add(new Tile("O", "6"));
+		m.add(new Tile("O", "7"));
+		m.add(new Tile("O", "8"));
+		m.add(new Tile("O", "9"));*/
 		
+		//ArrayList<Tile> m = new ArrayList<Tile>(m);
+		//ArrayList<Tile> m2 = new ArrayList<Tile>(m);
 		table.addMeldToTable(m);
-		table.addMeldToTable(m1);
-		table.addMeldToTable(m2);
-		table.addMeldToTable(m3);
-		table.addMeldToTable(m4);
-		table.addMeldToTable(m5);
-		table.addMeldToTable(m6);
-		table.addMeldToTable(m7);
-		table.addMeldToTable(m8);
-		table.addMeldToTable(m9);
-		table.addMeldToTable(m0);
-		
+		//table.addMeldToTable(m1);
+		//table.addMeldToTable(m2);
+
+		// move these 3 lines into the game loop
 		associatedTiles.clear();		
 		updateDisplayHand();
 		updateDisplayTable();
@@ -248,10 +248,8 @@ public class MainScreen extends Application {
 				meldTiles.add(associatedTiles.get(meldArea.getChildren().get(c)));
 			}
 			if (Meld.checkValidity(meldTiles)) {
-				displayToConsole("debug: valid meld");
-				// Valid meld
-				// move to table?
-				// Add to a temporary potential meld container list that will be added to table when user ends turn
+				currentTurnMelds.add(meldTiles);
+				meldTiles.clear();
 			}
 			else {
 				// Invalid meld
