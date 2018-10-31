@@ -61,7 +61,7 @@ public class Player implements Observer {
 	public int performStrategy() {
 		int returnValue;
 		
-		returnValue = playerStrat.strat(hand, initial30, tableTiles);
+		returnValue = playerStrat.strat(hand, initial30, tableTiles, smallestHandSizeInGame);
 		
 		if(returnValue != 0 && !initial30) {
 			initial30 = true;
