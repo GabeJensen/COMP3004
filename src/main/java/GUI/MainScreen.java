@@ -46,7 +46,6 @@ public class MainScreen extends Application {
 	private Button startButton;
 	private Button endButton;
 	private Button undoButton;
-	//private Button sortButton;
 	private Button playMeldButton;
 	private VBox playMeldBox;
 	private HBox userTilesBox;
@@ -94,7 +93,7 @@ public class MainScreen extends Application {
 		// Init the user's temporary display meld array
 		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
 		
-		// temp
+		// temp - for testing only
 		ArrayList<Tile> m = new ArrayList<Tile>();
 		m.add(new Tile("R", "6"));
 		m.add(new Tile("R", "7"));
@@ -104,19 +103,7 @@ public class MainScreen extends Application {
 		m.add(new Tile("R", "11"));
 		m.add(new Tile("R", "12"));
 		m.add(new Tile("R", "13"));
-		/*m.add(new Tile("O", "3"));
-		m.add(new Tile("O", "4"));
-		m.add(new Tile("O", "5"));
-		m.add(new Tile("O", "6"));
-		m.add(new Tile("O", "7"));
-		m.add(new Tile("O", "8"));
-		m.add(new Tile("O", "9"));*/
-		
-		//ArrayList<Tile> m = new ArrayList<Tile>(m);
-		//ArrayList<Tile> m2 = new ArrayList<Tile>(m);
 		table.addMeldToTable(m);
-		//table.addMeldToTable(m1);
-		//table.addMeldToTable(m2);
 	
 		// move these 3 lines into the game loop
 		associatedTiles.clear();		
@@ -192,12 +179,6 @@ public class MainScreen extends Application {
 		playGrid.setVgap(5);
 		playGrid.setHgap(2);
 		playGrid.setPrefRows(8);
-
-		/*sort.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			ObservableList<Node> uT = FXCollections.observableArrayList();
-			uT = userTilesBox.getChildren();
-			System.out.println(uT);
-		});*/
 		
 		playMeldBox.setPrefWidth(350);
 		
@@ -251,8 +232,10 @@ public class MainScreen extends Application {
 				meldTiles.add(associatedTiles.get(playMeldBox.getChildren().get(c)));
 			}
 			if (Meld.checkValidity(meldTiles)) {
+				// Valid meld. Accept and put into the currentTurnMelds
 				currentTurnMelds.add(meldTiles);
-				meldTiles.clear();
+				playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
+				updateTempMelds();
 			}
 			else {
 				// Invalid meld
@@ -291,6 +274,30 @@ public class MainScreen extends Application {
 		console.appendText(s + "\n");
 	}
 	
+	private void updateTempMelds() {
+		for (int x = currentTurnMelds.size() - 1; x < currentTurnMelds.size(); x++) {
+			for (Tile meldTile : currentTurnMelds.get(x)) {
+				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
+				DisplayTile dTile = new DisplayTile(tile, meldTile);
+				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+					if (dTile.isOrigin) {
+						dTile.isOrigin = !dTile.isOrigin;
+						dTile.lastIndex = playGrid.getChildren().indexOf(ev.getSource());
+						playGrid.getChildren().set(dTile.lastIndex, new Region());
+						playMeldBox.getChildren().add(dTile.iv);
+					}
+					else {
+						playGrid.getChildren().set(dTile.lastIndex, dTile.iv);
+						dTile.isOrigin = !dTile.isOrigin;
+					}
+				});
+				playGrid.getChildren().add(dTile.iv);
+				associatedTiles.put(dTile.iv, meldTile);
+			}
+			playGrid.getChildren().add(new Region());
+		}
+	}
+	
 	private void updateDisplayTable() {
 		clearDisplayTable();
 		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) table.getTable();
@@ -315,7 +322,6 @@ public class MainScreen extends Application {
 			}
 			playGrid.getChildren().add(new Region());
 		}
-		// Also loop through the "temporary melds" as mentioned below in the playMeld's click handler
 	}
 	
 	private void clearDisplayTable () {
