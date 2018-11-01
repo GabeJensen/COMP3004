@@ -55,7 +55,6 @@ public class MainScreen extends Application {
 	private HBox userTilesBox;
 	private HBox topCommandsBox;
 	private TilePane playGrid;
-	
 	private ArrayList<ArrayList<Tile>> currentTurnMelds;
 	private ArrayList<Tile> currentTurnUserUsedTiles;
 	
@@ -87,7 +86,7 @@ public class MainScreen extends Application {
 		deck.shuffleDeck();
 		
 		//Set tiles for users using deck
-		Player[] allPlayers = new Player[] {user, p1, p2, p3};
+		Player[] allPlayers = {user, p1, p2, p3};
 		
 		for (Player player : allPlayers) {
 			for (int c = 0; c < 14; c++) {
@@ -99,35 +98,8 @@ public class MainScreen extends Application {
 		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
 		currentTurnUserUsedTiles = new ArrayList<Tile>();
 		
-		// temp - for testing only
-		ArrayList<Tile> m = new ArrayList<Tile>();
-		m.add(new Tile("R", "6"));
-		m.add(new Tile("R", "7"));
-		m.add(new Tile("R", "8"));
-		m.add(new Tile("R", "9"));
-		m.add(new Tile("R", "10"));
-		m.add(new Tile("R", "11"));
-		m.add(new Tile("R", "12"));
-		m.add(new Tile("R", "13"));
-		game.addMeldToTable(m);
-		/*m.add(new Tile("O", "3"));
-		m.add(new Tile("O", "4"));
-		m.add(new Tile("O", "5"));
-		m.add(new Tile("O", "6"));
-		m.add(new Tile("O", "7"));
-		m.add(new Tile("O", "8"));
-		m.add(new Tile("O", "9"));*/
-		
-		//ArrayList<Tile> m = new ArrayList<Tile>(m);
-		//ArrayList<Tile> m2 = new ArrayList<Tile>(m);
-		game.addMeldToTable(m);
-		//table.addMeldToTable(m1);
-		//table.addMeldToTable(m2);
-	
-		// move these 3 lines into the game loop
-		associatedTiles.clear();		
-		updateDisplayHand();
-		updateDisplayTable();
+
+
 		/* 
 		 * while true
 		 * 	foreach(player in allUsers)
@@ -138,6 +110,27 @@ public class MainScreen extends Application {
 		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
 		 * 		GUI.update()
 		 * 	*/
+		updateDisplayHand();
+		updateDisplayTable();
+	}
+	
+	private void gameLoop() {
+		Player[] nonHumanPlayers = {p1, p2, p3};
+		int turnValue;
+		for (Player p : nonHumanPlayers) {
+			associatedTiles.clear();		
+			updateDisplayHand();
+			updateDisplayTable();
+			displayToConsole("debug: player is playing");
+			turnValue = p.performStrategy();
+			if (turnValue == 0) {
+				p.addTile(deck.dealTile());
+				continue;
+			}
+			else if (turnValue == 1) {
+				continue;
+			}
+		}
 	}
 
 	private void initWindow(Stage primaryStage) {
@@ -225,7 +218,6 @@ public class MainScreen extends Application {
 		consoleTextArea.setPrefWidth(300);
 		//console.relocate(1155,5);
 		consoleTextArea.setEditable(false);
-		consoleTextArea.setMouseTransparent(true);
 		consoleTextArea.setFocusTraversable(false);
 		consoleTextArea.setWrapText(true);
 		consoleTextArea.setId("console");
@@ -314,22 +306,25 @@ public class MainScreen extends Application {
 //						continue
 //					}
 //				}
-				
+								
 				//remove the user used tiles from user hand
 				for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
 					user.removeTile(currentTurnUserUsedTiles.get(i));
 				}
-
 				game.setTable(newTable);
-				updateDisplayTable();
-				updateDisplayHand();
 			} else {
 				//TODO: reset play grid when it's invalid? (e.g., play grid has an invalid meld like R6, R7)
 				displayToConsole("DEBUG: play grid is invalid");
 			}
 			
+			// If the user didn't play anything this turn.
+			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
+				user.addTile(deck.dealTile());
+			}
+			
 			currentTurnMelds.clear();
 			currentTurnUserUsedTiles.clear();
+			gameLoop();
 		});
 		
 		undoButton = new Button("Undo Turn");
@@ -345,8 +340,7 @@ public class MainScreen extends Application {
 	}
 
 	private void displayToConsole(String s) {
-		TextArea console = (TextArea) scene.lookup("#console");
-		console.appendText(s + "\n");
+		consoleTextArea.appendText(s + "\n");
 	}
 	
 	private void updateTempMelds() {
