@@ -200,6 +200,7 @@ public class MainScreen extends Application {
 		playGrid.setHgap(6);
 		playGrid.setPrefRows(8);
 		playGrid.getStyleClass().addAll("pane");
+		canvas.setMargin(playGrid, new Insets(0, 28, 8, 0));
 		
 		playMeldBox.setPrefWidth(350);
 		
