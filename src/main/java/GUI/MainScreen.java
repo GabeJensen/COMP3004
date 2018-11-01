@@ -191,10 +191,11 @@ public class MainScreen extends Application {
 		
 		// Grid in middle
 		playGrid = new TilePane();
-		playGrid.setPadding(new Insets(10, 2, 10, 2));
-		playGrid.setVgap(5);
-		playGrid.setHgap(2);
+		playGrid.setPadding(new Insets(5, 2, 10, 4));
+		playGrid.setVgap(9);
+		playGrid.setHgap(6);
 		playGrid.setPrefRows(8);
+		playGrid.getStyleClass().addAll("pane");
 		
 		playMeldBox.setPrefWidth(350);
 		

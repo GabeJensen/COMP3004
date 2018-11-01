@@ -3,3 +3,11 @@
 	-fx-background-repeat: stretch;   
 	-fx-background-position: center center;
 }
+
+/*Reference: https://stackoverflow.com/questions/28870460/how-to-create-a-background-grid*/
+.pane {
+	-fx-background-color: #D3D3D333,
+        linear-gradient(from 0.5px 0px to 23.5px 0px, repeat, black 5%, transparent 5%),
+        linear-gradient(from 0px 0.5px to 0px 29.5px, repeat, black 5%, transparent 5%);
+	
+}
