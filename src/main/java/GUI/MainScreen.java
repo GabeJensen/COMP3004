@@ -70,6 +70,7 @@ public class MainScreen extends Application {
 		this.p1 = new Player(game, "P1", new Strat1());
 		this.p2 = new Player(game, "P2", new Strat2());
 		this.p3 = new Player(game, "P3", new Strat3());
+		game.setPlayers(user, p1, p2, p3);
 		initWindow(primaryStage);
 	}
 
