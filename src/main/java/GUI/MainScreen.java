@@ -1,6 +1,7 @@
 package GUI;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import observer.Game;
 
@@ -38,7 +41,7 @@ public class MainScreen extends Application {
 	public Player p2;
 	public Player p3;
 	private Deck deck;
-	
+	private static MediaPlayer m;
 	private BorderPane canvas;
 	private Scene scene;
 	private HashMap<String, String> imageLoc;
@@ -169,12 +172,20 @@ public class MainScreen extends Application {
 		startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			displayToConsole("Started a game of Tile Rummy!");
 			canvas.setCenter(null);
+			music();
 			initGameElements();
 		});
 		
 		// Set elements on the BorderPane areas
 		canvas.setRight(consoleTextArea);
 		canvas.setCenter(startButton);
+	}
+	
+	private void music() {
+		Media media = new Media(Paths.get("src/main/resources/b.mp3").toUri().toString());
+		m = new MediaPlayer(media);
+		m.setCycleCount(MediaPlayer.INDEFINITE);
+		m.play();
 	}
 
 	private void initGameElements() {
