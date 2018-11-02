@@ -261,7 +261,7 @@ public class MainScreen extends Application {
 			}
 			else {
 				// Invalid meld
-				displayToConsole("That meld is not valid.");
+				displayToConsole("That meld is not valid!");
 			}
 			
 		});
@@ -276,52 +276,86 @@ public class MainScreen extends Application {
 		
 		endButton = new Button("End Turn");
 		endButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			//TODO: make sure that the tiles on the table is valid before continuing (Note: currentTurnMelds are in the GUI table) (complete)
-			boolean validPlayGrid = checkPlayGrid();
-			
-			if (validPlayGrid) {
-				List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
-				
-				//generate the new table for Game
-				ArrayList<Tile> meld = new ArrayList<Tile>();
-				for (int i = 0; i < playGrid.getChildren().size(); ++i) {
-					//hit blank space, add to newTable if size != 0
-					if (playGrid.getChildren().get(i) instanceof Region) {
-						if (meld.size() == 0) {
-							continue;
-						} else {
-							newTable.add(meld);
-							meld = new ArrayList<Tile>();
-						}
-					}else if (playGrid.getChildren().get(i) instanceof ImageView) {
-						//add tile to meld
-						ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
-						meld.add(associatedTiles.get(tileIV));
-					}
-				}
-				
-				//TODO: each tile, make an indication that these are the recently changed tiles for the next player
-//				for (int i = 0; i < currentTurnMelds.size(); ++i) {
-//					ArrayList<Tile> turnMeld = currentTurnMelds.get(i);
-//	
-//					for (int j = 0; j < turnMeld.size(); ++j) {
-//						continue
-//					}
-//				}
-								
-				//remove the user used tiles from user hand
-				for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
-					user.removeTile(currentTurnUserUsedTiles.get(i));
-				}
-				game.setTable(newTable);
-			} else {
-				//TODO: reset play grid when it's invalid? (e.g., play grid has an invalid meld like R6, R7)
-				displayToConsole("DEBUG: play grid is invalid");
-			}
 			
 			// If the user didn't play anything this turn.
 			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
-				user.addTile(deck.dealTile());
+				Tile draw = deck.dealTile();
+				displayToConsole("User draws " + draw.toString() + "!");
+				user.addTile(draw);
+			}
+			else {
+				// If the user has not played their initial 30 meld yet
+				if (!user.getInit30Flag()){
+					// No table tiles allowed to be played until the initial 30 meld(s)
+					int tileCount = 0;
+					for (ArrayList<Tile> meld : currentTurnMelds) {
+						for (@SuppressWarnings("unused") Tile t : meld) {
+							tileCount++;
+						}
+					}
+					// If the tile count of hand melds is the same as the count of total tiles used, it means that only hand melds were played
+					if (tileCount == currentTurnUserUsedTiles.size()) {
+						// User has to play HAND melds that add up to 30 or more and nothing else
+						int handMeldSum = 0;
+						for (ArrayList<Tile> meld : currentTurnMelds) {
+							handMeldSum += Meld.getValue(meld);
+						}
+						if (handMeldSum < 30) {
+							displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
+							return;
+						}
+						else {
+							user.playedInit30();
+						}
+					}
+					else {
+						displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
+						return;
+					}
+				}
+				//else if (user.getInit30Flag()) {
+					// They have played their 30 meld. It is a regular turn from then on.
+				//}
+				if (checkPlayGrid()) {
+					List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
+					
+					//generate the new table for Game
+					ArrayList<Tile> meld = new ArrayList<Tile>();
+					for (int i = 0; i < playGrid.getChildren().size(); ++i) {
+						//hit blank space, add to newTable if size != 0
+						if (playGrid.getChildren().get(i) instanceof Region) {
+							if (meld.size() == 0) {
+								continue;
+							} else {
+								newTable.add(meld);
+								meld = new ArrayList<Tile>();
+							}
+						}else if (playGrid.getChildren().get(i) instanceof ImageView) {
+							//add tile to meld
+							ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
+							meld.add(associatedTiles.get(tileIV));
+						}
+					}
+					
+					//TODO: each tile, make an indication that these are the recently changed tiles for the next player
+	//				for (int i = 0; i < currentTurnMelds.size(); ++i) {
+	//					ArrayList<Tile> turnMeld = currentTurnMelds.get(i);
+	//	
+	//					for (int j = 0; j < turnMeld.size(); ++j) {
+	//						continue
+	//					}
+	//				}
+									
+					//remove the user used tiles from user hand
+					for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
+						user.removeTile(currentTurnUserUsedTiles.get(i));
+					}
+					game.setTable(newTable);
+				} 
+				else {
+					displayToConsole("The table has some invalid melds!");
+					return;
+				}
 			}
 			
 			currentTurnMelds.clear();
