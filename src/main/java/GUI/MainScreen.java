@@ -376,6 +376,8 @@ public class MainScreen extends Application {
 			game.setTable(originator.getState().getTable());
 			user.setTiles(originator.getState().getHand());
 			
+			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
+			
 			currentTurnMelds = new ArrayList<ArrayList<Tile>>();
 			currentTurnUserUsedTiles = new ArrayList<Tile>();
 			
