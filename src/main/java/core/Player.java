@@ -58,6 +58,10 @@ public class Player implements Observer {
 		return hand.getHand();
 	}
 	
+	public void setTiles(ArrayList<Tile> newHand) {
+		this.hand.setHand(newHand);
+	}
+	
 	public int performStrategy() {
 		int returnValue;
 		

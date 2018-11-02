@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import core.Caretaker;
 import core.Deck;
 import core.Meld;
+import core.Originator;
 import core.Player;
 import core.Strat0;
 import core.Strat1;
@@ -43,6 +45,8 @@ public class MainScreen extends Application {
 	public Player p2;
 	public Player p3;
 	private Deck deck;
+	private Originator originator;
+	private Caretaker caretaker;
 	private static MediaPlayer m;
 	private BorderPane canvas;
 	private Scene scene;
@@ -71,6 +75,8 @@ public class MainScreen extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// Init things here.
 		this.game = new Game();
+		this.originator = new Originator();
+		this.caretaker = new Caretaker();
 		this.user = new Player(game, "User", new Strat0());
 		this.p1 = new Player(game, "P1", new Strat1());
 		this.p2 = new Player(game, "P2", new Strat2());
@@ -105,39 +111,33 @@ public class MainScreen extends Application {
 		currentTurnUserUsedTiles = new ArrayList<Tile>();
 		tablePlayTiles = new ArrayList<Tile>();
 		
-
-
-		/* 
-		 * while true
-		 * 	foreach(player in allUsers)
-		 * 		tiles = player.strat()
-		 * 		table.addMeldsToTable(tiles)
-		 * 		if player tiles == 0
-		 * 			end game
-		 * 		table.notifyObservers()  <- I'm not sure if this is done here or in the player class
-		 * 		GUI.update()
-		 * 	*/
 		updateDisplayHand();
 		updateDisplayTable();
+		
+		// Start of the game. We still want to be able to revert here.
+		originator.setState(game.getTable(), user.getTiles());
+		caretaker.set(originator.saveMemento());
 	}
 	
 	private void gameLoop() {
 		Player[] nonHumanPlayers = {p1, p2, p3};
 		int turnValue;
 		for (Player p : nonHumanPlayers) {
-			associatedTiles.clear();		
-			updateDisplayHand();
-			updateDisplayTable();
-			displayToConsole("debug: player is playing");
 			turnValue = p.performStrategy();
 			if (turnValue == 0) {
 				p.addTile(deck.dealTile());
 				continue;
 			}
 			else if (turnValue == 1) {
+				displayToConsole(p.getName() + " played this turn.");
 				continue;
 			}
 		}
+		associatedTiles.clear();		
+		updateDisplayHand();
+		updateDisplayTable();
+		originator.setState(game.getTable(), user.getTiles());
+		caretaker.set(originator.saveMemento());
 	}
 
 	private void initWindow(Stage primaryStage) {
@@ -371,13 +371,18 @@ public class MainScreen extends Application {
 		
 		undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			displayToConsole("This feature is unlockable via DLC.");
+			originator.restoreMemento(caretaker.get());
+			
+			game.setTable(originator.getState().getTable());
+			user.setTiles(originator.getState().getHand());
+			
+			currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+			currentTurnUserUsedTiles = new ArrayList<Tile>();
+			
+			updateDisplayHand();
+			updateDisplayTable();
 		});
 		
-		//sortButton = new Button ("Sort Hand");
-		// Memento pattern. 
-		undoButton.setDisable(true);
-		// Remove the above button when undo is actually implemented.
 		topCommandsBox.getChildren().addAll(endButton, undoButton);
 	}
 
