@@ -21,6 +21,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +32,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import observer.Game;
 
@@ -57,6 +59,9 @@ public class MainScreen extends Application {
 	private TilePane playGrid;
 	private ArrayList<ArrayList<Tile>> currentTurnMelds;
 	private ArrayList<Tile> currentTurnUserUsedTiles;
+	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
+	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
+	private ArrayList<Tile> tablePlayTiles;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -98,6 +103,7 @@ public class MainScreen extends Application {
 		// Init the user's temporary display meld array
 		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
 		currentTurnUserUsedTiles = new ArrayList<Tile>();
+		tablePlayTiles = new ArrayList<Tile>();
 		
 
 
@@ -384,6 +390,11 @@ public class MainScreen extends Application {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
+				if(tablePlayTiles.contains(dTile.tile)) {
+					dTile.iv.setEffect(tablePlayEffect);
+				} else {
+					dTile.iv.setEffect(handPlayEffect);					
+				}
 //				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 //					if (dTile.isOrigin) {
 //						dTile.isOrigin = !dTile.isOrigin;
@@ -401,6 +412,7 @@ public class MainScreen extends Application {
 			}
 			playGrid.getChildren().add(new Region());
 		}
+		tablePlayTiles.clear();
 	}
 	
 	private void updateDisplayTable() {
@@ -410,12 +422,14 @@ public class MainScreen extends Application {
 			for (Tile meldTile : meld) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
+//				dTile.iv.setEffect(handPlayEffect);
 				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 					if (dTile.isOrigin) {
 						dTile.isOrigin = !dTile.isOrigin;
 						dTile.lastIndex = playGrid.getChildren().indexOf(ev.getSource());
 						playGrid.getChildren().set(dTile.lastIndex, new Region());
 						playMeldBox.getChildren().add(dTile.iv);
+						tablePlayTiles.add(dTile.tile);
 					}
 					else {
 						playGrid.getChildren().set(dTile.lastIndex, dTile.iv);
