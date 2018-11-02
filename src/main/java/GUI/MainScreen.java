@@ -143,9 +143,7 @@ public class MainScreen extends Application {
 				displayToConsole(p.getName() + " played this turn.");
 				if(p.getHandCount() == 0) {
 					displayToConsole(p.getName() + " wins!!!!!!");
-					endButton.setDisable(true);
-					playMeldButton.setDisable(true);
-					undoButton.setDisable(true);
+					disableButtons();
 					break;
 				}
 				continue;
@@ -395,9 +393,7 @@ public class MainScreen extends Application {
 			currentTurnUserUsedTiles.clear();
 			if(user.getHandCount() == 0) {
 				displayToConsole("You win!");
-				endButton.setDisable(true);
-				playMeldButton.setDisable(true);
-				undoButton.setDisable(true);
+				disableButtons();
 			} else {
 				gameLoop();				
 			}
@@ -543,5 +539,11 @@ public class MainScreen extends Application {
 		
 		//play grid all good
 		return true;
+	}
+	
+	private void disableButtons() {
+		endButton.setDisable(true);
+		playMeldButton.setDisable(true);
+		undoButton.setDisable(true);
 	}
 }
