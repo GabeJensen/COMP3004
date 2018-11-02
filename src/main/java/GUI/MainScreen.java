@@ -66,6 +66,7 @@ public class MainScreen extends Application {
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
 	private ArrayList<Tile> tablePlayTiles;
+	private boolean emptyDeck;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -96,6 +97,7 @@ public class MainScreen extends Application {
 		//Create deck
 		deck = new Deck();
 		deck.shuffleDeck();
+		emptyDeck = false;
 		
 		//Set tiles for users using deck
 		Player[] allPlayers = {user, p1, p2, p3};
@@ -122,14 +124,30 @@ public class MainScreen extends Application {
 	private void gameLoop() {
 		Player[] nonHumanPlayers = {p1, p2, p3};
 		int turnValue;
+		Tile tile;
 		for (Player p : nonHumanPlayers) {
 			turnValue = p.performStrategy();
 			if (turnValue == 0) {
-				p.addTile(deck.dealTile());
+				if(!emptyDeck) {
+					tile = deck.dealTile();
+					if(tile == null) {
+						emptyDeck = true;
+						displayToConsole("Deck is empty");
+					} else {
+						p.addTile(tile);											
+					}
+				}
 				continue;
 			}
 			else if (turnValue == 1) {
 				displayToConsole(p.getName() + " played this turn.");
+				if(p.getHandCount() == 0) {
+					displayToConsole(p.getName() + " wins!!!!!!");
+					endButton.setDisable(true);
+					playMeldButton.setDisable(true);
+					undoButton.setDisable(true);
+					break;
+				}
 				continue;
 			}
 		}
@@ -285,9 +303,18 @@ public class MainScreen extends Application {
 			
 			// If the user didn't play anything this turn.
 			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
-				Tile draw = deck.dealTile();
-				displayToConsole("User draws " + draw.toString() + "!");
-				user.addTile(draw);
+				if(!emptyDeck) {
+					Tile draw = deck.dealTile();
+					if(draw == null) {
+						emptyDeck = true;
+						displayToConsole("Can't draw deck is empty");
+					} else {
+						displayToConsole("User draws " + draw.toString() + "!");
+						user.addTile(draw);						
+					}
+				} else {
+					displayToConsole("Can't draw deck is empty");
+				}
 			}
 			else {
 				// If the user has not played their initial 30 meld yet
@@ -366,7 +393,14 @@ public class MainScreen extends Application {
 			
 			currentTurnMelds.clear();
 			currentTurnUserUsedTiles.clear();
-			gameLoop();
+			if(user.getHandCount() == 0) {
+				displayToConsole("You win!");
+				endButton.setDisable(true);
+				playMeldButton.setDisable(true);
+				undoButton.setDisable(true);
+			} else {
+				gameLoop();				
+			}
 		});
 		
 		undoButton = new Button("Undo Turn");
