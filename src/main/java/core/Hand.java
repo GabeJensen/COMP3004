@@ -22,6 +22,10 @@ public class Hand {
 		return hand;
 	}
 	
+	public void setHand(ArrayList<Tile> newHand) {
+		this.hand = newHand;
+	}
+	
 	public List<ArrayList<Tile>> getHandMelds(){
 		return handMelds;
 	}
