@@ -132,7 +132,7 @@ public class MainScreen extends Application {
 					tile = deck.dealTile();
 					if(tile == null) {
 						emptyDeck = true;
-						displayToConsole("Deck is empty");
+						displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
 					} else {
 						p.addTile(tile);											
 					}
@@ -142,7 +142,7 @@ public class MainScreen extends Application {
 			else if (turnValue == 1) {
 				displayToConsole(p.getName() + " played this turn.");
 				if(p.getHandCount() == 0) {
-					displayToConsole(p.getName() + " wins!!!!!!");
+					displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
 					disableButtons();
 					break;
 				}
@@ -305,13 +305,13 @@ public class MainScreen extends Application {
 					Tile draw = deck.dealTile();
 					if(draw == null) {
 						emptyDeck = true;
-						displayToConsole("Can't draw deck is empty");
+						displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 					} else {
 						displayToConsole("User draws " + draw.toString() + "!");
 						user.addTile(draw);						
 					}
 				} else {
-					displayToConsole("Can't draw deck is empty");
+					displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 				}
 			}
 			else {
@@ -367,15 +367,6 @@ public class MainScreen extends Application {
 							meld.add(associatedTiles.get(tileIV));
 						}
 					}
-					
-					//TODO: each tile, make an indication that these are the recently changed tiles for the next player
-	//				for (int i = 0; i < currentTurnMelds.size(); ++i) {
-	//					ArrayList<Tile> turnMeld = currentTurnMelds.get(i);
-	//	
-	//					for (int j = 0; j < turnMeld.size(); ++j) {
-	//						continue
-	//					}
-	//				}
 									
 					//remove the user used tiles from user hand
 					for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
@@ -392,7 +383,7 @@ public class MainScreen extends Application {
 			currentTurnMelds.clear();
 			currentTurnUserUsedTiles.clear();
 			if(user.getHandCount() == 0) {
-				displayToConsole("You win!");
+				displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
 				disableButtons();
 			} else {
 				gameLoop();				
