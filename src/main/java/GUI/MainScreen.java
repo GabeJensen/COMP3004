@@ -137,7 +137,7 @@ public class MainScreen extends Application {
 						displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
 					} else {
 						p.addTile(tile);
-						displayToConsole(p.getName() + " draws a tile!");
+						displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
 					}
 				} else {
 					displayToConsole(p.getName() + " can't draw because the deck is empty!");
@@ -145,7 +145,7 @@ public class MainScreen extends Application {
 				continue;
 			}
 			else if (turnValue == 1) {
-				displayToConsole(p.getName() + " played this turn.");
+				displayToConsole(p.getName() + " played this turn!");
 				if(p.getHandCount() == 0) {
 					displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
 					disableButtons();
