@@ -71,7 +71,6 @@ public class HandTesting extends TestCase{
 		/*
 		 * This cannot be asserted if the for loop just prints.
 		 */
-		print("testDisplayHand start");
 		Hand h = new Hand();
 		Tile t1 = new Tile("R", "6");
 		Tile t2 = new Tile("O","7");
@@ -87,8 +86,7 @@ public class HandTesting extends TestCase{
 		h.addTile(t5);
 		h.addTile(t6);
 		
-		h.displayHand();
-		print("testDisplayHand end");
+		assertEquals("[R6, B2, B8, G9, O7, O12]", h.displayHand());
 	}
 	
 	public void testGetHandMelds() {
