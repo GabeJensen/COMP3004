@@ -34,10 +34,19 @@ public class Hand {
 		return tilesForTableMelds;
 	}
 	
-	public void displayHand() {
+	public String displayHand() {
+		StringBuilder sb = new StringBuilder(35);
+		sb.append("[");
 		for (int i = 0; i < hand.size(); i++) {
-			System.out.println(hand.get(i).toString());
+			if (i == (hand.size() - 1)) {
+				sb.append(hand.get(i).toString());
+			}
+			else {
+				sb.append(hand.get(i).toString() + ", ");
+			}
 		}
+		sb.append("]");
+		return sb.toString();
 	}
 	
 	public int getCount() {

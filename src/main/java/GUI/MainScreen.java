@@ -142,6 +142,7 @@ public class MainScreen extends Application {
 				} else {
 					displayToConsole(p.getName() + " can't draw because the deck is empty!");
 				}
+				displayToConsole(p.getName() + "'s hand: " + p.getHand());
 				continue;
 			}
 			else if (turnValue == 1) {
@@ -151,6 +152,7 @@ public class MainScreen extends Application {
 					disableButtons();
 					break;
 				}
+				displayToConsole(p.getName() + "'s hand: " + p.getHand());
 				continue;
 			}
 		}
@@ -295,6 +297,14 @@ public class MainScreen extends Application {
 		
 		playMeldBox.getChildren().addAll(playMeldButton);
 	}
+	
+	private boolean checkForTilesInMeldArea() {
+		if (playMeldBox.getChildren().size() > 1) {
+			displayToConsole("You still have tiles you are trying to play as a meld!");
+			return false;
+		}
+		return true;
+	}
 
 	private void initTopCommands() {
 		topCommandsBox = new HBox();
@@ -303,6 +313,10 @@ public class MainScreen extends Application {
 		
 		endButton = new Button("End Turn");
 		endButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
+			
+			if (!checkForTilesInMeldArea()) {
+				return;
+			}
 			
 			// If the user didn't play anything this turn.
 			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
