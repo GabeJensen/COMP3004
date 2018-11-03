@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import core.Caretaker;
@@ -121,11 +122,12 @@ public class MainScreen extends Application {
 		caretaker.set(originator.saveMemento());
 	}
 	
-	private void gameLoop() {
+	private void gameLoop() throws InterruptedException {
 		Player[] nonHumanPlayers = {p1, p2, p3};
 		int turnValue;
 		Tile tile;
 		for (Player p : nonHumanPlayers) {
+//			TimeUnit.SECONDS.sleep(1);
 			turnValue = p.performStrategy();
 			if (turnValue == 0) {
 				if(!emptyDeck) {
@@ -134,8 +136,11 @@ public class MainScreen extends Application {
 						emptyDeck = true;
 						displayToConsole("Deck is empty");
 					} else {
-						p.addTile(tile);											
+						p.addTile(tile);
+						displayToConsole(p.getName() + " draws " + tile.toString());
 					}
+				} else {
+					displayToConsole(p.getName() + " can't draw because the deck is empty");
 				}
 				continue;
 			}
@@ -307,7 +312,7 @@ public class MainScreen extends Application {
 						emptyDeck = true;
 						displayToConsole("Can't draw deck is empty");
 					} else {
-						displayToConsole("User draws " + draw.toString() + "!");
+						displayToConsole("User draws " + draw.toString());
 						user.addTile(draw);						
 					}
 				} else {
@@ -395,7 +400,12 @@ public class MainScreen extends Application {
 				displayToConsole("You win!");
 				disableButtons();
 			} else {
-				gameLoop();				
+				try {
+					gameLoop();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
 			}
 		});
 		
