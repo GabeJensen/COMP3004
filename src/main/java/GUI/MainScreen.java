@@ -137,10 +137,10 @@ public class MainScreen extends Application {
 						displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
 					} else {
 						p.addTile(tile);
-						displayToConsole(p.getName() + " draws " + tile.toString());
+						displayToConsole(p.getName() + " draws " + tile.toString() + "!");
 					}
 				} else {
-					displayToConsole(p.getName() + " can't draw because the deck is empty");
+					displayToConsole(p.getName() + " can't draw because the deck is empty!");
 				}
 				continue;
 			}
@@ -312,7 +312,7 @@ public class MainScreen extends Application {
 						emptyDeck = true;
 						displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 					} else {
-						displayToConsole("User draws " + draw.toString());
+						displayToConsole("User draws " + draw.toString() + "!");
 						user.addTile(draw);						
 					}
 				} else {
