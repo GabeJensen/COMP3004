@@ -117,6 +117,12 @@ public class MainScreen extends Application {
 		updateDisplayHand();
 		updateDisplayTable();
 		
+		// Because apparently we need to display everyone's hand at the start as well.
+		displayToConsole("P1's hand: " + p1.getHand());
+		displayToConsole("P2's hand: " + p2.getHand());
+		displayToConsole("P3's hand: " + p3.getHand());
+		
+		
 		// Start of the game. We still want to be able to revert here.
 		originator.setState(game.getTable(), user.getTiles());
 		caretaker.set(originator.saveMemento());
