@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import core.Caretaker;
@@ -128,12 +127,11 @@ public class MainScreen extends Application {
 		caretaker.set(originator.saveMemento());
 	}
 	
-	private void gameLoop() throws InterruptedException {
+	private void gameLoop() {
 		Player[] nonHumanPlayers = {p1, p2, p3};
 		int turnValue;
 		Tile tile;
 		for (Player p : nonHumanPlayers) {
-//			TimeUnit.SECONDS.sleep(1);
 			turnValue = p.performStrategy();
 			if (turnValue == 0) {
 				if(!emptyDeck) {
@@ -411,12 +409,7 @@ public class MainScreen extends Application {
 				displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
 				disableButtons();
 			} else {
-				try {
-					gameLoop();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
+				gameLoop();			
 			}
 		});
 		
