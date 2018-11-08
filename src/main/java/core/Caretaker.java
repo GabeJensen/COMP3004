@@ -1,14 +1,15 @@
 package core;
 
+import java.util.ArrayList;
+
 public class Caretaker {
-	// Only one state now. Normally is a list...
-	private Memento start_of_turn;
+	private ArrayList<Memento> mementos = new ArrayList<Memento>();
 	
-	public void set(Memento state) {
-		this.start_of_turn = state;
+	public void add(Memento state) {
+		this.mementos.add(state);
 	}
 	
-	public Memento get() {
-		return this.start_of_turn;
+	public Memento get(int i) {
+		return this.mementos.get(i);
 	}
 }

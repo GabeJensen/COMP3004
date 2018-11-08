@@ -9,7 +9,7 @@ import observer.Game;
 
 public class Player implements Observer {
 	private Hand hand;
-	private String name;
+	private final String name;
 	private boolean initial30;
 	private Subject game;
 	private List<ArrayList<Tile>> tableTiles;
