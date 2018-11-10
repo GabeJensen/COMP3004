@@ -1,15 +1,15 @@
 package core;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Caretaker {
-	private ArrayList<Memento> mementos = new ArrayList<Memento>();
+	private HashMap<String, Memento> mementos = new HashMap<String, Memento>();
 	
-	public void add(Memento state) {
-		this.mementos.add(state);
+	public void add(String player, Memento state) {
+		this.mementos.put(player, state);
 	}
 	
-	public Memento get(int i) {
-		return this.mementos.get(i);
+	public Memento get(String player) {
+		return this.mementos.get(player);
 	}
 }

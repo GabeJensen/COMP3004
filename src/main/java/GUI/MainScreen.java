@@ -124,7 +124,7 @@ public class MainScreen extends Application {
 		
 		// Start of the game. We still want to be able to revert here.
 		originator.setState(game.getTable(), user.getTiles());
-		caretaker.add(originator.saveMemento());
+		caretaker.add(user.getName(), originator.saveMemento());
 	}
 	
 	private void gameLoop() {
@@ -164,7 +164,7 @@ public class MainScreen extends Application {
 		updateDisplayHand();
 		updateDisplayTable();
 		originator.setState(game.getTable(), user.getTiles());
-		caretaker.add(originator.saveMemento());
+		caretaker.add(user.getName(), originator.saveMemento());
 	}
 
 	private void initWindow(Stage primaryStage) {
@@ -415,8 +415,8 @@ public class MainScreen extends Application {
 		
 		undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			//TODO: Multiple USER players could be playing. How to figure out which of their states that they have individually saved to restore?
-			originator.restoreMemento(caretaker.get(0));
+			//TODO: We will need to consider setting a "current player" per turn.
+			originator.restoreMemento(caretaker.get(user.getName()));
 			
 			game.setTable(originator.getState().getTable());
 			user.setTiles(originator.getState().getHand());
