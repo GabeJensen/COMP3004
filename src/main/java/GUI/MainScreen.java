@@ -18,6 +18,7 @@ import core.Strat1;
 import core.Strat2;
 import core.Strat3;
 import core.Tile;
+import core.TileRummyGame;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -39,133 +40,136 @@ import javafx.stage.Stage;
 import observer.Game;
 
 public class MainScreen extends Application {
-	public Game game;
-	public Player user;
-	public Player p1;
-	public Player p2;
-	public Player p3;
-	private Deck deck;
-	private Originator originator;
-	private Caretaker caretaker;
+//	public Game game;
+//	public Player user;
+//	public Player p1;
+//	public Player p2;
+//	public Player p3;
+//	private Deck deck;
+//	private Originator originator;
+//	private Caretaker caretaker;
 	private static MediaPlayer m;
 	private BorderPane canvas;
 	private Scene scene;
-	private HashMap<String, String> imageLoc;
-	private HashMap<ImageView, Tile> associatedTiles;
-	private TextArea consoleTextArea;
+	private static HashMap<String, String> imageLoc;
+	private static HashMap<ImageView, Tile> associatedTiles;
+	private static TextArea consoleTextArea;
 	private Button startButton;
-	private Button endButton;
-	private Button undoButton;
-	private Button playMeldButton;
-	private VBox playMeldBox;
-	private HBox userTilesBox;
+	private static Button endButton;
+	private static Button undoButton;
+	private static Button playMeldButton;
+	private static VBox playMeldBox;
+	private static HBox userTilesBox;
 	private HBox topCommandsBox;
-	private TilePane playGrid;
-	private ArrayList<ArrayList<Tile>> currentTurnMelds;
-	private ArrayList<Tile> currentTurnUserUsedTiles;
+	private static TilePane playGrid;
+	public static ArrayList<ArrayList<Tile>> currentTurnMelds;
+	public static ArrayList<Tile> currentTurnUserUsedTiles;
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
-	private ArrayList<Tile> tablePlayTiles;
+	public static ArrayList<Tile> tablePlayTiles;
 	private boolean emptyDeck;
+	private TileRummyGame rummyGame;
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
+//	public static void main(String[] args) {
+//		launch(args);
+//	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Init things here.
-		this.game = new Game();
-		this.originator = new Originator();
-		this.caretaker = new Caretaker();
-		this.user = new Player(game, "User", new Strat0());
-		this.p1 = new Player(game, "P1", new Strat1());
-		this.p2 = new Player(game, "P2", new Strat2());
-		this.p3 = new Player(game, "P3", new Strat3());
-		game.setPlayers(user, p1, p2, p3);
+//		this.game = new Game();
+//		this.originator = new Originator();
+//		this.caretaker = new Caretaker();
+//		this.user = new Player(game, "User", new Strat0());
+//		this.p1 = new Player(game, "P1", new Strat1());
+//		this.p2 = new Player(game, "P2", new Strat2());
+//		this.p3 = new Player(game, "P3", new Strat3());
+//		game.setPlayers(user, p1, p2, p3);
+		this.rummyGame = new TileRummyGame();
+		rummyGame.initalizeGame();
 		initWindow(primaryStage);
 	}
 
-	public void playGame() {
-		//Create and initialize GUI
-		/* Create buttons for:
-		 * - Starting the game
-		 * - Reseting table to start of turn
-		 * - Ending your turn (checking melds)
-		 * */
-		
-		//Create deck
-		deck = new Deck();
-		deck.shuffleDeck();
-		emptyDeck = false;
-		
-		//Set tiles for users using deck
-		Player[] allPlayers = {user, p1, p2, p3};
-		
-		for (Player player : allPlayers) {
-			for (int c = 0; c < 14; c++) {
-				player.addTile(deck.dealTile());
-			}
-		}
-		
-		// Init the user's temporary display meld array
-		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-		currentTurnUserUsedTiles = new ArrayList<Tile>();
-		tablePlayTiles = new ArrayList<Tile>();
-		
-		updateDisplayHand();
-		updateDisplayTable();
-		
-		// Because apparently we need to display everyone's hand at the start as well.
-		displayToConsole("P1's hand: " + p1.getHand());
-		displayToConsole("P2's hand: " + p2.getHand());
-		displayToConsole("P3's hand: " + p3.getHand());
-		
-		
-		// Start of the game. We still want to be able to revert here.
-		originator.setState(game.getTable(), user.getTiles());
-		caretaker.add(user.getName(), originator.saveMemento());
-	}
+//	public void playGame() {
+//		//Create and initialize GUI
+//		/* Create buttons for:
+//		 * - Starting the game
+//		 * - Reseting table to start of turn
+//		 * - Ending your turn (checking melds)
+//		 * */
+//		
+//		//Create deck
+//		deck = new Deck();
+//		deck.shuffleDeck();
+//		emptyDeck = false;
+//		
+//		//Set tiles for users using deck
+//		Player[] allPlayers = {user, p1, p2, p3};
+//		
+//		for (Player player : allPlayers) {
+//			for (int c = 0; c < 14; c++) {
+//				player.addTile(deck.dealTile());
+//			}
+//		}
+//		
+//		// Init the user's temporary display meld array
+//		currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+//		currentTurnUserUsedTiles = new ArrayList<Tile>();
+//		tablePlayTiles = new ArrayList<Tile>();
+//		
+//		updateDisplayHand();
+//		updateDisplayTable();
+//		
+//		// Because apparently we need to display everyone's hand at the start as well.
+//		displayToConsole("P1's hand: " + p1.getHand());
+//		displayToConsole("P2's hand: " + p2.getHand());
+//		displayToConsole("P3's hand: " + p3.getHand());
+//		
+//		
+//		// Start of the game. We still want to be able to revert here.
+//		originator.setState(game.getTable(), user.getTiles());
+//		caretaker.add(user.getName(), originator.saveMemento());
+//	}
 	
-	private void gameLoop() {
-		Player[] nonHumanPlayers = {p1, p2, p3};
-		int turnValue;
-		Tile tile;
-		for (Player p : nonHumanPlayers) {
-			turnValue = p.performStrategy();
-			if (turnValue == 0) {
-				if(!emptyDeck) {
-					tile = deck.dealTile();
-					if(tile == null) {
-						emptyDeck = true;
-						displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
-					} else {
-						p.addTile(tile);
-						displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
-					}
-				} else {
-					displayToConsole(p.getName() + " can't draw because the deck is empty!");
-				}
-				displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-			else if (turnValue == 1) {
-				displayToConsole(p.getName() + " played this turn!");
-				if(p.getHandCount() == 0) {
-					displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
-					disableButtons();
-					break;
-				}
-				displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-		}
-		associatedTiles.clear();		
-		updateDisplayHand();
-		updateDisplayTable();
-		originator.setState(game.getTable(), user.getTiles());
-		caretaker.add(user.getName(), originator.saveMemento());
-	}
+//	private void gameLoop() {
+//		Player[] nonHumanPlayers = {p1, p2, p3};
+//		int turnValue;
+//		Tile tile;
+//		for (Player p : nonHumanPlayers) {
+//			turnValue = p.performStrategy();
+//			if (turnValue == 0) {
+//				if(!emptyDeck) {
+//					tile = deck.dealTile();
+//					if(tile == null) {
+//						emptyDeck = true;
+//						displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
+//					} else {
+//						p.addTile(tile);
+//						displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
+//					}
+//				} else {
+//					displayToConsole(p.getName() + " can't draw because the deck is empty!");
+//				}
+//				displayToConsole(p.getName() + "'s hand: " + p.getHand());
+//				continue;
+//			}
+//			else if (turnValue == 1) {
+//				displayToConsole(p.getName() + " played this turn!");
+//				if(p.getHandCount() == 0) {
+//					displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
+//					disableButtons();
+//					break;
+//				}
+//				displayToConsole(p.getName() + "'s hand: " + p.getHand());
+//				continue;
+//			}
+//		}
+//		associatedTiles.clear();		
+//		updateDisplayHand();
+//		updateDisplayTable();
+//		originator.setState(game.getTable(), user.getTiles());
+//		caretaker.add(user.getName(), originator.saveMemento());
+//	}
 
 	private void initWindow(Stage primaryStage) {
 		BorderPane canvas = new BorderPane();
@@ -212,7 +216,7 @@ public class MainScreen extends Application {
 		Media media = new Media(Paths.get("src/main/resources/S.mp3").toUri().toString());
 		m = new MediaPlayer(media);
 		m.setCycleCount(MediaPlayer.INDEFINITE);
-		m.play();
+//		m.play();
 	}
 
 	private void initGameElements() {
@@ -244,7 +248,7 @@ public class MainScreen extends Application {
 		canvas.setLeft(playMeldBox);
 		//userTilesBox.getChildren().addAll();
 		
-		playGame();
+		rummyGame.playGame();
 	}
 
 	private void initConsole() {
@@ -322,118 +326,119 @@ public class MainScreen extends Application {
 				return;
 			}
 			
-			// If the user didn't play anything this turn.
-			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
-				if(!emptyDeck) {
-					Tile draw = deck.dealTile();
-					if(draw == null) {
-						emptyDeck = true;
-						displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
-					} else {
-						displayToConsole("User draws " + draw.toString() + "!");
-						user.addTile(draw);						
+//			// If the user didn't play anything this turn.
+//			if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
+//				if(!emptyDeck) {
+//					Tile draw = deck.dealTile();
+//					if(draw == null) {
+//						emptyDeck = true;
+//						displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
+//					} else {
+//						displayToConsole("User draws " + draw.toString() + "!");
+//						user.addTile(draw);						
+//					}
+//				} else {
+//					displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
+//				}
+//			}
+//			else {
+//				// If the user has not played their initial 30 meld yet
+//				if (!user.getInit30Flag()){
+//					// No table tiles allowed to be played until the initial 30 meld(s)
+//					int tileCount = 0;
+//					for (ArrayList<Tile> meld : currentTurnMelds) {
+//						for (@SuppressWarnings("unused") Tile t : meld) {
+//							tileCount++;
+//						}
+//					}
+//					// If the tile count of hand melds is the same as the count of total tiles used, it means that only hand melds were played
+//					if (tileCount == currentTurnUserUsedTiles.size()) {
+//						// User has to play HAND melds that add up to 30 or more and nothing else
+//						int handMeldSum = 0;
+//						for (ArrayList<Tile> meld : currentTurnMelds) {
+//							handMeldSum += Meld.getValue(meld);
+//						}
+//						if (handMeldSum < 30) {
+//							displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
+//							return;
+//						}
+//						else {
+//							user.playedInit30();
+//						}
+//					}
+//					else {
+//						displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
+//						return;
+//					}
+//				}
+//				//else if (user.getInit30Flag()) {
+//					// They have played their 30 meld. It is a regular turn from then on.
+//				//}
+			List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
+			if (checkPlayGrid()) {
+				
+				//generate the new table for Game
+				ArrayList<Tile> meld = new ArrayList<Tile>();
+				for (int i = 0; i < playGrid.getChildren().size(); ++i) {
+					//hit blank space, add to newTable if size != 0
+					if (playGrid.getChildren().get(i) instanceof Region) {
+						if (meld.size() == 0) {
+							continue;
+						} else {
+							newTable.add(meld);
+							meld = new ArrayList<Tile>();
+						}
+					}else if (playGrid.getChildren().get(i) instanceof ImageView) {
+						//add tile to meld
+						ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
+						meld.add(associatedTiles.get(tileIV));
 					}
-				} else {
-					displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 				}
-			}
-			else {
-				// If the user has not played their initial 30 meld yet
-				if (!user.getInit30Flag()){
-					// No table tiles allowed to be played until the initial 30 meld(s)
-					int tileCount = 0;
-					for (ArrayList<Tile> meld : currentTurnMelds) {
-						for (@SuppressWarnings("unused") Tile t : meld) {
-							tileCount++;
-						}
-					}
-					// If the tile count of hand melds is the same as the count of total tiles used, it means that only hand melds were played
-					if (tileCount == currentTurnUserUsedTiles.size()) {
-						// User has to play HAND melds that add up to 30 or more and nothing else
-						int handMeldSum = 0;
-						for (ArrayList<Tile> meld : currentTurnMelds) {
-							handMeldSum += Meld.getValue(meld);
-						}
-						if (handMeldSum < 30) {
-							displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
-							return;
-						}
-						else {
-							user.playedInit30();
-						}
-					}
-					else {
-						displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
-						return;
-					}
-				}
-				//else if (user.getInit30Flag()) {
-					// They have played their 30 meld. It is a regular turn from then on.
-				//}
-				if (checkPlayGrid()) {
-					List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
-					
-					//generate the new table for Game
-					ArrayList<Tile> meld = new ArrayList<Tile>();
-					for (int i = 0; i < playGrid.getChildren().size(); ++i) {
-						//hit blank space, add to newTable if size != 0
-						if (playGrid.getChildren().get(i) instanceof Region) {
-							if (meld.size() == 0) {
-								continue;
-							} else {
-								newTable.add(meld);
-								meld = new ArrayList<Tile>();
-							}
-						}else if (playGrid.getChildren().get(i) instanceof ImageView) {
-							//add tile to meld
-							ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
-							meld.add(associatedTiles.get(tileIV));
-						}
-					}
-									
-					//remove the user used tiles from user hand
-					for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
-						user.removeTile(currentTurnUserUsedTiles.get(i));
-					}
-					game.setTable(newTable);
-				} 
-				else {
-					displayToConsole("The table has some invalid melds!");
-					return;
-				}
+								
+				//remove the user used tiles from user hand
+//				for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
+//					user.removeTile(currentTurnUserUsedTiles.get(i));
+//				}
+//				game.setTable(newTable);
+			} else {
+				displayToConsole("The table has some invalid melds!");
+				return;
 			}
 			
-			currentTurnMelds.clear();
-			currentTurnUserUsedTiles.clear();
-			if(user.getHandCount() == 0) {
-				displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
-				disableButtons();
-			} else {
-				gameLoop();			
-			}
+			rummyGame.endTurn(currentTurnUserUsedTiles, newTable);
+//			
+//			currentTurnMelds.clear();
+//			currentTurnUserUsedTiles.clear();
+//			if(user.getHandCount() == 0) {
+//				displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
+//				disableButtons();
+//			} else {
+//				rummyGame.gameLoop();			
+//			}
 		});
 		
 		undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			//TODO: We will need to consider setting a "current player" per turn.
-			originator.restoreMemento(caretaker.get(user.getName()));
-			
-			game.setTable(originator.getState().getTable());
-			user.setTiles(originator.getState().getHand());
-			
+//			//TODO: We will need to consider setting a "current player" per turn.
+//			originator.restoreMemento(caretaker.get(user.getName()));
+//			
+//			game.setTable(originator.getState().getTable());
+//			user.setTiles(originator.getState().getHand());
+//			
 			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
-			
-			currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-			currentTurnUserUsedTiles = new ArrayList<Tile>();
-			
-			updateDisplayHand();
-			updateDisplayTable();
+			rummyGame.undoTurn();
+//			
+//			currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+//			currentTurnUserUsedTiles = new ArrayList<Tile>();
+//			
+//			updateDisplayHand();
+//			updateDisplayTable();
 		});
 		
 		topCommandsBox.getChildren().addAll(endButton, undoButton);
 	}
 
-	private void displayToConsole(String s) {
+	public static void displayToConsole(String s) {
 		consoleTextArea.appendText(s + "\n");
 	}
 	
@@ -467,10 +472,10 @@ public class MainScreen extends Application {
 		tablePlayTiles.clear();
 	}
 	
-	private void updateDisplayTable() {
+	public static void updateDisplayTable(List<ArrayList<Tile>> table) {
 		clearDisplayTable();
-		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) game.getTable();
-		for (ArrayList<Tile> meld : tableMelds) {
+//		ArrayList<ArrayList<Tile>> tableMelds = (ArrayList<ArrayList<Tile>>) game.getTable();
+		for (ArrayList<Tile> meld : table) {
 			for (Tile meldTile : meld) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
@@ -495,14 +500,14 @@ public class MainScreen extends Application {
 		}
 	}
 	
-	private void clearDisplayTable () {
+	private static void clearDisplayTable () {
 		playGrid.getChildren().clear();
 	}
 	
-	private void updateDisplayHand() {
+	public static void updateDisplayHand(ArrayList<Tile> hand) {
 		clearDisplayHand();
-		ArrayList<Tile> userHand = user.getTiles();
-		for (Tile userTile : userHand) {
+//		ArrayList<Tile> userHand = user.getTiles();
+		for (Tile userTile : hand) {
 			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
 			DisplayTile dTile = new DisplayTile(tile, userTile);
 			dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
@@ -528,7 +533,7 @@ public class MainScreen extends Application {
 		}
 	}
 	
-	private void clearDisplayHand() {
+	private static void clearDisplayHand() {
 		userTilesBox.getChildren().clear();
 	}
 	
@@ -556,7 +561,7 @@ public class MainScreen extends Application {
 		return true;
 	}
 	
-	private void disableButtons() {
+	public static void disableButtons() {
 		endButton.setDisable(true);
 		playMeldButton.setDisable(true);
 		undoButton.setDisable(true);
