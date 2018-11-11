@@ -3,11 +3,11 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-import GUI.MainScreen;
+import GUI.GUI;
 import observer.Game;
 
 public class TileRummyGame {
-	private static MainScreen gui;
+	private static GUI gui;
 	private Game game;
 	private Player user;
 	private Player p1;
@@ -19,7 +19,7 @@ public class TileRummyGame {
 	private boolean emptyDeck;
 	
 	public static void main(String[] args) {
-		javafx.application.Application.launch(MainScreen.class);
+		javafx.application.Application.launch(GUI.class);
 	}
 	
 	public void initalizeGame() {
@@ -34,12 +34,7 @@ public class TileRummyGame {
 	}
 	
 	public void playGame() {
-		//Create and initialize GUI
-		/* Create buttons for:
-		 * - Starting the game
-		 * - Reseting table to start of turn
-		 * - Ending your turn (checking melds)
-		 * */
+		//TODO: How to initialize the game with the variable amount of players and users here?
 		
 		//Create deck
 		deck = new Deck();
@@ -56,18 +51,17 @@ public class TileRummyGame {
 		}
 		
 		// Init the user's temporary display meld array
-		MainScreen.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-		MainScreen.currentTurnUserUsedTiles = new ArrayList<Tile>();
-		MainScreen.tablePlayTiles = new ArrayList<Tile>();
+		GUI.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>();
+		GUI.tablePlayTiles = new ArrayList<Tile>();
 		
-		MainScreen.updateDisplayHand(user.getTiles());
-		MainScreen.updateDisplayTable(game.getTable());
+		GUI.updateDisplayHand(user.getTiles());
+		GUI.updateDisplayTable(game.getTable());
 		
 		// Because apparently we need to display everyone's hand at the start as well.
-		MainScreen.displayToConsole("P1's hand: " + p1.getHand());
-		MainScreen.displayToConsole("P2's hand: " + p2.getHand());
-		MainScreen.displayToConsole("P3's hand: " + p3.getHand());
-		
+		GUI.displayToConsole("P1's hand: " + p1.getHand());
+		GUI.displayToConsole("P2's hand: " + p2.getHand());
+		GUI.displayToConsole("P3's hand: " + p3.getHand());
 		
 		// Start of the game. We still want to be able to revert here.
 		originator.setState(game.getTable(), user.getTiles());
@@ -85,31 +79,31 @@ public class TileRummyGame {
 					tile = deck.dealTile();
 					if(tile == null) {
 						emptyDeck = true;
-						MainScreen.displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
+						GUI.displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
 					} else {
 						p.addTile(tile);
-						MainScreen.displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
+						GUI.displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
 					}
 				} else {
-					MainScreen.displayToConsole(p.getName() + " can't draw because the deck is empty!");
+					GUI.displayToConsole(p.getName() + " can't draw because the deck is empty!");
 				}
-				MainScreen.displayToConsole(p.getName() + "'s hand: " + p.getHand());
+				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
 				continue;
 			}
 			else if (turnValue == 1) {
-				MainScreen.displayToConsole(p.getName() + " played this turn!");
+				GUI.displayToConsole(p.getName() + " played this turn!");
 				if(p.getHandCount() == 0) {
-					MainScreen.displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
-					MainScreen.disableButtons();
+					GUI.displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
+					GUI.disableButtons();
 					break;
 				}
-				MainScreen.displayToConsole(p.getName() + "'s hand: " + p.getHand());
+				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
 				continue;
 			}
 		}		
 		
-		MainScreen.updateDisplayHand(user.getTiles());
-		MainScreen.updateDisplayTable(game.getTable());
+		GUI.updateDisplayHand(user.getTiles());
+		GUI.updateDisplayTable(game.getTable());
 		originator.setState(game.getTable(), user.getTiles());
 		caretaker.add(user.getName(), originator.saveMemento());
 	}
@@ -121,27 +115,27 @@ public class TileRummyGame {
 		game.setTable(originator.getState().getTable());
 		user.setTiles(originator.getState().getHand());
 		
-		MainScreen.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-		MainScreen.currentTurnUserUsedTiles = new ArrayList<Tile>();
+		GUI.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
+		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>();
 		
-		MainScreen.updateDisplayHand(user.getTiles());
-		MainScreen.updateDisplayTable(game.getTable());
+		GUI.updateDisplayHand(user.getTiles());
+		GUI.updateDisplayTable(game.getTable());
 	}
 	
 	public void endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> newTable) {
 		// If the user didn't play anything this turn.
-		if ((MainScreen.currentTurnMelds.isEmpty()) && MainScreen.currentTurnUserUsedTiles.isEmpty()) {
+		if ((GUI.currentTurnMelds.isEmpty()) && GUI.currentTurnUserUsedTiles.isEmpty()) {
 			if(!emptyDeck) {
 				Tile draw = deck.dealTile();
 				if(draw == null) {
 					emptyDeck = true;
-					MainScreen.displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
+					GUI.displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 				} else {
-					MainScreen.displayToConsole("User draws " + draw.toString() + "!");
+					GUI.displayToConsole("User draws " + draw.toString() + "!");
 					user.addTile(draw);						
 				}
 			} else {
-				MainScreen.displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
+				GUI.displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 			}
 		}
 		else {
@@ -149,20 +143,20 @@ public class TileRummyGame {
 			if (!user.getInit30Flag()){
 				// No table tiles allowed to be played until the initial 30 meld(s)
 				int tileCount = 0;
-				for (ArrayList<Tile> meld : MainScreen.currentTurnMelds) {
+				for (ArrayList<Tile> meld : GUI.currentTurnMelds) {
 					for (Tile t : meld) {
 						tileCount++;
 					}
 				}
 				// If the tile count of hand melds is the same as the count of total tiles used, it means that only hand melds were played
-				if (tileCount == MainScreen.currentTurnUserUsedTiles.size()) {
+				if (tileCount == GUI.currentTurnUserUsedTiles.size()) {
 					// User has to play HAND melds that add up to 30 or more and nothing else
 					int handMeldSum = 0;
-					for (ArrayList<Tile> meld : MainScreen.currentTurnMelds) {
+					for (ArrayList<Tile> meld : GUI.currentTurnMelds) {
 						handMeldSum += Meld.getValue(meld);
 					}
 					if (handMeldSum < 30) {
-						MainScreen.displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
+						GUI.displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
 						return;
 					}
 					else {
@@ -170,7 +164,7 @@ public class TileRummyGame {
 					}
 				}
 				else {
-					MainScreen.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
+					GUI.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
 					return;
 				}
 			}
@@ -182,11 +176,11 @@ public class TileRummyGame {
 		}
 		game.setTable(newTable);
 		
-		MainScreen.currentTurnMelds.clear();
-		MainScreen.currentTurnUserUsedTiles.clear();
+		GUI.currentTurnMelds.clear();
+		GUI.currentTurnUserUsedTiles.clear();
 		if(user.getHandCount() == 0) {
-			MainScreen.displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
-			MainScreen.disableButtons();
+			GUI.displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
+			GUI.disableButtons();
 		} else {
 			gameLoop();			
 		}
