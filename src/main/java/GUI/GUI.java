@@ -212,6 +212,21 @@ public class GUI extends Application {
 				return;
 			}
 			
+			// temporary debug lines -- to be used for initializing players
+			System.out.println(playerCount.getValue());
+			System.out.println(userCount.getValue());
+			for (int x = 4; x < selectionContainer.getChildren().size(); x+=2) {
+				if (selectionContainer.getChildren().get(x) instanceof Button) {
+					// is a button, don't do anything.
+					// This is here as we might not add anything with the 0 users.
+				} 
+				else {
+					System.out.println(((ComboBox) selectionContainer.getChildren().get(x)).getValue());
+				}
+				
+			}
+			// end temporary debug lines
+			
 			displayToConsole("Started a game of Tile Rummy!");
 			canvas.setCenter(null);
 			music();
@@ -228,7 +243,7 @@ public class GUI extends Application {
 		playerCount.getItems().addAll(2, 3, 4);
 				
 		userCount = new ComboBox<Integer>();
-		userCount.getItems().addAll(2, 3, 4);
+		userCount.getItems().addAll(0, 1, 2, 3, 4);
 		
 		playerCount.getSelectionModel().selectFirst();
 		userCount.getSelectionModel().selectFirst();
@@ -238,12 +253,41 @@ public class GUI extends Application {
 		uCount.setLabelFor(userCount);
 		uCount.setStyle("-fx-background-color: white;");
 		
+		playerCount.setOnAction((ev) -> {
+			rerenderStratDropdown();
+		});
+		
+		userCount.setOnAction((ev) -> {
+			rerenderStratDropdown();
+		});
+		
 		selectionContainer.getChildren().addAll(pCount, playerCount, uCount, userCount, startButton);
+		renderStratDropdown();
 		selectionContainer.setAlignment(Pos.CENTER);
 		
 		// Set elements on the BorderPane areas
 		canvas.setRight(consoleTextArea);
 		canvas.setCenter(selectionContainer);
+	}
+	
+	private void rerenderStratDropdown() {
+		selectionContainer.getChildren().remove(5, selectionContainer.getChildren().size());
+		renderStratDropdown();
+		return;
+	}
+	
+	private void renderStratDropdown() {
+		for (int x = 0; x < (playerCount.getValue() - userCount.getValue()); x++) {
+			ComboBox<String> container = new ComboBox<String>();
+			Label s_down = new Label("P" + (x+1) + " Strategy");
+			s_down.setLabelFor(container);
+			s_down.setStyle("-fx-background-color: white;");
+			container.setId("P" + (x+1));
+			container.getItems().addAll("Strategy 1", "Strategy 2", "Strategy 3");
+			container.getSelectionModel().selectFirst();
+			selectionContainer.getChildren().addAll(s_down, container);
+		}
+		return;
 	}
 	
 	private void music() {
