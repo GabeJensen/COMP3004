@@ -214,9 +214,6 @@ public class GUI extends Application {
 				return;
 			}
 			
-			// temporary debug lines -- to be used for initializing players
-			System.out.println(playerCount.getValue());
-			System.out.println(userCount.getValue());
 			strategySelection = new ArrayList<String>();
 			for (int x = 4; x < selectionContainer.getChildren().size(); x+=2) {
 				if (selectionContainer.getChildren().get(x) instanceof Button) {
@@ -224,12 +221,9 @@ public class GUI extends Application {
 					// This is here as we might not add anything with the 0 users.
 				} 
 				else {
-					System.out.println(((ComboBox) selectionContainer.getChildren().get(x)).getValue());
 					strategySelection.add((String)((ComboBox) selectionContainer.getChildren().get(x)).getValue());
-				}
-				
+				}	
 			}
-			// end temporary debug lines
 			
 			displayToConsole("Started a game of Tile Rummy!");
 			canvas.setCenter(null);

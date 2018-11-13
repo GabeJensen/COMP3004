@@ -41,21 +41,24 @@ public class TileRummyGame {
 		players = new ArrayList<Player>();
 		//Goes through all humans and names them
 		for(int i = 0; i < userCount; i++) {
-			players.add(new Player(game, "User " + i+1, new Strat0()));
+			players.add(new Player(game, "User " + (i+1), new Strat0()));
 		}
 		
-		int p1Count = 0;
+		/*int p1Count = 0;
 		int p2Count = 0;
-		int p3Count = 0;
+		int p3Count = 0;*/
 		//Goes throgh al strategies and names them appropriately
 		for(int i = 0; i < strategySelection.size(); i++) {
 			String selection = strategySelection.get(i);
+			String name = "P" + (i+1);
 			if(selection.endsWith("1")) {
-				players.add(new Player(game, "P1." + ++p1Count, new Strat1()));				
+				players.add(new Player(game, name, new Strat1()));				
 			} else if (selection.endsWith("2")) {
-				players.add(new Player(game, "P2." + ++p2Count, new Strat2()));
-			} else {
-				players.add(new Player(game, "P3." + ++p3Count, new Strat3()));
+				players.add(new Player(game, name, new Strat2()));
+			} else if (selection.endsWith("3")) {
+				players.add(new Player(game, name, new Strat3()));
+			} else if (selection.endsWith("4")) {
+				// Strategy 4...
 			}
 		}
 		//TEMP REMOVE AFTER FIX
@@ -67,17 +70,12 @@ public class TileRummyGame {
 	}
 	
 	public void playGame() {
-		//TODO: How to initialize the game with the variable amount of players and users here?
-		
 		//Create deck
 		deck = new Deck();
 		deck.shuffleDeck();
 		emptyDeck = false;
 		
-		//Set tiles for users using deck
-		Player[] allPlayers = {user, p1, p2, p3};
-		
-		for (Player player : allPlayers) {
+		for (Player player : players) {
 			for (int c = 0; c < 14; c++) {
 				player.addTile(deck.dealTile());
 			}
