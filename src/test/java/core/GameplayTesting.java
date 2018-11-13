@@ -988,4 +988,53 @@ public class GameplayTesting extends TestCase{
 		assertEquals(meld1, table.getTable().get(1));
 		assertEquals(meld2, table.getTable().get(2));
 	}
+	
+	public void testStrat3e() {
+		//Test play table tiles when having 3 more tiles than another player
+		int stratResult;
+		Game table = new Game();
+		Player user = new Player(table, "User", new Strat0());
+		Player p1 = new Player(table, "P1", new Strat1());
+		Player p2 = new Player(table, "P2", new Strat2());
+		Player p3 = new Player(table, "P3", new Strat3());
+		table.setPlayers(user, p1, p2, p3);
+		
+		Tile t1 = new Tile("R", "9");
+		Tile t2 = new Tile("R", "13");
+		Tile t3 = new Tile("R", "11");
+		Tile t4 = new Tile("R", "4");
+		Tile t5 = new Tile("O", "5");
+		Tile t6 = new Tile("B", "5");
+		Tile t7 = new Tile("G", "6");
+		
+		Tile t8 = new Tile("O", "13");
+		Tile t9 = new Tile("R", "6");
+		Tile t10 = new Tile("G", "13");
+
+		Tile[] userMelds = {t8};
+		Tile[] p1Melds = {t9};
+		Tile[] p2Melds = {t10};
+		Tile[] p3Melds = {t1, t2, t3, t4, t5, t6, t7};
+		
+		for(Tile tile : userMelds) {
+			user.addTile(tile);
+		}
+		
+		for(Tile tile : p1Melds) {
+			p1.addTile(tile);
+		}
+		
+		for(Tile tile : p2Melds) {
+			p2.addTile(tile);
+		}
+		
+		for(Tile tile : p3Melds) {
+			p3.addTile(tile);
+		}
+		
+		stratResult = p3.performStrategy();
+		
+		assertEquals(0, stratResult);
+		
+	}
 }
