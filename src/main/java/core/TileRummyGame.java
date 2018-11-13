@@ -13,6 +13,7 @@ public class TileRummyGame {
 	private Player p1;
 	private Player p2;
 	private Player p3;
+	private ArrayList<Player> players;
 	private Deck deck;
 	private Originator originator;
 	private Caretaker caretaker;
@@ -31,6 +32,38 @@ public class TileRummyGame {
 		p2 = new Player(game, "P2", new Strat2());
 		p3 = new Player(game, "P3", new Strat3());
 		game.setPlayers(user, p1, p2, p3);
+	}
+	
+	public void initalizeGame(int userCount, ArrayList<String> strategySelection) {
+		game = new Game();
+		originator = new Originator();
+		caretaker = new Caretaker();
+		players = new ArrayList<Player>();
+		//Goes through all humans and names them
+		for(int i = 0; i < userCount; i++) {
+			players.add(new Player(game, "User " + i+1, new Strat0()));
+		}
+		
+		int p1Count = 0;
+		int p2Count = 0;
+		int p3Count = 0;
+		//Goes throgh al strategies and names them appropriately
+		for(int i = 0; i < strategySelection.size(); i++) {
+			String selection = strategySelection.get(i);
+			if(selection.endsWith("1")) {
+				players.add(new Player(game, "P1." + ++p1Count, new Strat1()));				
+			} else if (selection.endsWith("2")) {
+				players.add(new Player(game, "P2." + ++p2Count, new Strat2()));
+			} else {
+				players.add(new Player(game, "P3." + ++p3Count, new Strat3()));
+			}
+		}
+		//TEMP REMOVE AFTER FIX
+		user = players.get(0);
+		this.p1 = players.get(1);
+		this.p2 = players.get(2);
+		this.p3 = players.get(3);
+		game.setPlayers(players);
 	}
 	
 	public void playGame() {

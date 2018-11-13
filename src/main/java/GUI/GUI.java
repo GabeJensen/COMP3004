@@ -64,6 +64,7 @@ public class GUI extends Application {
 	private static VBox playMeldBox;
 	private static HBox userTilesBox;
 	private static HBox selectionContainer;
+	private static ArrayList<String> strategySelection;
 	private static ComboBox<Integer> playerCount;
 	private static ComboBox<Integer> userCount;
 	private HBox topCommandsBox;
@@ -92,8 +93,9 @@ public class GUI extends Application {
 //		this.p3 = new Player(game, "P3", new Strat3());
 //		game.setPlayers(user, p1, p2, p3);
 		this.rummyGame = new TileRummyGame();
-		rummyGame.initalizeGame();
 		initWindow(primaryStage);
+		
+//		rummyGame.initalizeGame();
 	}
 
 //	public void playGame() {
@@ -215,6 +217,7 @@ public class GUI extends Application {
 			// temporary debug lines -- to be used for initializing players
 			System.out.println(playerCount.getValue());
 			System.out.println(userCount.getValue());
+			strategySelection = new ArrayList<String>();
 			for (int x = 4; x < selectionContainer.getChildren().size(); x+=2) {
 				if (selectionContainer.getChildren().get(x) instanceof Button) {
 					// is a button, don't do anything.
@@ -222,6 +225,7 @@ public class GUI extends Application {
 				} 
 				else {
 					System.out.println(((ComboBox) selectionContainer.getChildren().get(x)).getValue());
+					strategySelection.add((String)((ComboBox) selectionContainer.getChildren().get(x)).getValue());
 				}
 				
 			}
@@ -326,6 +330,7 @@ public class GUI extends Application {
 		canvas.setLeft(playMeldBox);
 		//userTilesBox.getChildren().addAll();
 		
+		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
 		rummyGame.playGame();
 	}
 
