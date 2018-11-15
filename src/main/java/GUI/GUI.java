@@ -56,7 +56,6 @@ public class GUI extends Application {
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
 	private static ArrayList<Tile> tablePlayTiles;
-	private boolean emptyDeck;
 	private TileRummyGame rummyGame;
 	
 	@Override
@@ -309,11 +308,15 @@ public class GUI extends Application {
 				}
 			}
 			
-			rummyGame.endTurn(currentTurnUserUsedTiles, currentTurnMelds, table, playMeldBox.getChildren().size());
+			int retVal = rummyGame.endTurn(currentTurnUserUsedTiles, currentTurnMelds, table, playMeldBox.getChildren().size());
 			
-			// Wipe the turn's tracking information, end of turn
-			currentTurnMelds.clear();
-			currentTurnUserUsedTiles.clear();
+			if (retVal == 0) {
+				// Wipe the turn's tracking information, end of turn
+				currentTurnMelds.clear();
+				currentTurnUserUsedTiles.clear();
+			} else {
+				// Error encountered or rule hasn't been met yet, do nothing
+			}
 		});
 		
 		undoButton = new Button("Undo Turn");
