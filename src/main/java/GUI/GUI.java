@@ -427,30 +427,6 @@ public class GUI extends Application {
 		userTilesBox.getChildren().clear();
 	}
 	
-	private boolean checkPlayGrid() {
-		ArrayList<Tile> checkMeld = new ArrayList<Tile>();
-		for (int i = 0; i < playGrid.getChildren().size(); ++i) {
-			//hit a blank space
-			if (playGrid.getChildren().get(i) instanceof Region) {
-				//haven't added tiles to checkMeld or valid meld
-				if (checkMeld.size() == 0 || Meld.checkValidity(checkMeld)) {
-					checkMeld.clear();
-					continue;
-				} else {
-					//invalid meld
-					return false;
-				}
-			}else if (playGrid.getChildren().get(i) instanceof ImageView) {
-				//add tile to checkMeld
-				ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
-				checkMeld.add(associatedTiles.get(tileIV));
-			}
-		}
-		
-		//play grid all good
-		return true;
-	}
-	
 	public static void disableButtons() {
 		endButton.setDisable(true);
 		playMeldButton.setDisable(true);
