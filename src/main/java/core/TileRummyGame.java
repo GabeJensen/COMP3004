@@ -7,7 +7,6 @@ import GUI.GUI;
 import observer.Game;
 
 public class TileRummyGame {
-	private static GUI gui;
 	private Game game;
 	private Player user;
 	private Player p1;
@@ -81,11 +80,6 @@ public class TileRummyGame {
 			}
 		}
 		
-		// Init the user's temporary display meld array
-		GUI.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>();
-		GUI.tablePlayTiles = new ArrayList<Tile>();
-		
 		GUI.updateDisplayHand(user.getTiles());
 		GUI.updateDisplayTable(game.getTable());
 		
@@ -146,16 +140,19 @@ public class TileRummyGame {
 		game.setTable(originator.getState().getTable());
 		user.setTiles(originator.getState().getHand());
 		
-		GUI.currentTurnMelds = new ArrayList<ArrayList<Tile>>();
-		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>();
-		
 		GUI.updateDisplayHand(user.getTiles());
 		GUI.updateDisplayTable(game.getTable());
 	}
 	
-	public void endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> newTable) {
+	public void endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
+		// if there are still tiles in the "playMeldBox"
+		if (numItemsInPlayMeldBox > 1) {
+			GUI.displayToConsole("You still have tiles you are trying to play as a meld!");
+			return;
+		}
+		
 		// If the user didn't play anything this turn.
-		if ((GUI.currentTurnMelds.isEmpty()) && GUI.currentTurnUserUsedTiles.isEmpty()) {
+		if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
 			if(!emptyDeck) {
 				Tile draw = deck.dealTile();
 				if(draw == null) {
@@ -168,52 +165,57 @@ public class TileRummyGame {
 			} else {
 				GUI.displayToConsole(user.getName() + " tried drawing, but the deck was empty!");
 			}
-		}
-		else {
+		} else {
 			// If the user has not played their initial 30 meld yet
 			if (!user.getInit30Flag()){
 				// No table tiles allowed to be played until the initial 30 meld(s)
 				int tileCount = 0;
-				for (ArrayList<Tile> meld : GUI.currentTurnMelds) {
+				for (ArrayList<Tile> meld : currentTurnMelds) {
 					for (Tile t : meld) {
 						tileCount++;
 					}
 				}
 				// If the tile count of hand melds is the same as the count of total tiles used, it means that only hand melds were played
-				if (tileCount == GUI.currentTurnUserUsedTiles.size()) {
+				if (tileCount == currentTurnUserUsedTiles.size()) {
 					// User has to play HAND melds that add up to 30 or more and nothing else
 					int handMeldSum = 0;
-					for (ArrayList<Tile> meld : GUI.currentTurnMelds) {
+					for (ArrayList<Tile> meld : currentTurnMelds) {
 						handMeldSum += Meld.getValue(meld);
 					}
 					if (handMeldSum < 30) {
 						GUI.displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
 						return;
-					}
-					else {
+					} else {
 						user.playedInit30();
 					}
-				}
-				else {
+				} else {
 					GUI.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
 					return;
 				}
 			}
 		}
 		
-		//remove the user used tiles from user hand
+		// Check if the current state of the table is valid
+		for (ArrayList<Tile> meld: turnTableState) {
+			if (!Meld.checkValidity(meld)) {
+				GUI.displayToConsole("The table has some invalid melds!");
+				return;
+			}
+		}
+		
+		// At this point, all rule checking is complete
+		// Remove the user used tiles from user hand
 		for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
 			user.removeTile(currentTurnUserUsedTiles.get(i));
 		}
-		game.setTable(newTable);
+		game.setTable(turnTableState);
 		
-		GUI.currentTurnMelds.clear();
-		GUI.currentTurnUserUsedTiles.clear();
+		// Check if human player on this turn has won or nots
 		if(user.getHandCount() == 0) {
 			GUI.displayToConsole(user.getName() + " says: 'RUMMIKUB!' They won the game!");
 			GUI.disableButtons();
 		} else {
-			gameLoop();			
+			gameLoop();
 		}
 	}
 }

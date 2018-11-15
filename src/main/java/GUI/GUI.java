@@ -31,7 +31,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import observer.Game;
 
 public class GUI extends Application {
 	private static MediaPlayer m;
@@ -52,16 +51,21 @@ public class GUI extends Application {
 	private static ComboBox<Integer> userCount;
 	private HBox topCommandsBox;
 	private static TilePane playGrid;
-	public static ArrayList<ArrayList<Tile>> currentTurnMelds;
-	public static ArrayList<Tile> currentTurnUserUsedTiles;
+	private static List<ArrayList<Tile>> currentTurnMelds;
+	private static ArrayList<Tile> currentTurnUserUsedTiles;
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
-	public static ArrayList<Tile> tablePlayTiles;
+	private static ArrayList<Tile> tablePlayTiles;
 	private boolean emptyDeck;
 	private TileRummyGame rummyGame;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		// Init the users' temporary tile tracking array
+		GUI.currentTurnMelds = new ArrayList<ArrayList<Tile>>(); // keeps track of the melds played throughout the turn
+		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>(); // keeps track of the tiles used from the hand
+		GUI.tablePlayTiles = new ArrayList<Tile>(); // keeps track of the tiles that have been re-used from the table (only used for updateTempMelds())
+		
 		// Create out rummyGame "controller" object and initialize our window
 		this.rummyGame = new TileRummyGame();
 		initWindow(primaryStage);
@@ -180,7 +184,7 @@ public class GUI extends Application {
 		Media media = new Media(Paths.get("src/main/resources/S.mp3").toUri().toString());
 		m = new MediaPlayer(media);
 		m.setCycleCount(MediaPlayer.INDEFINITE);
-		m.play();
+//		m.play();
 	}
 
 	private void initGameElements() {
@@ -286,42 +290,40 @@ public class GUI extends Application {
 		
 		endButton = new Button("End Turn");
 		endButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			
-			if (!checkForTilesInMeldArea()) {
-				return;
-			}
-			
-			List<ArrayList<Tile>> newTable = new ArrayList<ArrayList<Tile>>();
-			if (checkPlayGrid()) {
-				
-				//generate the new table for Game
-				ArrayList<Tile> meld = new ArrayList<Tile>();
-				for (int i = 0; i < playGrid.getChildren().size(); ++i) {
-					//hit blank space, add to newTable if size != 0
-					if (playGrid.getChildren().get(i) instanceof Region) {
-						if (meld.size() == 0) {
-							continue;
-						} else {
-							newTable.add(meld);
-							meld = new ArrayList<Tile>();
-						}
-					}else if (playGrid.getChildren().get(i) instanceof ImageView) {
-						//add tile to meld
-						ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
-						meld.add(associatedTiles.get(tileIV));
+			// Obtain the table state that is displayed in the GUI
+			List<ArrayList<Tile>> table = new ArrayList<ArrayList<Tile>>();
+			ArrayList<Tile> meld = new ArrayList<Tile>();
+			for (int i = 0; i < playGrid.getChildren().size(); ++i) {
+				//hit blank space, add to newTable if size != 0
+				if (playGrid.getChildren().get(i) instanceof Region) {
+					if (meld.size() == 0) {
+						continue;
+					} else {
+						table.add(meld);
+						meld = new ArrayList<Tile>();
 					}
+				}else if (playGrid.getChildren().get(i) instanceof ImageView) {
+					//add tile to meld
+					ImageView tileIV = (ImageView) playGrid.getChildren().get(i);
+					meld.add(associatedTiles.get(tileIV));
 				}
-			} else {
-				displayToConsole("The table has some invalid melds!");
-				return;
 			}
 			
-			rummyGame.endTurn(currentTurnUserUsedTiles, newTable);
+			rummyGame.endTurn(currentTurnUserUsedTiles, currentTurnMelds, table, playMeldBox.getChildren().size());
+			
+			// Wipe the turn's tracking information, end of turn
+			currentTurnMelds.clear();
+			currentTurnUserUsedTiles.clear();
 		});
 		
 		undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
+			
+			// Wipe the turn's tracking information, turn getting reset to beginning
+			currentTurnMelds.clear();
+			currentTurnUserUsedTiles.clear();
+			
 			rummyGame.undoTurn();
 		});
 		
