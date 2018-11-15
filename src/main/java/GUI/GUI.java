@@ -273,14 +273,6 @@ public class GUI extends Application {
 		
 		playMeldBox.getChildren().addAll(playMeldButton);
 	}
-	
-	private boolean checkForTilesInMeldArea() {
-		if (playMeldBox.getChildren().size() > 1) {
-			displayToConsole("You still have tiles you are trying to play as a meld!");
-			return false;
-		}
-		return true;
-	}
 
 	private void initTopCommands() {
 		topCommandsBox = new HBox();
