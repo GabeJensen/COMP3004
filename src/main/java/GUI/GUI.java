@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
@@ -44,6 +45,7 @@ public class GUI extends Application {
 	private static Button undoButton;
 	private static Button playMeldButton;
 	private static VBox playMeldBox;
+	private static ScrollPane horizScroll;
 	private static HBox userTilesBox;
 	private static HBox selectionContainer;
 	private static ArrayList<String> strategySelection;
@@ -188,6 +190,7 @@ public class GUI extends Application {
 
 	private void initGameElements() {
 		// Bottom card section
+		horizScroll = new ScrollPane();
 		userTilesBox = new HBox();
 		userTilesBox.setPadding(new Insets(5,5,0,5));
 		userTilesBox.setSpacing(10);
@@ -211,7 +214,8 @@ public class GUI extends Application {
 		
 		canvas.setCenter(playGrid);
 		canvas.setTop(topCommandsBox);
-		canvas.setBottom(userTilesBox);
+		horizScroll.setContent(userTilesBox);
+		canvas.setBottom(horizScroll);
 		canvas.setLeft(playMeldBox);
 		//userTilesBox.getChildren().addAll();
 		

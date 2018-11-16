@@ -104,8 +104,8 @@ public class TileRummyGame {
 	}
 	
 	public void nextTurn() {
-		int turnValue;
-		Tile tile;
+		/*int turnValue;
+		Tile tile;*/
 		
 		next();
 		/*New Idea
@@ -124,7 +124,7 @@ public class TileRummyGame {
 			
 			originator.setState(game.getTable(), currentPlayer.getTiles());
 			caretaker.add(currentPlayer.getName(), originator.saveMemento());
-			GUI.displayToConsole(currentPlayer.getName() + "'s turn	");
+			GUI.displayToConsole(currentPlayer.getName() + "'s turn!");
 			displayOtherUserHands();
 			
 			//Needs to wait for end turn input
