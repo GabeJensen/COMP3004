@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -9,6 +10,7 @@ import GUI.GUI;
 import observer.Game;
 
 public class TileRummyGame {
+	private final int penalty = 3; //Num tiles to draw when end of turn, table is invalid
 	private Game game;
 	private Player user;
 	private Player p1;
@@ -35,6 +37,9 @@ public class TileRummyGame {
 		p1 = new Player(game, "P1", new Strat1());
 		p2 = new Player(game, "P2", new Strat2());
 		p3 = new Player(game, "P3", new Strat3());
+		deck = new Deck();
+		deck.shuffleDeck();
+		emptyDeck = false;
 		game.setPlayers(user, p1, p2, p3);
 	}
 	
@@ -43,6 +48,9 @@ public class TileRummyGame {
 		originator = new Originator();
 		caretaker = new Caretaker();
 		players = new ArrayList<Player>();
+		deck = new Deck();
+		deck.shuffleDeck();
+		emptyDeck = false;
 		//Goes through all humans and names them
 		for(int i = 0; i < userCount; i++) {
 			players.add(new Player(game, "User " + (i+1), new Strat0()));
@@ -76,11 +84,7 @@ public class TileRummyGame {
 	}
 	
 	public void playGame() {
-		//Create deck
-		deck = new Deck();
-		deck.shuffleDeck();
-		emptyDeck = false;
-		
+		// deal 14 tiles to each player
 		for (Player player : players) {
 			for (int c = 0; c < 14; c++) {
 				player.addTile(deck.dealTile());
@@ -213,7 +217,27 @@ public class TileRummyGame {
 		originator.restoreMemento(caretaker.get(currentPlayer.getName()));
 		
 		game.setTable(originator.getState().getTable());
-		currentPlayer.setTiles(originator.getState().getHand());
+		
+		// deal "penalty" number of tiles to current player for invalid moves
+		ArrayList<Tile> startingHand = originator.getState().getHand();
+		for (int i = 0; i < penalty; ++i) {
+			Tile t = deck.dealTile();
+			if (t == null) {
+				emptyDeck = true;
+				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
+				break;
+			} else {
+				startingHand.add(t);
+				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
+			}
+		}
+		
+		Collections.sort(startingHand, new TileComparator());
+		currentPlayer.setTiles(startingHand);
+		
+		// save the new state of the current player with the new tiles added to hand
+		originator.setState(game.getTable(), currentPlayer.getTiles());
+		caretaker.add(currentPlayer.getName(), originator.saveMemento());
 		
 		GUI.updateDisplayHand(currentPlayer.getTiles());
 		GUI.updateDisplayTable(game.getTable());
