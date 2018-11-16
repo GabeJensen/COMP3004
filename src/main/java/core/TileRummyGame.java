@@ -219,11 +219,14 @@ public class TileRummyGame {
 		GUI.updateDisplayTable(game.getTable());
 	}
 	
-	public void endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
+	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
+		/**
+		 * Function returns -1 if an error or rule hasn't been met yet, otherwise returns 0.
+		 */
 		// if there are still tiles in the "playMeldBox"
 		if (numItemsInPlayMeldBox > 1) {
 			GUI.displayToConsole("You still have tiles you are trying to play as a meld!");
-			return;
+			return -1;
 		}
 		
 		// If the user didn't play anything this turn.
@@ -259,13 +262,13 @@ public class TileRummyGame {
 					}
 					if (handMeldSum < 30) {
 						GUI.displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
-						return;
+						return -1;
 					} else {
 						currentPlayer.playedInit30();
 					}
 				} else {
 					GUI.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
-					return;
+					return -1;
 				}
 			}
 		}
@@ -274,7 +277,7 @@ public class TileRummyGame {
 		for (ArrayList<Tile> meld: turnTableState) {
 			if (!Meld.checkValidity(meld)) {
 				GUI.displayToConsole("The table has some invalid melds!");
-				return;
+				return -1;
 			}
 		}
 		
@@ -292,5 +295,7 @@ public class TileRummyGame {
 		} else {
 			nextTurn();
 		}
+		
+		return 0;
 	}
 }
