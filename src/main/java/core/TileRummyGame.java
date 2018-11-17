@@ -87,23 +87,72 @@ public class TileRummyGame {
 			}
 		}
 		
-		//decideOrder() function goes here
-		//For now i will manually put the order
-		orderedPlayers = new LinkedList<Player>();
-		for(Player player : players) {
-			orderedPlayers.add(player);
-		}
-		
+		orderedPlayers = decideOrder(players.size());		
 		nextTurn();
 	}
 	
-	public void next() {
+	private LinkedList<Player> decideOrder(int playerCount) {
+		Deck orderDeck = new Deck();
+		orderDeck.shuffleDeck();
+		
+		ArrayList<int[]> ordering = new ArrayList<int[]>();
+		//ArrayList<Integer> values = new ArrayList<Integer>();
+		
+		int player = 0;
+		int user = 0;
+		
+		// Loop for however many players, 0 being first player, 1 the 2nd, etc.
+		for (int i = 0; i < playerCount; i++) {
+			int v = orderDeck.dealTile().getValue();
+			if (players.get(i).getName().contains("User")) {
+				user++;
+				GUI.displayToConsole("User " + (user) + " has drawn a tile with a value of " + v + "!");
+			}
+			else {
+				player++;
+				GUI.displayToConsole("Player " + (player) + " has drawn a tile with a value of " + v + "!");
+			}
+			ordering.add(new int[] {i, v});
+			//values.add(v);
+		}
+		
+		List<Integer> playerOrder = new ArrayList<Integer>(players.size());
+		
+		while (ordering.size() > 0) {
+			playerOrder.add(max(ordering));
+		}
+		
+		LinkedList<Player> drawnPlayers = new LinkedList<Player>();
+		
+		for (int i = 0; i < playerOrder.size(); i++) {
+			drawnPlayers.add(players.get(playerOrder.get(i)));
+		}
+		
+		return drawnPlayers;
+	}
+	
+	private int max(ArrayList<int[]> order) {
+		int max = Integer.MIN_VALUE;
+		int maxIndex = -1;
+		int playerIndex = -1;
+		for (int x = 0; x < order.size(); x++) {
+			if (order.get(x)[1] > max) {
+				max = order.get(x)[1];
+				playerIndex = order.get(x)[0];
+				maxIndex = x;
+			}
+		}
+		order.remove(maxIndex);
+		return playerIndex;
+	}
+	
+	private void next() {
 		//Assigns current player to next player in line and puts them at the back creating a circular queue
 		currentPlayer = orderedPlayers.remove();
 		orderedPlayers.add(currentPlayer);
 	}
 	
-	public void nextTurn() {
+	private void nextTurn() {
 		/*int turnValue;
 		Tile tile;*/
 		
@@ -136,7 +185,7 @@ public class TileRummyGame {
 		
 	}
 	
-	public void aiTurn() {
+	private void aiTurn() {
 		int turnValue;
 		Tile tile;
 		turnValue = currentPlayer.performStrategy();

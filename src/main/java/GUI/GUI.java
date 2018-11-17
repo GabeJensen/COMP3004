@@ -185,7 +185,7 @@ public class GUI extends Application {
 		Media media = new Media(Paths.get("src/main/resources/S.mp3").toUri().toString());
 		m = new MediaPlayer(media);
 		m.setCycleCount(MediaPlayer.INDEFINITE);
-//		m.play();
+		m.play();
 	}
 
 	private void initGameElements() {
