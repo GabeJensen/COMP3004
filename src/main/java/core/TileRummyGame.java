@@ -270,7 +270,7 @@ public class TileRummyGame {
 		
 		// if there are still tiles in the "playMeldBox"
 		if (numItemsInPlayMeldBox > 1) {
-			GUI.displayToConsole("You still have tiles you are trying to play as a meld!");
+			GUI.displayToConsole("There are still tiles you are trying to play as a meld!");
 			return -1;
 		}
 		
@@ -314,7 +314,7 @@ public class TileRummyGame {
 					}
 				} else {
 					// Current player attempted to re-use tiles on the table before playing their initial 30 points
-					GUI.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
+					GUI.displayToConsole("You must play the initial greater than 30 valued hand meld(s) first before using tiles on the table!");
 					playerPenalty();
 					appliedPlayerPenalty = true;
 				}
@@ -328,7 +328,7 @@ public class TileRummyGame {
 			// Check if the current state of the table is valid
 			for (ArrayList<Tile> meld: turnTableState) {
 				if (!Meld.checkValidity(meld)) {
-					GUI.displayToConsole("The table has some invalid melds!");
+					GUI.displayToConsole("The table had some invalid melds!");
 					playerPenalty();
 					appliedPlayerPenalty = true;
 					break;
