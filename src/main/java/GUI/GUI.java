@@ -42,7 +42,6 @@ public class GUI extends Application {
 	private static TextArea consoleTextArea;
 	private Button startButton;
 	private static Button endButton;
-	private static Button undoButton;
 	private static Button playMeldButton;
 	private static VBox playMeldBox;
 	private static ScrollPane horizScroll;
@@ -311,22 +310,11 @@ public class GUI extends Application {
 				currentTurnMelds.clear();
 				currentTurnUserUsedTiles.clear();
 			} else {
-				// Error encountered or rule hasn't been met yet, do nothing
+				// Still tiles in the playMeldBox
 			}
 		});
 		
-		undoButton = new Button("Undo Turn");
-		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
-			
-			// Wipe the turn's tracking information, turn getting reset to beginning
-			currentTurnMelds.clear();
-			currentTurnUserUsedTiles.clear();
-			
-			rummyGame.undoTurn();
-		});
-		
-		topCommandsBox.getChildren().addAll(endButton, undoButton);
+		topCommandsBox.getChildren().addAll(endButton);
 	}
 
 	public static void displayToConsole(String s) {
@@ -429,6 +417,5 @@ public class GUI extends Application {
 	public static void disableButtons() {
 		endButton.setDisable(true);
 		playMeldButton.setDisable(true);
-		undoButton.setDisable(true);
 	}
 }
