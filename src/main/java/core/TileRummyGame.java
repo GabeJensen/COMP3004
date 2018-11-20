@@ -305,43 +305,15 @@ public class TileRummyGame {
 		caretaker.add(currentPlayer.getName(), originator.saveMemento());
 	}
 	
-	public void undoTurn() {
-		originator.restoreMemento(caretaker.get(currentPlayer.getName()));
-		
-		game.setTable(originator.getState().getTable());
-		
-		// deal "penalty" number of tiles to current player for invalid moves
-		ArrayList<Tile> startingHand = originator.getState().getHand();
-		for (int i = 0; i < penalty; ++i) {
-			Tile t = deck.dealTile();
-			if (t == null) {
-				emptyDeck = true;
-				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
-				break;
-			} else {
-				startingHand.add(t);
-				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
-			}
-		}
-		
-		Collections.sort(startingHand, new TileComparator());
-		currentPlayer.setTiles(startingHand);
-		
-		// save the new state of the current player with the new tiles added to hand
-		originator.setState(game.getTable(), currentPlayer.getTiles());
-		caretaker.add(currentPlayer.getName(), originator.saveMemento());
-		
-		GUI.updateDisplayHand(currentPlayer.getTiles());
-		GUI.updateDisplayTable(game.getTable());
-	}
-	
 	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
 		/**
-		 * Function returns -1 if an error or rule hasn't been met yet, otherwise returns 0.
+		 * Function returns -1 if there are tiles in the "playMeldBox", otherwise returns 0.
 		 */
+		boolean appliedPlayerPenalty = false;
+		
 		// if there are still tiles in the "playMeldBox"
 		if (numItemsInPlayMeldBox > 1) {
-			GUI.displayToConsole("You still have tiles you are trying to play as a meld!");
+			GUI.displayToConsole("There are still tiles you are trying to play as a meld!");
 			return -1;
 		}
 		
@@ -378,33 +350,49 @@ public class TileRummyGame {
 					}
 					if (handMeldSum < 30) {
 						GUI.displayToConsole("The value of the hand melds played do not add up to at least 30 points!");
-						return -1;
+						playerPenalty();
+						appliedPlayerPenalty = true;
 					} else {
 						currentPlayer.playedInit30();
 					}
 				} else {
-					GUI.displayToConsole("You must play the the initial greater than 30 valued hand meld(s) first!");
-					return -1;
+					// Current player attempted to re-use tiles on the table before playing their initial 30 points
+					GUI.displayToConsole("You must play the initial greater than 30 valued hand meld(s) first before using tiles on the table!");
+					playerPenalty();
+					appliedPlayerPenalty = true;
 				}
 			}
 		}
 		
-		// Check if the current state of the table is valid
-		for (ArrayList<Tile> meld: turnTableState) {
-			if (!Meld.checkValidity(meld)) {
-				GUI.displayToConsole("The table has some invalid melds!");
-				return -1;
+		// After checking all rules and no player penalty has been applied, check if the table state is valid
+		// Note: This if-statement is to prevent penalizing the current player twice (e.g., haven't played initial 30 but, 
+		// 			played meld(s) using table tiles and left the table in an invalid state)
+		if (!appliedPlayerPenalty) {
+			// Check if the current state of the table is valid
+			for (ArrayList<Tile> meld: turnTableState) {
+				if (!Meld.checkValidity(meld)) {
+					GUI.displayToConsole("The table had some invalid melds!");
+					playerPenalty();
+					appliedPlayerPenalty = true;
+					break;
+				}
 			}
 		}
 		
-		// At this point, all rule checking is complete
-		// Remove the user used tiles from user hand
-		for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
-			currentPlayer.removeTile(currentTurnUserUsedTiles.get(i));
+		// At this point, all checking is complete
+		if (appliedPlayerPenalty) {
+			// display the restored table
+			// Note: the restored table happens in playerPenalty()
+			GUI.updateDisplayTable(game.getTable());
+		} else {
+			// Remove the user used tiles from user hand
+			for (int i = 0; i < currentTurnUserUsedTiles.size(); ++i) {
+				currentPlayer.removeTile(currentTurnUserUsedTiles.get(i));
+			}
+			game.setTable(turnTableState);
 		}
-		game.setTable(turnTableState);
 		
-		// Check if human player on this turn has won or nots
+		// Check if human player on this turn has won or not
 		if(currentPlayer.getHandCount() == 0) {
 			GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
 			GUI.disableButtons();
@@ -414,5 +402,28 @@ public class TileRummyGame {
 		stopTimer(time_sched);
 		startTimer(time_sched, turnDuration);
 		return 0;
+	}
+	
+	private void playerPenalty() {
+		originator.restoreMemento(caretaker.get(currentPlayer.getName()));
+		
+		game.setTable(originator.getState().getTable());
+		
+		// deal "penalty" number of tiles to current player for invalid moves
+		ArrayList<Tile> startingHand = originator.getState().getHand();
+		for (int i = 0; i < penalty; ++i) {
+			Tile t = deck.dealTile();
+			if (t == null) {
+				emptyDeck = true;
+				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
+				break;
+			} else {
+				startingHand.add(t);
+				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
+			}
+		}
+		
+		Collections.sort(startingHand, new TileComparator());
+		currentPlayer.setTiles(startingHand);
 	}
 }

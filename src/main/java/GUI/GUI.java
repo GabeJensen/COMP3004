@@ -42,7 +42,6 @@ public class GUI extends Application {
 	private static TextArea consoleTextArea;
 	private Button startButton;
 	private static Button endButton;
-	private static Button undoButton;
 	private static Button playMeldButton;
 	private static Label time;
 	private static VBox playMeldBox;
@@ -312,11 +311,10 @@ public class GUI extends Application {
 				currentTurnMelds.clear();
 				currentTurnUserUsedTiles.clear();
 			} else {
-				// Error encountered or rule hasn't been met yet, do nothing
+				// Still tiles in the playMeldBox
 			}
 		});
-		
-		undoButton = new Button("Undo Turn");
+		/*undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
 			
@@ -325,12 +323,12 @@ public class GUI extends Application {
 			currentTurnUserUsedTiles.clear();
 			
 			rummyGame.undoTurn();
-		});
+		});*/
 		
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
 		
-		topCommandsBox.getChildren().addAll(endButton, undoButton, time);
+		topCommandsBox.getChildren().addAll(endButton, time);
 	}
 
 	public static void displayToConsole(String s) {
@@ -437,6 +435,5 @@ public class GUI extends Application {
 	public static void disableButtons() {
 		endButton.setDisable(true);
 		playMeldButton.setDisable(true);
-		undoButton.setDisable(true);
 	}
 }
