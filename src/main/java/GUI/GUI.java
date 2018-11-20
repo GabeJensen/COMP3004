@@ -44,6 +44,7 @@ public class GUI extends Application {
 	private static Button endButton;
 	private static Button undoButton;
 	private static Button playMeldButton;
+	private static Label time;
 	private static VBox playMeldBox;
 	private static ScrollPane horizScroll;
 	private static HBox userTilesBox;
@@ -326,11 +327,18 @@ public class GUI extends Application {
 			rummyGame.undoTurn();
 		});
 		
-		topCommandsBox.getChildren().addAll(endButton, undoButton);
+		time = new Label();
+		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
+		
+		topCommandsBox.getChildren().addAll(endButton, undoButton, time);
 	}
 
 	public static void displayToConsole(String s) {
 		consoleTextArea.appendText(s + "\n");
+	}
+	
+	public static void updateTime(int t) {
+		time.setText("Time: " + Integer.toString(t));
 	}
 	
 	private void updateTempMelds() {

@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Queue;
 
 import GUI.GUI;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 import observer.Game;
 
 public class TileRummyGame {
@@ -23,6 +28,24 @@ public class TileRummyGame {
 	private Originator originator;
 	private Caretaker caretaker;
 	private boolean emptyDeck;
+	
+	//TODO: "I" will change this to 120 when it is all figured out.
+	private final int turnDuration = 30;
+	private int currentTurnTime;
+	
+	Timeline time_sched = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent ev) {
+			currentTurnTime--;
+			GUI.updateTime(currentTurnTime);
+			timeEnd();
+		}
+		public void timeEnd() {
+			if (currentTurnTime == 0) {
+				GUI.displayToConsole("EOTime");
+			}
+		}
+	}));
 	
 	public static void main(String[] args) {
 		javafx.application.Application.launch(GUI.class);
@@ -100,7 +123,7 @@ public class TileRummyGame {
 		orderDeck.shuffleDeck();
 		
 		ArrayList<int[]> ordering = new ArrayList<int[]>();
-		//ArrayList<Integer> values = new ArrayList<Integer>();
+		ArrayList<Integer> values = new ArrayList<Integer>();
 		
 		int player = 0;
 		int user = 0;
@@ -108,6 +131,11 @@ public class TileRummyGame {
 		// Loop for however many players, 0 being first player, 1 the 2nd, etc.
 		for (int i = 0; i < playerCount; i++) {
 			int v = orderDeck.dealTile().getValue();
+			//TODO: Handle when a Joker is drawn here.
+			// should just be adding a condition if joker's value for example were "*" or -1 to this while loop below
+			while (values.contains(v)) {
+				v = orderDeck.dealTile().getValue();
+			}
 			if (players.get(i).getName().contains("User")) {
 				user++;
 				GUI.displayToConsole("User " + (user) + " has drawn a tile with a value of " + v + "!");
@@ -117,7 +145,7 @@ public class TileRummyGame {
 				GUI.displayToConsole("Player " + (player) + " has drawn a tile with a value of " + v + "!");
 			}
 			ordering.add(new int[] {i, v});
-			//values.add(v);
+			values.add(v);
 		}
 		
 		List<Integer> playerOrder = new ArrayList<Integer>(players.size());
@@ -156,6 +184,16 @@ public class TileRummyGame {
 		orderedPlayers.add(currentPlayer);
 	}
 	
+	private void startTimer(Timeline t, int duration) {
+		this.currentTurnTime = duration;
+		t.setCycleCount(duration);
+		t.play();
+	}
+	
+	private void stopTimer(Timeline t) {
+		t.stop();
+	}
+	
 	private void nextTurn() {
 		/*int turnValue;
 		Tile tile;*/
@@ -171,7 +209,12 @@ public class TileRummyGame {
 		 * properly reflect the player who's tiles those belong to
 		 * */
 		
+		GUI.updateTime(turnDuration);
+		
 		if(currentPlayer.getName().contains("User")) {
+			stopTimer(time_sched);
+			startTimer(time_sched, turnDuration);
+			
 			//User stuff
 			GUI.updateDisplayHand(currentPlayer.getTiles());
 			
@@ -368,7 +411,8 @@ public class TileRummyGame {
 		} else {
 			nextTurn();
 		}
-		
+		stopTimer(time_sched);
+		startTimer(time_sched, turnDuration);
 		return 0;
 	}
 }
