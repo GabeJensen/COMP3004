@@ -231,7 +231,6 @@ public class TileRummyGame {
 			aiTurn();
 			nextTurn();
 		}
-		
 	}
 	
 	private void aiTurn() {

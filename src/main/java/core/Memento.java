@@ -28,8 +28,7 @@ public class Memento {
 		ArrayList<Tile> tileCopy = new ArrayList<Tile>();
 		
 		for (Tile t : tiles) {
-			String[] tileInfo = t.getInfo();
-			tileCopy.add(new Tile(tileInfo[0], tileInfo[1]));
+			tileCopy.add(t.copyTile(t));
 		}
 		
 		return tileCopy;

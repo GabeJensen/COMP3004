@@ -48,6 +48,19 @@ public class Tile {
 		}
 	}
 	
+	private Tile() {
+		this.handPlayed = false;
+		this.tablePlayed = false;
+	}
+	
+	public Tile copyTile(Tile t) {
+		Tile newTile = new Tile();
+		String[] copyInfo = t.getInfo();
+		newTile.color = copyInfo[0];
+		newTile.value = copyInfo[1];
+		return newTile;
+	}
+	
 	@Override
 	public String toString() {
 		return color + value;
