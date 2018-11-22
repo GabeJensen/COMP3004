@@ -42,7 +42,9 @@ public class TileRummyGame {
 		}
 		public void timeEnd() {
 			if (currentTurnTime == 0) {
-				GUI.displayToConsole("EOTime");
+				playerPenalty();
+				GUI.updateDisplayHand(currentPlayer.getTiles());
+				GUI.displayToConsole(currentPlayer.getName() + " ran out of time! The penalty was applied and " + currentPlayer.getName() + " drew 3 tiles!");
 			}
 		}
 	}));
