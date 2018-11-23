@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -51,7 +52,7 @@ public class GUI extends Application {
 	private static ArrayList<String> strategySelection;
 	private static ComboBox<Integer> playerCount;
 	private static ComboBox<Integer> userCount;
-	private HBox topCommandsBox;
+	private static HBox topCommandsBox;
 	private static TilePane playGrid;
 	private static List<ArrayList<Tile>> currentTurnMelds;
 	private static ArrayList<Tile> currentTurnUserUsedTiles;
@@ -190,6 +191,10 @@ public class GUI extends Application {
 		m.setCycleCount(MediaPlayer.INDEFINITE);
 		m.play();
 	}
+	
+	public static void destroyTime() {
+		topCommandsBox.getChildren().remove(time);
+	}
 
 	private void initGameElements() {
 		// Bottom card section
@@ -321,16 +326,6 @@ public class GUI extends Application {
 				// Still tiles in the playMeldBox
 			}
 		});
-		/*undoButton = new Button("Undo Turn");
-		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
-			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
-			
-			// Wipe the turn's tracking information, turn getting reset to beginning
-			currentTurnMelds.clear();
-			currentTurnUserUsedTiles.clear();
-			
-			rummyGame.undoTurn();
-		});*/
 		
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
@@ -338,12 +333,22 @@ public class GUI extends Application {
 		topCommandsBox.getChildren().addAll(endButton, time);
 	}
 
+	public static void undoTurn() {
+		playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
+		
+		// Wipe the turn's tracking information, turn getting reset to beginning
+		currentTurnMelds.clear();
+		currentTurnUserUsedTiles.clear();
+	}
+	
 	public static void displayToConsole(String s) {
 		consoleTextArea.appendText(s + "\n");
 	}
 	
 	public static void updateTime(int t) {
-		time.setText("Time: " + Integer.toString(t));
+		if (time != null) {
+			time.setText("Time: " + Integer.toString(t));
+		}
 	}
 	
 	private static void removeImageReference(ArrayList<DisplayTile> holder) {
@@ -353,8 +358,22 @@ public class GUI extends Application {
 		holder.clear();
 	}
 	
+	private static void clearUnusedIV() {
+		/*for (HashMap.Entry<ImageView, Tile> mapping : associatedTiles.entrySet()) {
+			ImageView id = mapping.getKey();
+			if (!(playGrid.getChildren().contains(id)) && !(userTilesBox.getChildren().contains(id))) {
+				associatedTiles.remove(id);
+			}
+		}*/
+		/*associatedTiles.forEach((iv, t) -> {
+			if (!(playGrid.getChildren().contains(iv)) && !(userTilesBox.getChildren().contains(iv))) {
+				associatedTiles.remove(iv);
+			}
+		});*/
+	}
+	
 	private void updateTempMelds() {
-		removeImageReference(dtTempRef);
+		//removeImageReference(dtTempRef);
 		for (int x = currentTurnMelds.size() - 1; x < currentTurnMelds.size(); x++) {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
@@ -414,7 +433,8 @@ public class GUI extends Application {
 	}
 	
 	private static void clearDisplayTable () {
-		removeImageReference(dtTabRef);
+		//removeImageReference(dtTabRef);
+		clearUnusedIV();
 		playGrid.getChildren().clear();
 	}
 	
@@ -448,7 +468,8 @@ public class GUI extends Application {
 	}
 	
 	private static void clearDisplayHand() {
-		removeImageReference(dtHandRef);
+		//removeImageReference(dtHandRef);
+		clearUnusedIV();
 		userTilesBox.getChildren().clear();
 	}
 	

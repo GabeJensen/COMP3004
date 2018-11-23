@@ -42,9 +42,7 @@ public class TileRummyGame {
 		}
 		public void timeEnd() {
 			if (currentTurnTime == 0) {
-				playerPenalty();
-				GUI.updateDisplayHand(currentPlayer.getTiles());
-				GUI.displayToConsole(currentPlayer.getName() + " ran out of time! The penalty was applied and " + currentPlayer.getName() + " drew 3 tiles!");
+				timerOut();
 			}
 		}
 	}));
@@ -214,7 +212,7 @@ public class TileRummyGame {
 		GUI.updateTime(turnDuration);
 		
 		if(currentPlayer.getName().contains("User")) {
-			stopTimer(time_sched);
+			//stopTimer(time_sched);
 			startTimer(time_sched, turnDuration);
 			
 			//User stuff
@@ -227,13 +225,17 @@ public class TileRummyGame {
 			
 			//Needs to wait for end turn input
 		} else {
-			//Ai stuff
-			aiTurn();
+			//AI Turn
+			int aiVal = aiTurn();
+			// AI Turn returns -1 if someone won
+			if (aiVal == -1) {
+				return;
+			}
 			nextTurn();
 		}
 	}
 	
-	private void aiTurn() {
+	private int aiTurn() {
 		int turnValue;
 		Tile tile;
 		turnValue = currentPlayer.performStrategy();
@@ -256,54 +258,19 @@ public class TileRummyGame {
 			GUI.displayToConsole(currentPlayer.getName() + " played this turn!");
 			if(currentPlayer.getHandCount() == 0) {
 				GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
+				System.out.println(time_sched.toString());
+				stopTimer(time_sched);
+				stopTimer(time_sched);
+				System.out.println(time_sched.toString());
+				GUI.destroyTime();
 				GUI.disableButtons();
+				return -1;
 			} else {
 				GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());				
 			}
 		}
-		
 		GUI.updateDisplayTable(game.getTable());
-	}
-	
-	@Deprecated
-	public void gameLoop() {
-		Player[] nonHumanPlayers = {p1, p2, p3};
-		int turnValue;
-		Tile tile;
-		for (Player p : nonHumanPlayers) {
-			turnValue = p.performStrategy();
-			if (turnValue == 0) {
-				if(!emptyDeck) {
-					tile = deck.dealTile();
-					if(tile == null) {
-						emptyDeck = true;
-						GUI.displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
-					} else {
-						p.addTile(tile);
-						GUI.displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
-					}
-				} else {
-					GUI.displayToConsole(p.getName() + " can't draw because the deck is empty!");
-				}
-				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-			else if (turnValue == 1) {
-				GUI.displayToConsole(p.getName() + " played this turn!");
-				if(p.getHandCount() == 0) {
-					GUI.displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
-					GUI.disableButtons();
-					break;
-				}
-				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-		}		
-		
-		GUI.updateDisplayHand(currentPlayer.getTiles());
-		GUI.updateDisplayTable(game.getTable());
-		originator.setState(game.getTable(), currentPlayer.getTiles());
-		caretaker.add(currentPlayer.getName(), originator.saveMemento());
+		return 0;
 	}
 	
 	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
@@ -396,18 +363,30 @@ public class TileRummyGame {
 		// Check if human player on this turn has won or not
 		if(currentPlayer.getHandCount() == 0) {
 			GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
+			System.out.println(time_sched);
+			stopTimer(time_sched);
+			System.out.println(time_sched);
+			GUI.destroyTime();
 			GUI.disableButtons();
+			return 0;
 		} else {
 			nextTurn();
 		}
 		stopTimer(time_sched);
-		startTimer(time_sched, turnDuration);
+		//startTimer(time_sched, turnDuration);
 		return 0;
+	}
+	
+	private void timerOut() {
+		GUI.displayToConsole(currentPlayer.getName() + " ran out of time! The penalty was applied and " + currentPlayer.getName() + " draws 3 tiles!");
+		playerPenalty();
+		nextTurn();
+		stopTimer(time_sched);
+		//startTimer(time_sched, turnDuration);
 	}
 	
 	private void playerPenalty() {
 		originator.restoreMemento(caretaker.get(currentPlayer.getName()));
-		
 		game.setTable(originator.getState().getTable());
 		
 		// deal "penalty" number of tiles to current player for invalid moves
@@ -423,6 +402,8 @@ public class TileRummyGame {
 				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
 			}
 		}
+		
+		GUI.undoTurn();
 		
 		Collections.sort(startingHand, new TileComparator());
 		currentPlayer.setTiles(startingHand);
