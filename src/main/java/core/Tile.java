@@ -9,10 +9,12 @@ public class Tile {
 	
 	public boolean handPlayed;
 	public boolean tablePlayed;
+	private boolean isJoker;
 	
 	public Tile(String c, String v) {
 		handPlayed = false;
 		tablePlayed = false;
+		isJoker = false;
 		String[] validColors = {"R", "B", "G", "O"};
 		c = c.toUpperCase();
 		boolean validFlag = false;
@@ -25,27 +27,33 @@ public class Tile {
 			}
 		}
 		
-		try {
-			int intV;
-			intV = Integer.parseInt(v);
-			if ((intV > 0) || (intV < 14)) {
-				this.value = v;
+		//Checks for Joker
+		if(v.equals("J")) {
+			this.value = "-1";
+			isJoker = true;
+		} else {
+			try {
+				int intV;
+				intV = Integer.parseInt(v);
+				if ((intV > 0) || (intV < 14)) {
+					this.value = v;
+				}
+				else {
+					throw new IllegalArgumentException("Invalid value out of range: " + c);
+				}
 			}
-			else {
-				throw new IllegalArgumentException("Invalid value out of range: " + c);
-			}
-		}
-		catch (NumberFormatException e) {
-			throw e;
+			catch (NumberFormatException e) {
+				throw e;
+			}		
 		}
 		
 		if (validFlag) {
 			this.color = c;
-			this.value = v;
+//			this.value = v;
 		}
 		else {
 			throw new IllegalArgumentException("Invalid color: " + c);
-		}
+		}	
 	}
 	
 	private Tile() {
@@ -61,8 +69,33 @@ public class Tile {
 		return newTile;
 	}
 	
+	public boolean setValue(String v) {
+		if(isJoker) {
+			try {
+				int intV;
+				intV = Integer.parseInt(v);
+				if ((intV > 0) && (intV < 14)) {
+					this.value = v;
+					return true;
+				}
+
+			}
+			catch (NumberFormatException e) {
+				throw e;
+			}
+		} 
+		return false;
+	}
+	
+	public boolean isJoker() {
+		return isJoker;
+	}
+	
 	@Override
 	public String toString() {
+		if(isJoker) {
+			return color + "J";
+		}
 		return color + value;
 	}
 	
@@ -71,6 +104,9 @@ public class Tile {
 	}
 	
 	public String[] getInfo() {
+		if(isJoker) {
+			return new String[] {color, "J"};
+		}
 		return new String[] {color, value};
 	}
 	
