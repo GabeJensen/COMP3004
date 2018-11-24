@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import GUI.GUI;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.util.Duration;
+import javafx.application.Platform;
 import observer.Game;
 
 public class TileRummyGame {
@@ -32,22 +30,42 @@ public class TileRummyGame {
 	//TODO: "I" will change this to 120 when it is all figured out.
 	private final int turnDuration = 30;
 	private int currentTurnTime;
+	private Timer timer;
+	private Thread timeThread;
+	private TimerTask timeAction() {
+		return new TimerTask() {
+			/*private static TimerTask singleInstance = new TimerTask();
+			
+			private void TimerTask() {}
+			
+			public static TimerTask getInstance() {
+				return singleInstance;
+			}*/
+			
+			@Override
+			public void run() {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						currentTurnTime--;
+						GUI.updateTime(currentTurnTime);
+						timeEnd();
+					}
+				});
 	
-	Timeline time_sched = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-		@Override
-		public void handle(ActionEvent ev) {
-			currentTurnTime--;
-			GUI.updateTime(currentTurnTime);
-			timeEnd();
-		}
-		public void timeEnd() {
-			if (currentTurnTime == 0) {
-				playerPenalty();
-				GUI.updateDisplayHand(currentPlayer.getTiles());
-				GUI.displayToConsole(currentPlayer.getName() + " ran out of time! The penalty was applied and " + currentPlayer.getName() + " drew 3 tiles!");
 			}
-		}
-	}));
+			public void timeEnd() {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						if (currentTurnTime <= 0) {
+							timerOut();
+						}
+					}
+				});
+			}
+		};
+	}
 	
 	public static void main(String[] args) {
 		javafx.application.Application.launch(GUI.class);
@@ -76,12 +94,13 @@ public class TileRummyGame {
 		deck = new Deck();
 		deck.shuffleDeck();
 		emptyDeck = false;
-		//Goes through all humans and names them
+		
+		// Goes through all humans and names them
 		for(int i = 0; i < userCount; i++) {
 			players.add(new Player(game, "User " + (i+1), new Strat0()));
 		}
 		
-		//Goes throgh al strategies and names them appropriately
+		//Goes through AI strategies and names them appropriately
 		for(int i = 0; i < strategySelection.size(); i++) {
 			String selection = strategySelection.get(i);
 			String name = "P" + (i+1);
@@ -95,6 +114,8 @@ public class TileRummyGame {
 				// Strategy 4...
 			}
 		}
+		
+		timer = new Timer();
 
 		game.setPlayers(players);
 	}
@@ -105,7 +126,7 @@ public class TileRummyGame {
 				GUI.displayToConsole(player.getName() + "'s hand: " + player.getHand());
 			}
 		}
-		GUI.displayToConsole("----------");
+		GUI.displayToConsole("--------------------------------------------------------");
 	}
 	
 	public void playGame() {
@@ -152,8 +173,15 @@ public class TileRummyGame {
 		
 		List<Integer> playerOrder = new ArrayList<Integer>(players.size());
 		
-		while (ordering.size() > 0) {
-			playerOrder.add(max(ordering));
+		int startPlayer = max(ordering);
+		playerOrder.add(startPlayer);
+		// Set the rest of the clockwise players
+		for (int p = (startPlayer + 1); p < ordering.size(); p++) {
+			playerOrder.add(ordering.get(p)[0]);
+		}
+		// Set any inital part of the clockwise players
+		for (int p_icw = 0; p_icw < startPlayer; p_icw++) {
+			playerOrder.add(ordering.get(p_icw)[0]);
 		}
 		
 		LinkedList<Player> drawnPlayers = new LinkedList<Player>();
@@ -167,16 +195,16 @@ public class TileRummyGame {
 	
 	private int max(ArrayList<int[]> order) {
 		int max = Integer.MIN_VALUE;
-		int maxIndex = -1;
+		//int maxIndex = -1;
 		int playerIndex = -1;
 		for (int x = 0; x < order.size(); x++) {
 			if (order.get(x)[1] > max) {
 				max = order.get(x)[1];
 				playerIndex = order.get(x)[0];
-				maxIndex = x;
+				//maxIndex = x;
 			}
 		}
-		order.remove(maxIndex);
+		//order.remove(maxIndex);
 		return playerIndex;
 	}
 	
@@ -186,14 +214,21 @@ public class TileRummyGame {
 		orderedPlayers.add(currentPlayer);
 	}
 	
-	private void startTimer(Timeline t, int duration) {
-		this.currentTurnTime = duration;
-		t.setCycleCount(duration);
-		t.play();
+	private void startTimer() {
+		currentTurnTime = turnDuration;
+		timeThread = Thread.currentThread();
+		timer = new Timer(true); // Creating timers as true is creating it as a daemon thread. The program SHOULD exit completely if the remaining threads are daemon threads.
+		timer.schedule(timeAction(), 0, 1000);
 	}
 	
-	private void stopTimer(Timeline t) {
-		t.stop();
+	public void stopTimer() {
+		try {
+			timer.cancel();
+			timeThread.interrupt();
+		}
+		catch (Exception e) {
+			// 
+		}
 	}
 	
 	private void nextTurn() {
@@ -214,8 +249,7 @@ public class TileRummyGame {
 		GUI.updateTime(turnDuration);
 		
 		if(currentPlayer.getName().contains("User")) {
-			stopTimer(time_sched);
-			startTimer(time_sched, turnDuration);
+			startTimer();
 			
 			//User stuff
 			GUI.updateDisplayHand(currentPlayer.getTiles());
@@ -228,12 +262,16 @@ public class TileRummyGame {
 			//Needs to wait for end turn input
 		} else {
 			//Ai stuff
-			aiTurn();
+			int aiVal = aiTurn();
+			// AITurn returns -1 if someone won
+			if (aiVal == -1) {
+				return;
+			}
 			nextTurn();
 		}
 	}
 	
-	private void aiTurn() {
+	private int aiTurn() {
 		int turnValue;
 		Tile tile;
 		turnValue = currentPlayer.performStrategy();
@@ -257,53 +295,15 @@ public class TileRummyGame {
 			if(currentPlayer.getHandCount() == 0) {
 				GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
 				GUI.disableButtons();
+				stopTimer();
+				return -1;
 			} else {
 				GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());				
 			}
 		}
 		
 		GUI.updateDisplayTable(game.getTable());
-	}
-	
-	@Deprecated
-	public void gameLoop() {
-		Player[] nonHumanPlayers = {p1, p2, p3};
-		int turnValue;
-		Tile tile;
-		for (Player p : nonHumanPlayers) {
-			turnValue = p.performStrategy();
-			if (turnValue == 0) {
-				if(!emptyDeck) {
-					tile = deck.dealTile();
-					if(tile == null) {
-						emptyDeck = true;
-						GUI.displayToConsole(p.getName() + " tried drawing, but the deck was empty!");
-					} else {
-						p.addTile(tile);
-						GUI.displayToConsole(p.getName() + " draws " + tile.toString() + "!" );
-					}
-				} else {
-					GUI.displayToConsole(p.getName() + " can't draw because the deck is empty!");
-				}
-				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-			else if (turnValue == 1) {
-				GUI.displayToConsole(p.getName() + " played this turn!");
-				if(p.getHandCount() == 0) {
-					GUI.displayToConsole(p.getName() + " says: 'RUMMIKUB!' They won the game!");
-					GUI.disableButtons();
-					break;
-				}
-				GUI.displayToConsole(p.getName() + "'s hand: " + p.getHand());
-				continue;
-			}
-		}		
-		
-		GUI.updateDisplayHand(currentPlayer.getTiles());
-		GUI.updateDisplayTable(game.getTable());
-		originator.setState(game.getTable(), currentPlayer.getTiles());
-		caretaker.add(currentPlayer.getName(), originator.saveMemento());
+		return 0;
 	}
 	
 	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
@@ -338,7 +338,7 @@ public class TileRummyGame {
 				// No table tiles allowed to be played until the initial 30 meld(s)
 				int tileCount = 0;
 				for (ArrayList<Tile> meld : currentTurnMelds) {
-					for (Tile t : meld) {
+					for (@SuppressWarnings("unused") Tile t : meld) {
 						tileCount++;
 					}
 				}
@@ -397,12 +397,20 @@ public class TileRummyGame {
 		if(currentPlayer.getHandCount() == 0) {
 			GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
 			GUI.disableButtons();
+			stopTimer();
+			return 0;
 		} else {
+			stopTimer();
 			nextTurn();
 		}
-		stopTimer(time_sched);
-		startTimer(time_sched, turnDuration);
 		return 0;
+	}
+	
+	private void timerOut() {
+		GUI.displayToConsole(currentPlayer.getName() + " ran out of time! The penalty was applied and " + currentPlayer.getName() + " draws 3 tiles!");
+		playerPenalty();
+		stopTimer();
+		nextTurn();
 	}
 	
 	private void playerPenalty() {
@@ -424,7 +432,10 @@ public class TileRummyGame {
 			}
 		}
 		
+		GUI.undoTurn();
+		
 		Collections.sort(startingHand, new TileComparator());
 		currentPlayer.setTiles(startingHand);
+		GUI.updateDisplayHand(currentPlayer.getTiles());
 	}
 }

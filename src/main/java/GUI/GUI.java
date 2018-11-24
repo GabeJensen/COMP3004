@@ -58,9 +58,9 @@ public class GUI extends Application {
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
 	private static ArrayList<Tile> tablePlayTiles;
-	private static ArrayList<DisplayTile> dtTabRef;
-	private static ArrayList<DisplayTile> dtHandRef;
-	private static ArrayList<DisplayTile> dtTempRef;
+//	private static ArrayList<DisplayTile> dtTabRef;
+//	private static ArrayList<DisplayTile> dtHandRef;
+//	private static ArrayList<DisplayTile> dtTempRef;
 	private TileRummyGame rummyGame;
 	
 	@Override
@@ -73,6 +73,17 @@ public class GUI extends Application {
 		// Create out rummyGame "controller" object and initialize our window
 		this.rummyGame = new TileRummyGame();
 		initWindow(primaryStage);
+	}
+	
+	@Override
+	public void stop() {
+		try {
+			rummyGame.stopTimer();
+			System.exit(0);
+		}
+		catch (Exception e) {
+			// no instance of timer was run.
+		}
 	}
 
 	private void initWindow(Stage primaryStage) {
@@ -222,9 +233,9 @@ public class GUI extends Application {
 		canvas.setLeft(playMeldBox);
 		//userTilesBox.getChildren().addAll();
 		
-		dtTabRef = new ArrayList<DisplayTile>();
+		/*dtTabRef = new ArrayList<DisplayTile>();
 		dtHandRef = new ArrayList<DisplayTile>();
-		dtTempRef = new ArrayList<DisplayTile>();
+		dtTempRef = new ArrayList<DisplayTile>();*/
 		
 		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
 		rummyGame.playGame();
@@ -346,15 +357,36 @@ public class GUI extends Application {
 		time.setText("Time: " + Integer.toString(t));
 	}
 	
-	private static void removeImageReference(ArrayList<DisplayTile> holder) {
+/*	private static void removeImageReference(ArrayList<DisplayTile> holder) {
 		for (int tc = 0; tc < holder.size(); tc++) {
 			associatedTiles.remove(holder.get(tc).iv);
 		}
 		holder.clear();
+	}*/
+	
+	public static void undoTurn() {
+		playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
+		
+		// Wipe the turn's tracking information, reset turn to beginning.
+		currentTurnMelds.clear();
+		currentTurnUserUsedTiles.clear();
+	}
+	
+	private static void clearUnusedIV() {
+		ArrayList<ImageView> unusedImageViews = new ArrayList<ImageView>();
+		associatedTiles.forEach((iv, t) -> {
+			if (!(playGrid.getChildren().contains(iv)) && !(userTilesBox.getChildren().contains(iv))) {
+				unusedImageViews.add(iv);
+			}
+		});
+		for (ImageView i : unusedImageViews) {
+			associatedTiles.remove(i);
+		}
 	}
 	
 	private void updateTempMelds() {
-		removeImageReference(dtTempRef);
+		//removeImageReference(dtTempRef);
+		clearUnusedIV();
 		for (int x = currentTurnMelds.size() - 1; x < currentTurnMelds.size(); x++) {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
 				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
@@ -378,7 +410,7 @@ public class GUI extends Application {
 //				});
 				playGrid.getChildren().add(dTile.iv);
 				associatedTiles.put(dTile.iv, meldTile);
-				dtTempRef.add(dTile);
+				//dtTempRef.add(dTile);
 			}
 			playGrid.getChildren().add(new Region());
 		}
@@ -407,14 +439,15 @@ public class GUI extends Application {
 				});
 				playGrid.getChildren().add(dTile.iv);
 				associatedTiles.put(dTile.iv, meldTile);
-				dtTabRef.add(dTile);
+				//dtTabRef.add(dTile);
 			}
 			playGrid.getChildren().add(new Region());
 		}
 	}
 	
 	private static void clearDisplayTable () {
-		removeImageReference(dtTabRef);
+		//removeImageReference(dtTabRef);
+		clearUnusedIV();
 		playGrid.getChildren().clear();
 	}
 	
@@ -443,12 +476,13 @@ public class GUI extends Application {
 			});
 			userTilesBox.getChildren().addAll(dTile.iv);
 			associatedTiles.put(dTile.iv, userTile);
-			dtHandRef.add(dTile);
+			//dtHandRef.add(dTile);
 		}
 	}
 	
 	private static void clearDisplayHand() {
-		removeImageReference(dtHandRef);
+		//removeImageReference(dtHandRef);
+		clearUnusedIV();
 		userTilesBox.getChildren().clear();
 	}
 	
