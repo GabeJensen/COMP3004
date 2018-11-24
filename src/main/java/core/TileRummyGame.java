@@ -153,8 +153,15 @@ public class TileRummyGame {
 		
 		List<Integer> playerOrder = new ArrayList<Integer>(players.size());
 		
-		while (ordering.size() > 0) {
-			playerOrder.add(max(ordering));
+		int startPlayer = max(ordering);
+		playerOrder.add(startPlayer);
+		// Set the rest of the clockwise players
+		for (int p = (startPlayer + 1); p < ordering.size(); p++) {
+			playerOrder.add(ordering.get(p)[0]);
+		}
+		// Set any inital part of the clockwise players
+		for (int p_icw = 0; p_icw < startPlayer; p_icw++) {
+			playerOrder.add(ordering.get(p_icw)[0]);
 		}
 		
 		LinkedList<Player> drawnPlayers = new LinkedList<Player>();
@@ -168,16 +175,16 @@ public class TileRummyGame {
 	
 	private int max(ArrayList<int[]> order) {
 		int max = Integer.MIN_VALUE;
-		int maxIndex = -1;
+		//int maxIndex = -1;
 		int playerIndex = -1;
 		for (int x = 0; x < order.size(); x++) {
 			if (order.get(x)[1] > max) {
 				max = order.get(x)[1];
 				playerIndex = order.get(x)[0];
-				maxIndex = x;
+				//maxIndex = x;
 			}
 		}
-		order.remove(maxIndex);
+		//order.remove(maxIndex);
 		return playerIndex;
 	}
 	
