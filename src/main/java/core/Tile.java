@@ -70,11 +70,13 @@ public class Tile {
 	}
 	
 	public boolean setValue(String v) {
+		//Only works if it's a joker
 		if(isJoker) {
 			try {
 				int intV;
 				intV = Integer.parseInt(v);
-				if ((intV > 0) && (intV < 14)) {
+				//Can be set back to a Joker (-1)
+				if (((intV > 0) && (intV < 14)) || intV == -1) {
 					this.value = v;
 					return true;
 				}
@@ -84,6 +86,23 @@ public class Tile {
 				throw e;
 			}
 		} 
+		return false;
+	}
+	
+	public boolean setColor(String c) {
+		//Only works if it is a Joker
+		if(isJoker) {
+			String[] validColors = {"R", "B", "G", "O"};
+			c = c.toUpperCase();
+			for(String color : validColors) {
+				if(color.equals(c)) {
+					this.color = c;
+					return true;
+				}
+			}
+			
+		}
+		
 		return false;
 	}
 	
@@ -121,6 +140,9 @@ public class Tile {
 		}
 		
 		Tile t = (Tile) o;
+		if(isJoker && t.isJoker) {
+			return true;
+		}
 		if (this.color.equals(t.color) && this.value.equals(t.value)) {
 			return true;
 		}else {
@@ -131,6 +153,18 @@ public class Tile {
 
 class TileComparator implements Comparator<Tile> {
 	public int compare(Tile t1, Tile t2) {
+		//If either tile are jokers then the comparison will fall in this if statement
+		//Jokers are always less than regular tiles
+		if(t1.isJoker()) {
+			if(t2.isJoker()) {//Both Jokers
+				return 0;
+			} else {
+				return 1;
+			}
+		} else if(t2.isJoker()) {
+			return -1;
+		}
+		
 		HashMap<String, Integer> conv = new HashMap<String, Integer>();
 		conv.put("R", 4);
 		conv.put("B", 3);

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class Hand {
 	private ArrayList<Tile> hand;
@@ -104,6 +105,11 @@ public class Hand {
 		List<ArrayList<Tile>> validMelds = new ArrayList<ArrayList<Tile>>();
 		ArrayList<Tile> remainingTiles = new ArrayList<Tile>();
 		
+		for(Tile tile : hand) { //Makes sure all Joker values are reset
+			if(tile.isJoker()) {
+				tile.setValue("-1");
+			}
+		}
 		//add hand tiles to a map
 		for (int idx = 0; idx < hand.size(); ++idx) {
 			Tile tile = hand.get(idx);
@@ -142,7 +148,11 @@ public class Hand {
 						iter.remove(); // remove the current tile
 						for (int i = 1; i < tempMeld.size(); ++i) { //remove the other tiles in the meld (excluding current tile)
 							Tile t = tempMeld.get(i);
-							handTiles.get(t.getValue()).remove(t);
+							if(!t.isJoker()) { 
+								handTiles.get(t.getValue()).remove(t);	
+							} else {
+								handTiles.get(-1).remove(t);
+							}
 						}
 						validMelds.add(tempMeld);
 					}
@@ -150,11 +160,19 @@ public class Hand {
 			}
 		}
 		
+		//Resets Joker values so they can be used properly for sets
+		if(handTiles.containsKey(-1)) {
+			for(Tile joker : handTiles.get(-1)) {
+				joker.setValue("-1");
+			}
+		}
+		
 		//find set melds
 		for (int tileValue = 1; tileValue <= 13; ++tileValue) {
-			if (handTiles.containsKey(tileValue) && handTiles.get(tileValue).size() > 2) {
+			if (handTiles.containsKey(tileValue) && handTiles.get(tileValue).size() >= 2) {
 				ArrayList<String> colours = new ArrayList<String>();
 				ArrayList<Tile> tempMeld = new ArrayList<Tile>();
+				String[] validColors = {"R", "B", "G", "O"};
 				
 				for (Tile tile: handTiles.get(tileValue)) {	
 					//get this tile's info
@@ -164,6 +182,20 @@ public class Hand {
 					if (!colours.contains(tileColour)) {
 						colours.add(tileColour);
 						tempMeld.add(tile);
+					}
+				}
+				
+				//Checks if Jokers can be used to make a set
+				if(tempMeld.size() <= 2 && handTiles.containsKey(-1)) {
+					for(Tile tile: handTiles.get(-1)) { //Checks for Joker tiles
+						for(String jokerColor : validColors) {
+							if(!colours.contains(jokerColor)) { //If the color is not in the set then add it in and change the joker internal values
+								tile.setColor(jokerColor);
+								tile.setValue(Integer.toString(tileValue));
+								tempMeld.add(tile);
+								break;
+							}
+						}
 					}
 				}
 				
@@ -211,6 +243,19 @@ public class Hand {
 					tempMeld.add(tile);
 					checkNextTileValue(nextTileValue+1, tileColour, handTiles, tempMeld);
 					break;
+				}
+			}
+		} 
+		else if(handTiles.containsKey(-1)) { //If Joker
+			ArrayList<Tile> nextTiles = handTiles.get(-1);
+			//Color doesn't matter
+			for (Tile tile: nextTiles) {
+				if(!tempMeld.contains(tile)) { //If the joker is not already in the meld
+					tempMeld.add(tile);
+					tile.setValue(Integer.toString(nextTileValue)); //Sets the value of the Joker to what tile it's imitating 
+					tile.setColor(tileColour);
+					checkNextTileValue(nextTileValue+1, tileColour, handTiles, tempMeld); //Continue checking
+					break;					
 				}
 			}
 		}
