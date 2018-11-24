@@ -74,6 +74,17 @@ public class GUI extends Application {
 		this.rummyGame = new TileRummyGame();
 		initWindow(primaryStage);
 	}
+	
+	@Override
+	public void stop() {
+		try {
+			rummyGame.stopTimer();
+			System.exit(0);
+		}
+		catch (Exception e) {
+			// no instance of timer was run.
+		}
+	}
 
 	private void initWindow(Stage primaryStage) {
 		BorderPane canvas = new BorderPane();
@@ -346,12 +357,12 @@ public class GUI extends Application {
 		time.setText("Time: " + Integer.toString(t));
 	}
 	
-	private static void removeImageReference(ArrayList<DisplayTile> holder) {
+/*	private static void removeImageReference(ArrayList<DisplayTile> holder) {
 		for (int tc = 0; tc < holder.size(); tc++) {
 			associatedTiles.remove(holder.get(tc).iv);
 		}
 		holder.clear();
-	}
+	}*/
 	
 	public static void undoTurn() {
 		playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
