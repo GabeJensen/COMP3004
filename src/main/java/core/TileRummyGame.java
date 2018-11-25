@@ -262,12 +262,23 @@ public class TileRummyGame {
 			//Needs to wait for end turn input
 		} else {
 			//Ai stuff
-			int aiVal = aiTurn();
-			// AITurn returns -1 if someone won
-			if (aiVal == -1) {
-				return;
+			int aiVal;
+			while(true) {
+				aiVal = aiTurn();
+				
+				// AITurn returns -1 if someone won
+				if (aiVal == -1) {
+					return;
+				} else { //Checks if th next player is a user. If so then break the loop otherwise keep going
+					if(orderedPlayers.peek().getName().contains("User")) {
+						nextTurn();
+						break;
+					} else {
+						next();
+					}
+				}
 			}
-			nextTurn();
+//			nextTurn();
 		}
 	}
 	
