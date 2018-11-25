@@ -141,6 +141,10 @@ public class TileRummyGame {
 		nextTurn();
 	}
 	
+	public void loadFile(String fileUrl) {
+		// Do things with the URL here.
+	}
+	
 	private LinkedList<Player> decideOrder(int playerCount) {
 		Deck orderDeck = new Deck();
 		orderDeck.shuffleDeck();

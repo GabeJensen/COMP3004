@@ -11,6 +11,7 @@ import core.Meld;
 import core.Tile;
 import core.TileRummyGame;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -58,9 +60,6 @@ public class GUI extends Application {
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
 	private static ArrayList<Tile> tablePlayTiles;
-//	private static ArrayList<DisplayTile> dtTabRef;
-//	private static ArrayList<DisplayTile> dtHandRef;
-//	private static ArrayList<DisplayTile> dtTempRef;
 	private TileRummyGame rummyGame;
 	
 	@Override
@@ -70,7 +69,7 @@ public class GUI extends Application {
 		GUI.currentTurnUserUsedTiles = new ArrayList<Tile>(); // keeps track of the tiles used from the hand
 		GUI.tablePlayTiles = new ArrayList<Tile>(); // keeps track of the tiles that have been re-used from the table (only used for updateTempMelds())
 		
-		// Create out rummyGame "controller" object and initialize our window
+		// Create our rummyGame "controller" object and initialize our window
 		this.rummyGame = new TileRummyGame();
 		initWindow(primaryStage);
 	}
@@ -82,6 +81,7 @@ public class GUI extends Application {
 			System.exit(0);
 		}
 		catch (Exception e) {
+			System.exit(0);
 			// no instance of timer was run.
 		}
 	}
@@ -111,9 +111,26 @@ public class GUI extends Application {
 		// Preload the tile info
 		loadTileImages();
 		
+		// Top container - Reading a file location
+				Label fRead = new Label("File to Read Data");
+				fRead.setStyle("-fx-background-color: white;");
+				TextField fileLocation = new TextField();
+				fRead.setLabelFor(fileLocation);
+				fileLocation.setPromptText("Example: src/test/resources/");
+				fileLocation.setPrefWidth(300);
+				
+				HBox fileElements = new HBox();
+				fileElements.setSpacing(10);
+				fileElements.getChildren().addAll(fRead, fileLocation);
+				fileElements.setAlignment(Pos.CENTER);
+		
+		
+		// Middle container - Labels, Dropdowns and the Start Game Button
+		selectionContainer = new HBox();
+		selectionContainer.setSpacing(10);
+		
 		// Start Button
 		startButton = new Button("Start Game");
-		//startButton.relocate(1155/2, 900/2);
 		
 		startButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			if (userCount.getValue() > playerCount.getValue()) {
@@ -134,12 +151,13 @@ public class GUI extends Application {
 			
 			displayToConsole("Started a game of Tile Rummy!");
 			canvas.setCenter(null);
+			canvas.setTop(null);
+			if (!fileLocation.getText().equals("")) {
+				rummyGame.loadFile(fileLocation.getText());
+			}
 			music();
 			initGameElements();
 		});
-		
-		selectionContainer = new HBox();
-		selectionContainer.setSpacing(10);
 		
 		Label pCount = new Label("Players");
 		Label uCount = new Label("Users");
@@ -172,7 +190,14 @@ public class GUI extends Application {
 		
 		// Set elements on the BorderPane areas
 		canvas.setRight(consoleTextArea);
+		canvas.setTop(fileElements);
 		canvas.setCenter(selectionContainer);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				playerCount.requestFocus();
+			}
+		});
 	}
 	
 	private void rerenderStratDropdown() {
@@ -231,11 +256,6 @@ public class GUI extends Application {
 		horizScroll.setContent(userTilesBox);
 		canvas.setBottom(horizScroll);
 		canvas.setLeft(playMeldBox);
-		//userTilesBox.getChildren().addAll();
-		
-		/*dtTabRef = new ArrayList<DisplayTile>();
-		dtHandRef = new ArrayList<DisplayTile>();
-		dtTempRef = new ArrayList<DisplayTile>();*/
 		
 		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
 		rummyGame.playGame();
@@ -385,7 +405,6 @@ public class GUI extends Application {
 	}
 	
 	private void updateTempMelds() {
-		//removeImageReference(dtTempRef);
 		clearUnusedIV();
 		for (int x = currentTurnMelds.size() - 1; x < currentTurnMelds.size(); x++) {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
@@ -410,7 +429,6 @@ public class GUI extends Application {
 //				});
 				playGrid.getChildren().add(dTile.iv);
 				associatedTiles.put(dTile.iv, meldTile);
-				//dtTempRef.add(dTile);
 			}
 			playGrid.getChildren().add(new Region());
 		}
@@ -439,14 +457,12 @@ public class GUI extends Application {
 				});
 				playGrid.getChildren().add(dTile.iv);
 				associatedTiles.put(dTile.iv, meldTile);
-				//dtTabRef.add(dTile);
 			}
 			playGrid.getChildren().add(new Region());
 		}
 	}
 	
 	private static void clearDisplayTable () {
-		//removeImageReference(dtTabRef);
 		clearUnusedIV();
 		playGrid.getChildren().clear();
 	}
@@ -476,12 +492,10 @@ public class GUI extends Application {
 			});
 			userTilesBox.getChildren().addAll(dTile.iv);
 			associatedTiles.put(dTile.iv, userTile);
-			//dtHandRef.add(dTile);
 		}
 	}
 	
 	private static void clearDisplayHand() {
-		//removeImageReference(dtHandRef);
 		clearUnusedIV();
 		userTilesBox.getChildren().clear();
 	}
