@@ -89,6 +89,10 @@ public class Tile {
 		return false;
 	}
 	
+	public boolean setValue(Integer v) {
+		return setValue(Integer.toString(v));
+	}
+	
 	public boolean setColor(String c) {
 		//Only works if it is a Joker
 		if(isJoker) {
