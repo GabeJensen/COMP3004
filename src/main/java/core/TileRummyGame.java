@@ -308,6 +308,7 @@ public class TileRummyGame {
 			GUI.displayToConsole(currentPlayer.getName() + " played this turn!");
 			if(currentPlayer.getHandCount() == 0) {
 				GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
+				GUI.updateDisplayTable(game.getTable());
 				GUI.disableButtons();
 				stopTimer();
 				return -1;
@@ -410,6 +411,7 @@ public class TileRummyGame {
 		// Check if human player on this turn has won or not
 		if(currentPlayer.getHandCount() == 0) {
 			GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
+			GUI.updateDisplayTable(game.getTable());
 			GUI.disableButtons();
 			stopTimer();
 			return 0;
