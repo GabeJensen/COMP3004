@@ -112,17 +112,17 @@ public class GUI extends Application {
 		loadTileImages();
 		
 		// Top container - Reading a file location
-				Label fRead = new Label("File to Read Data");
-				fRead.setStyle("-fx-background-color: white;");
-				TextField fileLocation = new TextField();
-				fRead.setLabelFor(fileLocation);
-				fileLocation.setPromptText("Example: src/test/resources/");
-				fileLocation.setPrefWidth(300);
-				
-				HBox fileElements = new HBox();
-				fileElements.setSpacing(10);
-				fileElements.getChildren().addAll(fRead, fileLocation);
-				fileElements.setAlignment(Pos.CENTER);
+		Label fRead = new Label("File to Read Data");
+		fRead.setStyle("-fx-background-color: white;");
+		TextField fileLocation = new TextField();
+		fRead.setLabelFor(fileLocation);
+		fileLocation.setPromptText("Example: src/test/resources/");
+		fileLocation.setPrefWidth(300);
+		
+		HBox fileElements = new HBox();
+		fileElements.setSpacing(10);
+		fileElements.getChildren().addAll(fRead, fileLocation);
+		fileElements.setAlignment(Pos.CENTER);
 		
 		
 		// Middle container - Labels, Dropdowns and the Start Game Button

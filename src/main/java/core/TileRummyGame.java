@@ -26,9 +26,8 @@ public class TileRummyGame {
 	private Originator originator;
 	private Caretaker caretaker;
 	private boolean emptyDeck;
-	
-	//TODO: "I" will change this to 120 when it is all figured out.
-	private final int turnDuration = 30;
+
+	private final int turnDuration = 120;
 	private int currentTurnTime;
 	private Timer timer;
 	private Thread timeThread;
