@@ -37,7 +37,7 @@ public class Meld {
 			//Checks all tile suit's against the first suit
 			if(suit.isEmpty()) {
 				suit = tileStr[0];
-			} else if(suit != tileStr[0]) {
+			} else if(!suit.equals(tileStr[0])) {
 				return false;
 			}
 		}
@@ -75,7 +75,7 @@ public class Meld {
 			//Set the value from the first tile and compare with every other tile
 			if(value.isEmpty()) {
 				value = tileStr[1];
-			} else if(value != tileStr[1]) {
+			} else if(!value.equals(tileStr[1])) {
 				return false;
 			}
 			
