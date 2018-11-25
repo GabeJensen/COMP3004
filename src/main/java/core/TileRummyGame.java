@@ -1,10 +1,13 @@
 package core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +29,9 @@ public class TileRummyGame {
 	private Originator originator;
 	private Caretaker caretaker;
 	private boolean emptyDeck;
+	
+	private Scanner fileReader;
+	private boolean fileRigging = false;
 
 	private final int turnDuration = 120;
 	private int currentTurnTime;
@@ -130,18 +136,39 @@ public class TileRummyGame {
 	
 	public void playGame() {
 		// deal 14 tiles to each player
-		for (Player player : players) {
-			for (int c = 0; c < 14; c++) {
-				player.addTile(deck.dealTile());
+		if (fileRigging) {
+			for (Player player: players) {
+				for (int c = 0; c < 14; c++) {
+					String tileInfo = fileReader.next();
+					Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
+					player.addTile(tile);
+				}
+			}
+		} else {
+			for (Player player : players) {
+				for (int c = 0; c < 14; c++) {
+					player.addTile(deck.dealTile());
+				}
 			}
 		}
-		
+			
 		orderedPlayers = decideOrder(players.size());		
 		nextTurn();
 	}
 	
 	public void loadFile(String fileUrl) {
 		// Do things with the URL here.
+		fileUrl = "./" + fileUrl;
+		File file = new File(fileUrl);
+		System.out.println(file.getAbsolutePath());
+		
+		try {
+			fileReader = new Scanner(file);
+			fileRigging = true;
+		} catch (FileNotFoundException e) {
+			System.out.println("\'" + fileUrl + "\' file not found. No file rigging is going to happen.");
+			fileRigging = false;
+		}
 	}
 	
 	private LinkedList<Player> decideOrder(int playerCount) {
@@ -287,21 +314,9 @@ public class TileRummyGame {
 	
 	private int aiTurn() {
 		int turnValue;
-		Tile tile;
 		turnValue = currentPlayer.performStrategy();
 		if (turnValue == 0) {
-			if(!emptyDeck) {
-				tile = deck.dealTile();
-				if(tile == null) {
-					emptyDeck = true;
-					GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
-				} else {
-					currentPlayer.addTile(tile);
-					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
-				}
-			} else {
-				GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
-			}
+			drawTile();
 			GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
 		}
 		else if (turnValue == 1) {
@@ -334,18 +349,7 @@ public class TileRummyGame {
 		
 		// If the user didn't play anything this turn.
 		if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
-			if(!emptyDeck) {
-				Tile draw = deck.dealTile();
-				if(draw == null) {
-					emptyDeck = true;
-					GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
-				} else {
-					GUI.displayToConsole(currentPlayer.getName() + " draws " + draw.toString() + "!");
-					currentPlayer.addTile(draw);						
-				}
-			} else {
-				GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
-			}
+			drawTile();
 		} else {
 			// If the user has not played their initial 30 meld yet
 			if (!currentPlayer.getInit30Flag()){
@@ -435,14 +439,25 @@ public class TileRummyGame {
 		// deal "penalty" number of tiles to current player for invalid moves
 		ArrayList<Tile> startingHand = originator.getState().getHand();
 		for (int i = 0; i < penalty; ++i) {
-			Tile t = deck.dealTile();
-			if (t == null) {
-				emptyDeck = true;
-				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
-				break;
+			if (fileRigging) {
+				if (fileReader.hasNext()) {
+					String tileInfo = fileReader.next();
+					Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
+					startingHand.add(tile);
+					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + " due to penalty!" );
+				} else {
+					GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
+				}
 			} else {
-				startingHand.add(t);
-				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
+				Tile t = deck.dealTile();
+				if (t == null) {
+					emptyDeck = true;
+					GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
+					break;
+				} else {
+					startingHand.add(t);
+					GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
+				}
 			}
 		}
 		
@@ -451,5 +466,31 @@ public class TileRummyGame {
 		Collections.sort(startingHand, new TileComparator());
 		currentPlayer.setTiles(startingHand);
 		GUI.updateDisplayHand(currentPlayer.getTiles());
+	}
+	
+	private void drawTile() {
+		if (fileRigging) {
+			if (fileReader.hasNext()) {
+				String tileInfo = fileReader.next();
+				Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
+				currentPlayer.addTile(tile);
+				GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
+			} else {
+				GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
+			}
+		} else {
+			if(!emptyDeck) {
+				Tile tile = deck.dealTile();
+				if(tile == null) {
+					emptyDeck = true;
+					GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
+				} else {
+					currentPlayer.addTile(tile);
+					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
+				}
+			} else {
+				GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
+			}
+		}
 	}
 }
