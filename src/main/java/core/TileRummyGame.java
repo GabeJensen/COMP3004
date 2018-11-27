@@ -29,6 +29,7 @@ public class TileRummyGame {
 	private Originator originator;
 	private Caretaker caretaker;
 	private boolean emptyDeck;
+	private int drawTurns; //Counts the number of consecutive draws performed by players
 	
 	private Scanner fileReader;
 	private boolean fileRigging = false;
@@ -99,6 +100,8 @@ public class TileRummyGame {
 		deck = new Deck();
 		deck.shuffleDeck();
 		emptyDeck = false;
+		
+		resetDrawTurns();
 		
 		// Goes through all humans and names them
 		for(int i = 0; i < userCount; i++) {
@@ -261,6 +264,24 @@ public class TileRummyGame {
 		}
 	}
 	
+	//Used for User draws
+	private boolean noUsers() {
+		for(Player p : players) {
+			if(p.getName().contains("User")){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public void incDrawTurns() {
+		drawTurns++;
+	}
+	
+	public void resetDrawTurns() {
+		drawTurns = 0;
+	}
+	
 	private void nextTurn() {
 		/*int turnValue;
 		Tile tile;*/
@@ -293,21 +314,42 @@ public class TileRummyGame {
 		} else {
 			//Ai stuff
 			int aiVal;
+			int deckCountBeforePlay;
 			while(true) {
+				//Deck count is stored before the user played to cover the case where a player draws the 
+				//last card of the deck but since everyone else tried drawing the game ends and they can't play their card
+				deckCountBeforePlay = deck.getTileCount();
 				aiVal = aiTurn();
 				
 				// AITurn returns -1 if someone won
 				if (aiVal == -1) {
 					return;
 				} else { //Checks if th next player is a user. If so then break the loop otherwise keep going
+					//If the deck is empty and the AI draws then increment drawTurns otherwise reset it
+					if(deckCountBeforePlay == 0 && aiVal == 0) {
+						incDrawTurns();
+					} else {
+						resetDrawTurns();
+					}
 					if(orderedPlayers.peek().getName().contains("User")) {
 						nextTurn();
 						break;
 					} else {
+						//If the number of draws equals the amount of players then the game is a draw
+						if(drawTurns == players.size()) {
+							GUI.displayToConsole("Game is a draw. Deck is empty and no more moves were made");
+							break;
+						}
 						next();
 					}
 				}
 			}
+			
+			//Needed if we want to draw a game with users
+//			if(!noUsers() && drawTurns >= players.size() && deckCountBeforePlay == 0) {
+//				GUI.displayToConsole("Game is a draw. Deck is empty and no more moves were made");
+//				GUI.disableButtons();
+//			}
 //			nextTurn();
 		}
 	}
@@ -318,6 +360,7 @@ public class TileRummyGame {
 		if (turnValue == 0) {
 			drawTile();
 			GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
+			return 0;
 		}
 		else if (turnValue == 1) {
 			GUI.displayToConsole(currentPlayer.getName() + " played this turn!");
@@ -333,7 +376,7 @@ public class TileRummyGame {
 		}
 		
 		GUI.updateDisplayTable(game.getTable());
-		return 0;
+		return 1;
 	}
 	
 	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
@@ -350,8 +393,10 @@ public class TileRummyGame {
 		
 		// If the user didn't play anything this turn.
 		if ((currentTurnMelds.isEmpty()) && currentTurnUserUsedTiles.isEmpty()) {
+//			incDrawTurns(); //Used for drawing with Humans
 			drawTile();
 		} else {
+//			resetDrawTurns(); //Used for drawing with Humans
 			// If the user has not played their initial 30 meld yet
 			if (!currentPlayer.getInit30Flag()){
 				// No table tiles allowed to be played until the initial 30 meld(s)
