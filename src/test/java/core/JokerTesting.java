@@ -335,4 +335,18 @@ public class JokerTesting extends TestCase{
 		
 		assertFalse(Meld.checkValidity(ms1));
 	}
+	
+	public void testJokerInDeck() {
+		//Tests that there are exactly 2 jokers within the deck
+		Deck deck = new Deck();
+		
+		int jokerCount = 0;
+		while(deck.getTileCount() != 0) {
+			if(deck.dealTile().isJoker()) {
+				jokerCount++;
+			}
+		}
+		
+		assertEquals(2, jokerCount);
+	}
 }
