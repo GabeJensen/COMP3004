@@ -44,6 +44,8 @@ public class GUI extends Application {
 	private static TextArea consoleTextArea;
 	private Button startButton;
 	private static Button endButton;
+	private static Label rigTileDrawLabel;
+	private static ComboBox<String> remainingDeckTileDropdown;
 	private static Button playMeldButton;
 	private static Label time;
 	private static VBox playMeldBox;
@@ -258,6 +260,7 @@ public class GUI extends Application {
 		canvas.setLeft(playMeldBox);
 		
 		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
+		updateTileDrawDropdown(); // Must be called here because a deck exists after the previous line		
 		rummyGame.playGame();
 	}
 
@@ -363,12 +366,31 @@ public class GUI extends Application {
 			rummyGame.undoTurn();
 		});*/
 		
+		rigTileDrawLabel = new Label("Set Next Tile to Draw");
+		rigTileDrawLabel.setStyle("-fx-background-color: white;");
+		rigTileDrawLabel.setLabelFor(remainingDeckTileDropdown);
+		remainingDeckTileDropdown = new ComboBox<String>();
+		
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
 		
-		topCommandsBox.getChildren().addAll(endButton, time);
+		topCommandsBox.getChildren().addAll(endButton, time, rigTileDrawLabel, remainingDeckTileDropdown);
 	}
-
+	
+	public void updateTileDrawDropdown() {
+		remainingDeckTileDropdown.getItems().clear();
+		remainingDeckTileDropdown.getItems().add("Regular Tile Draw");
+		for (String tile : rummyGame.getDeckToString()) {
+			remainingDeckTileDropdown.getItems().add(tile);
+		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				remainingDeckTileDropdown.getSelectionModel().selectFirst();
+			}
+		});
+	}
+	
 	public static void displayToConsole(String s) {
 		consoleTextArea.appendText(s + "\n");
 	}

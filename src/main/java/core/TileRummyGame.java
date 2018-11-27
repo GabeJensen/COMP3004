@@ -163,8 +163,7 @@ public class TileRummyGame {
 		// Do things with the URL here.
 		fileUrl = "./" + fileUrl;
 		File file = new File(fileUrl);
-		System.out.println(file.getAbsolutePath());
-		
+		//System.out.println(file.getAbsolutePath());
 		try {
 			fileReader = new Scanner(file);
 			fileRigging = true;
@@ -264,6 +263,10 @@ public class TileRummyGame {
 		}
 	}
 	
+	public ArrayList<String> getDeckToString() {
+		return deck.getDeckString();
+	}
+	
 	//Used for User draws
 	private boolean noUsers() {
 		for(Player p : players) {
@@ -337,7 +340,7 @@ public class TileRummyGame {
 					} else {
 						//If the number of draws equals the amount of players then the game is a draw
 						if(drawTurns == players.size()) {
-							GUI.displayToConsole("Game is a draw. Deck is empty and no more moves were made");
+							GUI.displayToConsole("Game is a draw! Deck is empty and no more moves were made!");
 							break;
 						}
 						next();
@@ -347,7 +350,7 @@ public class TileRummyGame {
 			
 			//Needed if we want to draw a game with users
 //			if(!noUsers() && drawTurns >= players.size() && deckCountBeforePlay == 0) {
-//				GUI.displayToConsole("Game is a draw. Deck is empty and no more moves were made");
+//				GUI.displayToConsole("Game is a draw! Deck is empty and no more moves were made");
 //				GUI.disableButtons();
 //			}
 //			nextTurn();

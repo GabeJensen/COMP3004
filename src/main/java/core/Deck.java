@@ -35,6 +35,26 @@ public class Deck {
 		}
 	}
 	
+	public Tile drawSpecific(String t) {
+		for (Tile tile : deck) {
+			if (tile.toString().equals(t)) {
+				Tile instance = tile;
+				deck.remove(tile);
+				return instance;
+			}
+		}
+		return null;
+	}
+	
+	public ArrayList<String> getDeckString() {
+		ArrayList<String> strDeck = new ArrayList<String>();
+		for (Tile t : deck) {
+			strDeck.add(t.toString());
+		}
+		Collections.sort(strDeck);
+		return strDeck;
+	}
+	
 	public int getTileCount() {
 		return deck.size();
 	}
