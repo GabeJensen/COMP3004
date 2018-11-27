@@ -13,6 +13,9 @@ public class Deck {
 		
 		int vLength = values.length;
 		
+		deck.add(new Tile("R", "J"));
+		deck.add(new Tile("R", "J"));
+		
 		for (int d = 0; d < 2; d++) {
 			for (int c = 0; c < colors.length; c++) {
 				for (int v = 0; v < vLength; v++) {
