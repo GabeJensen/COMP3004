@@ -363,6 +363,7 @@ public class TileRummyGame {
 		if (turnValue == 0) {
 			drawTile();
 			GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
+			GUI.updateDisplayTable(game.getTable());
 			return 0;
 		}
 		else if (turnValue == 1) {
