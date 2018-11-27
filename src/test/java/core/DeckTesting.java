@@ -28,4 +28,18 @@ public class DeckTesting extends TestCase{
 		// The following assert should rarely ever fail ... due to the nature of testing a randomize shuffle, maybe once in a while the first tile dealt could be the same.
 		assertNotEquals(noshuffle.dealTile().getInfo(), d.dealTile().getInfo());
 	}
+	
+	public void testDrawSpecific() {
+		Deck d = new Deck();
+		
+		Tile t = d.drawSpecific("R6");
+		assertEquals(t.toString(), "R6");
+		t = d.drawSpecific("R6");
+		assertEquals(t.toString(), "R6");
+		t = d.drawSpecific("R6");
+		assertEquals(t, null);
+		
+		t = d.drawSpecific("OJ");
+		assertEquals(t.toString(), "OJ");
+	}
 }
