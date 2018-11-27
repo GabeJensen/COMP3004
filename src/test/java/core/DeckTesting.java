@@ -39,7 +39,7 @@ public class DeckTesting extends TestCase{
 		t = d.drawSpecific("R6");
 		assertEquals(t, null);
 		
-		t = d.drawSpecific("OJ");
-		assertEquals(t.toString(), "OJ");
+		t = d.drawSpecific("G7");
+		assertEquals(t.toString(), "G7");
 	}
 }
