@@ -303,8 +303,8 @@ public class TileRummyGame {
 		GUI.updateTime(turnDuration);
 		
 		if(currentPlayer.getName().contains("User")) {
+			resetDrawTurns(); //So the game doesnt draw if the AI are only drawing
 			startTimer();
-			
 			//User stuff
 			GUI.updateDisplayHand(currentPlayer.getTiles());
 			
