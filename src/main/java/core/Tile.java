@@ -117,7 +117,7 @@ public class Tile {
 	@Override
 	public String toString() {
 		if(isJoker) {
-			return color + "J";
+			return "J";
 		}
 		return color + value;
 	}

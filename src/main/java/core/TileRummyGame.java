@@ -34,20 +34,12 @@ public class TileRummyGame {
 	private Scanner fileReader;
 	private boolean fileRigging = false;
 
-	private final int turnDuration = 120;
+	private final int turnDuration = 10;
 	private int currentTurnTime;
 	private Timer timer;
 	private Thread timeThread;
 	private TimerTask timeAction() {
-		return new TimerTask() {
-			/*private static TimerTask singleInstance = new TimerTask();
-			
-			private void TimerTask() {}
-			
-			public static TimerTask getInstance() {
-				return singleInstance;
-			}*/
-			
+		return new TimerTask() {			
 			@Override
 			public void run() {
 				Platform.runLater(new Runnable() {
@@ -58,7 +50,6 @@ public class TileRummyGame {
 						timeEnd();
 					}
 				});
-	
 			}
 			public void timeEnd() {
 				Platform.runLater(new Runnable() {
@@ -188,7 +179,7 @@ public class TileRummyGame {
 			int v = orderDeck.dealTile().getValue();
 			//TODO: Handle when a Joker is drawn here.
 			// should just be adding a condition if joker's value for example were "*" or -1 to this while loop below
-			while (values.contains(v)) {
+			while ((values.contains(v)) || (v == -1)) {
 				v = orderDeck.dealTile().getValue();
 			}
 			if (players.get(i).getName().contains("User")) {
@@ -263,10 +254,6 @@ public class TileRummyGame {
 		}
 	}
 	
-	public ArrayList<String> getDeckToString() {
-		return deck.getDeckString();
-	}
-	
 	//Used for User draws
 	private boolean noUsers() {
 		for(Player p : players) {
@@ -290,6 +277,7 @@ public class TileRummyGame {
 		Tile tile;*/
 		
 		next();
+		GUI.updateTileDrawDropdown(deck.getDeckString());
 		/*New Idea
 		 * Instead of loop we have a nextTurn function
 		 * Goes to next player in line and performs their action
@@ -387,6 +375,8 @@ public class TileRummyGame {
 		/**
 		 * Function returns -1 if there are tiles in the "playMeldBox", otherwise returns 0.
 		 */
+		System.gc();
+		
 		boolean appliedPlayerPenalty = false;
 		
 		// if there are still tiles in the "playMeldBox"
@@ -531,7 +521,16 @@ public class TileRummyGame {
 			}
 		} else {
 			if(!emptyDeck) {
-				Tile tile = deck.dealTile();
+				Tile tile;
+				// If there is a specific tile to draw, draw it.
+				// This is not applied to a user's penalty draws.
+				String specificTileDraw = GUI.getTileDrawStatus();
+				if (specificTileDraw.equals("Regular Tile Draw")) {
+					tile = deck.dealTile();
+				} else {
+					tile = deck.drawSpecific(specificTileDraw);
+					GUI.updateTileDrawDropdown(deck.getDeckString());
+				}
 				if(tile == null) {
 					emptyDeck = true;
 					GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
