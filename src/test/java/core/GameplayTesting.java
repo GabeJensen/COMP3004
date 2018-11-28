@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -1036,5 +1037,77 @@ public class GameplayTesting extends TestCase{
 		
 		assertEquals(0, stratResult);
 		
+	}
+	
+	public void testStrat4a() {
+		int stratResult;
+		Game game = new Game();
+		Player p4 = new Player(game, "P4", new Strat4());
+		
+		// Melds on the table
+		Tile t1 = new Tile("R", "4");
+		Tile t2 = new Tile("R", "5");
+		Tile t3 = new Tile("R", "6");
+		Tile t4 = new Tile("B", "5");
+		Tile t5 = new Tile("G", "5");
+		Tile t6 = new Tile("O", "5");
+		Tile t7 = new Tile("R", "1");
+		Tile t8 = new Tile("B", "1");
+		Tile t9 = new Tile("G", "1");
+		Tile t10 = new Tile("O", "1");
+		Tile t11 = new Tile("B", "3");
+		Tile t12 = new Tile("B", "4");
+		Tile t13 = new Tile("B", "5");
+		Tile t14 = new Tile("G", "2");
+		Tile t15 = new Tile("G", "3");
+		Tile t16 = new Tile("G", "4");
+		
+		// Tiles in P4 hand
+		Tile userT1 = new Tile("R", "2"); // will get discarded, both R1 and R4 are seen on the table, making this meld unlikely to be completed
+		Tile userT2 = new Tile("R", "3"); // will get discarded, both R1 and R4 are seen on the table, making this meld unlikely to be completed
+		Tile userT3 = new Tile("B", "6");
+		Tile userT4 = new Tile("O", "6");
+		Tile userT5 = new Tile("G", "5"); // will get discarded, 5 or more are on the table
+		Tile userT6 = new Tile("O", "1");
+		Tile userT7 = new Tile("R", "9");
+		Tile userT8 = new Tile("R", "10");
+		
+		// table melds
+		ArrayList<Tile> meld1 = new ArrayList<Tile>(Arrays.asList(t1, t2, t3)); // R4, R5, R6
+		ArrayList<Tile> meld2 = new ArrayList<Tile>(Arrays.asList(t4, t5, t6)); // B5, G5, O5
+		ArrayList<Tile> meld3 = new ArrayList<Tile>(Arrays.asList(t7, t8, t9, t10)); // R1, B1, G1, O1
+		ArrayList<Tile> meld4 = new ArrayList<Tile>(Arrays.asList(t11, t12, t13)); // B3, B4, B5
+		ArrayList<Tile> meld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16)); // G2, G3, G4
+		
+		// new table meld after start 4 is performed
+		ArrayList<Tile> newMeld3 = new ArrayList<Tile>(Arrays.asList(t7, userT1, userT2)); // not sure if this meld will be played thru table tile re-use...might need to change later when start 4 is implemented
+		ArrayList<Tile> newMeld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16, userT5));
+		
+		ArrayList<Tile> p4RemainingTilesInHand = new ArrayList<Tile>(Arrays.asList(userT7, userT8, userT3, userT6, userT4)); // might need to add userT1 and userT2 in here if it does not get played as table meld R1,R2,R3
+		
+		p4.addTile(userT1);
+		p4.addTile(userT2);
+		p4.addTile(userT3);
+		p4.addTile(userT4);
+		p4.addTile(userT5);
+		p4.addTile(userT6);
+		p4.addTile(userT7);
+		p4.addTile(userT8);
+		
+		game.addMeldToTable(meld1);
+		game.addMeldToTable(meld2);
+		game.addMeldToTable(meld3);
+		game.addMeldToTable(meld4);
+		game.addMeldToTable(meld5);
+		
+		stratResult = p4.performStrategy();
+		
+		//check if the start played tiles (in particular, R2, R3 and G5)
+		assertEquals(1, stratResult);
+		//check if the start discarded the proper tiles
+		assertEquals(p4RemainingTilesInHand, p4.getTiles());
+		//check if table has the new melds
+		assertEquals(true, game.getTable().contains(newMeld3));
+		assertEquals(true, game.getTable().contains(newMeld5));
 	}
 }
