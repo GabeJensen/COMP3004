@@ -39,7 +39,7 @@ public class GUI extends Application {
 	private static MediaPlayer m;
 	private BorderPane canvas;
 	private Scene scene;
-	private static HashMap<String, String> imageLoc;
+	private static HashMap<String, Image> imageLoc;
 	private static HashMap<ImageView, Tile> associatedTiles;
 	private static TextArea consoleTextArea;
 	private Button startButton;
@@ -284,18 +284,19 @@ public class GUI extends Application {
 		String tileResources = "src/main/resources/tiles/";
 		File tileLoc = new File(tileResources);
 		File[] tileImages = tileLoc.listFiles();
-		imageLoc = new HashMap<String, String>();
+		imageLoc = new HashMap<String, Image>();
 		associatedTiles = new HashMap<ImageView, Tile>();
 		for (int i = 0; i < tileImages.length; i++) {
 			String fileName = tileImages[i].getName();
 			String[] imgInf = fileName.split(Pattern.quote("."));
-			imageLoc.put(imgInf[0], tileResources + tileImages[i].getName());
+			imageLoc.put(imgInf[0], new Image(new File(tileResources + tileImages[i].getName()).toURI().toString()));
 		}
 		String jokerName = "J.png";
-		imageLoc.put("RJ", tileResources + jokerName);
-		imageLoc.put("BJ", tileResources + jokerName);
-		imageLoc.put("OJ", tileResources + jokerName);
-		imageLoc.put("GJ", tileResources + jokerName);
+		Image jokerImg = new Image(new File(tileResources + jokerName).toURI().toString());
+		imageLoc.put("RJ", jokerImg);
+		imageLoc.put("BJ", jokerImg);
+		imageLoc.put("OJ", jokerImg);
+		imageLoc.put("GJ", jokerImg);
 //		imageLoc.put("J", tileResources + jokerName);
 	}
 
@@ -444,7 +445,7 @@ public class GUI extends Application {
 		clearUnusedIV();
 		for (int x = currentTurnMelds.size() - 1; x < currentTurnMelds.size(); x++) {
 			for (Tile meldTile : currentTurnMelds.get(x)) {
-				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
+				Image tile = imageLoc.get(meldTile.toString());
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
 				if(tablePlayTiles.contains(dTile.tile)) {
 					dTile.iv.setEffect(tablePlayEffect);
@@ -475,7 +476,7 @@ public class GUI extends Application {
 		clearDisplayTable();
 		for (ArrayList<Tile> meld : table) {
 			for (Tile meldTile : meld) {
-				Image tile = new Image(new File(imageLoc.get(meldTile.toString())).toURI().toString());			
+				Image tile = imageLoc.get(meldTile.toString());	
 				DisplayTile dTile = new DisplayTile(tile, meldTile);
 //				dTile.iv.setEffect(handPlayEffect);
 				dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
@@ -506,7 +507,7 @@ public class GUI extends Application {
 	public static void updateDisplayHand(ArrayList<Tile> hand) {
 		clearDisplayHand();
 		for (Tile userTile : hand) {
-			Image tile = new Image(new File(imageLoc.get(userTile.toString())).toURI().toString());			
+			Image tile = imageLoc.get(userTile.toString());		
 			DisplayTile dTile = new DisplayTile(tile, userTile);
 			dTile.iv.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 				if (dTile.isOrigin) {

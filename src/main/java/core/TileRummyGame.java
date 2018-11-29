@@ -34,7 +34,7 @@ public class TileRummyGame {
 	private Scanner fileReader;
 	private boolean fileRigging = false;
 
-	private final int turnDuration = 10;
+	private final int turnDuration = 120;
 	private int currentTurnTime;
 	private Timer timer;
 	private Thread timeThread;
@@ -328,6 +328,7 @@ public class TileRummyGame {
 						//If the number of draws equals the amount of players then the game is a draw
 						if(drawTurns == players.size()) {
 							GUI.displayToConsole("Game is a draw! Deck is empty and no more moves were made!");
+							GUI.disableButtons();
 							break;
 						}
 						next();
