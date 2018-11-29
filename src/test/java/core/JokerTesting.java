@@ -54,12 +54,12 @@ public class JokerTesting extends TestCase{
 		Tile joker = new Tile("B", "J");
 		
 		//Test it still returns a string as a joker
-		assertEquals("BJ", joker.toString());
+		assertEquals("J", joker.toString());
 		assertArrayEquals(new String[] {"B",  "J"}, joker.getInfo());
 		
 		joker.setValue("5");
 		//Checking that the string doesn't change when changing the value
-		assertEquals("BJ", joker.toString());
+		assertEquals("J", joker.toString());
 		assertArrayEquals(new String[] {"B",  "J"}, joker.getInfo());
 	}
 	

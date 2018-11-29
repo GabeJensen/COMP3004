@@ -177,8 +177,7 @@ public class TileRummyGame {
 		// Loop for however many players, 0 being first player, 1 the 2nd, etc.
 		for (int i = 0; i < playerCount; i++) {
 			int v = orderDeck.dealTile().getValue();
-			//TODO: Handle when a Joker is drawn here.
-			// should just be adding a condition if joker's value for example were "*" or -1 to this while loop below
+			// Redraw if value was drawn before or is joker
 			while ((values.contains(v)) || (v == -1)) {
 				v = orderDeck.dealTile().getValue();
 			}
