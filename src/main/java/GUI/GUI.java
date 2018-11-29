@@ -260,7 +260,7 @@ public class GUI extends Application {
 		canvas.setBottom(horizScroll);
 		canvas.setLeft(playMeldBox);
 		
-		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
+		rummyGame.initializeGame(userCount.getValue(), strategySelection);
 		rummyGame.playGame();
 	}
 
