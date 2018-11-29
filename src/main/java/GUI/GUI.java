@@ -224,7 +224,7 @@ public class GUI extends Application {
 	}
 	
 	private void music() {
-		Media media = new Media(Paths.get("src/main/resources/o.mp3").toUri().toString());
+		Media media = new Media(Paths.get("src/main/resources/S.mp3").toUri().toString());
 		m = new MediaPlayer(media);
 		m.setCycleCount(MediaPlayer.INDEFINITE);
 		m.play();
