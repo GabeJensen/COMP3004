@@ -1071,6 +1071,7 @@ public class GameplayTesting extends TestCase{
 		Tile userT6 = new Tile("O", "1");
 		Tile userT7 = new Tile("R", "9");
 		Tile userT8 = new Tile("R", "10");
+		Tile userT9 = new Tile("R", "5"); // will get discarded, 5 or more are on the table
 		
 		// table melds
 		ArrayList<Tile> meld1 = new ArrayList<Tile>(Arrays.asList(t1, t2, t3)); // R4, R5, R6
@@ -1080,10 +1081,11 @@ public class GameplayTesting extends TestCase{
 		ArrayList<Tile> meld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16)); // G2, G3, G4
 		
 		// new table meld after start 4 is performed
-		ArrayList<Tile> newMeld3 = new ArrayList<Tile>(Arrays.asList(t7, userT1, userT2)); // not sure if this meld will be played thru table tile re-use...might need to change later when start 4 is implemented
+		ArrayList<Tile> newMeld1 = new ArrayList<Tile>(Arrays.asList(userT2, t1, t2, t3));
+		ArrayList<Tile> newMeld2 = new ArrayList<Tile>(Arrays.asList(userT9, t4, t5, t6));
 		ArrayList<Tile> newMeld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16, userT5));
 		
-		ArrayList<Tile> p4RemainingTilesInHand = new ArrayList<Tile>(Arrays.asList(userT7, userT8, userT3, userT6, userT4)); // might need to add userT1 and userT2 in here if it does not get played as table meld R1,R2,R3
+		ArrayList<Tile> p4RemainingTilesInHand = new ArrayList<Tile>(Arrays.asList(userT1, userT7, userT8, userT3, userT6, userT4)); // might need to add userT1 and userT2 in here if it does not get played as table meld R1,R2,R3
 		
 		p4.addTile(userT1);
 		p4.addTile(userT2);
@@ -1093,6 +1095,7 @@ public class GameplayTesting extends TestCase{
 		p4.addTile(userT6);
 		p4.addTile(userT7);
 		p4.addTile(userT8);
+		p4.addTile(userT9);
 		
 		game.addMeldToTable(meld1);
 		game.addMeldToTable(meld2);
@@ -1100,14 +1103,17 @@ public class GameplayTesting extends TestCase{
 		game.addMeldToTable(meld4);
 		game.addMeldToTable(meld5);
 		
+		// assume that P4 has already played their initial 30 points
+		p4.playedInit30();
 		stratResult = p4.performStrategy();
 		
-		//check if the start played tiles (in particular, R2, R3 and G5)
+		//check if the strat played tiles (in particular, R2, R3, G5 and R5)
 		assertEquals(1, stratResult);
 		//check if the start discarded the proper tiles
 		assertEquals(p4RemainingTilesInHand, p4.getTiles());
 		//check if table has the new melds
-		assertEquals(true, game.getTable().contains(newMeld3));
+		assertEquals(true, game.getTable().contains(newMeld1));
+		assertEquals(true, game.getTable().contains(newMeld2));
 		assertEquals(true, game.getTable().contains(newMeld5));
 	}
 }
