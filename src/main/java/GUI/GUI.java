@@ -216,7 +216,7 @@ public class GUI extends Application {
 			s_down.setLabelFor(container);
 			s_down.setStyle("-fx-background-color: white;");
 			container.setId("P" + (x+1));
-			container.getItems().addAll("Strategy 1", "Strategy 2", "Strategy 3");
+			container.getItems().addAll("Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4");
 			container.getSelectionModel().selectFirst();
 			selectionContainer.getChildren().addAll(s_down, container);
 		}

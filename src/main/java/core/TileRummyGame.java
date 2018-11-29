@@ -110,7 +110,7 @@ public class TileRummyGame {
 			} else if (selection.endsWith("3")) {
 				players.add(new Player(game, name, new Strat3()));
 			} else if (selection.endsWith("4")) {
-				// Strategy 4...
+				players.add(new Player(game, name, new Strat4()));
 			}
 		}
 		
