@@ -134,7 +134,7 @@ public class TileRummyGame {
 			for (Player player: players) {
 				for (int c = 0; c < 14; c++) {
 					String tileInfo = fileReader.next();
-					Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
+					Tile tile = deck.drawSpecific(tileInfo);
 					player.addTile(tile);
 				}
 			}
@@ -480,25 +480,14 @@ public class TileRummyGame {
 		// deal "penalty" number of tiles to current player for invalid moves
 		ArrayList<Tile> startingHand = originator.getState().getHand();
 		for (int i = 0; i < penalty; ++i) {
-			if (fileRigging) {
-				if (fileReader.hasNext()) {
-					String tileInfo = fileReader.next();
-					Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
-					startingHand.add(tile);
-					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + " due to penalty!" );
-				} else {
-					GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
-				}
+			Tile t = deck.dealTile();
+			if (t == null) {
+				emptyDeck = true;
+				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
+				break;
 			} else {
-				Tile t = deck.dealTile();
-				if (t == null) {
-					emptyDeck = true;
-					GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
-					break;
-				} else {
-					startingHand.add(t);
-					GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
-				}
+				startingHand.add(t);
+				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
 			}
 		}
 		
@@ -510,37 +499,26 @@ public class TileRummyGame {
 	}
 	
 	private void drawTile() {
-		if (fileRigging) {
-			if (fileReader.hasNext()) {
-				String tileInfo = fileReader.next();
-				Tile tile = new Tile(tileInfo.substring(0, 1), tileInfo.substring(1));
+		if(!emptyDeck) {
+			Tile tile;
+			// If there is a specific tile to draw, draw it.
+			// This is not applied to a user's penalty draws.
+			String specificTileDraw = GUI.getTileDrawStatus();
+			if (specificTileDraw.equals("Regular Tile Draw")) {
+				tile = deck.dealTile();
+			} else {
+				tile = deck.drawSpecific(specificTileDraw);
+				GUI.updateTileDrawDropdown(deck.getDeckString());
+			}
+			if(tile == null) {
+				emptyDeck = true;
+				GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
+			} else {
 				currentPlayer.addTile(tile);
 				GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
-			} else {
-				GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
 			}
 		} else {
-			if(!emptyDeck) {
-				Tile tile;
-				// If there is a specific tile to draw, draw it.
-				// This is not applied to a user's penalty draws.
-				String specificTileDraw = GUI.getTileDrawStatus();
-				if (specificTileDraw.equals("Regular Tile Draw")) {
-					tile = deck.dealTile();
-				} else {
-					tile = deck.drawSpecific(specificTileDraw);
-					GUI.updateTileDrawDropdown(deck.getDeckString());
-				}
-				if(tile == null) {
-					emptyDeck = true;
-					GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
-				} else {
-					currentPlayer.addTile(tile);
-					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
-				}
-			} else {
-				GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
-			}
+			GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
 		}
 	}
 }
