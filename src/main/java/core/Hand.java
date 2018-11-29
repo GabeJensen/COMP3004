@@ -395,6 +395,46 @@ public class Hand {
 	        }
 	    }
 	}
+	
+	public void playTableMeld(ArrayList<ArrayList<Tile>> tableTiles, ArrayList<Tile> looseTiles) {
+		for(int i = 0; i < tableTiles.size(); i++){
+	        // The first melds in the table will be prioritized this way (having tiles added to them if possible)
+	        ArrayList<Tile> temp;
+	        ArrayList<Tile> meld;
+	        
+	        for (Tile t : looseTiles) {
+	        	meld = tableTiles.get(i);
+	        	temp = new ArrayList<>(meld);
+	        	temp.add(0,t);
+	            if (Meld.checkValidity(temp)) { // could successfully add a tile to front of meld and maintain validity
+	                // is a valid meld
+	                tableTiles.set(tableTiles.indexOf(meld), temp);
+	                removeTile(t);
+	                continue;
+	            }
+	            temp = new ArrayList<>(meld);
+	            temp.add(meld.size(), t);
+	            if (Meld.checkValidity(temp)) { // could successfully add to back of meld and maintain validity
+	                // is a valid meld
+	                tableTiles.set(tableTiles.indexOf(meld), temp);
+	                removeTile(t);
+	                continue;
+	            }
+	            // check if can be inserted within positions inside the meld and still be valid
+                List<ArrayList<Tile>> splitMelds = getSplitMeld(meld, t);
+                if (splitMelds == null) {
+                    continue;
+                }
+                else {
+                    tableTiles.set(tableTiles.indexOf(meld), splitMelds.get(0));
+                    tableTiles.add(splitMelds.get(1));
+                }
+                
+                removeTile(t);
+	            
+	        }
+	    }
+	}
 
 	private ArrayList<ArrayList<Tile>> getSplitMeld(ArrayList<Tile> m, Tile t) {
 	    if ((t.getValue() < m.get(0).getValue() - 1) || (t.getValue() > m.get(m.size() - 1).getValue() + 1)) {
