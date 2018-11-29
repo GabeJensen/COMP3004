@@ -62,10 +62,8 @@ public class Tile {
 	}
 	
 	public Tile copyTile(Tile t) {
-		Tile newTile = new Tile();
 		String[] copyInfo = t.getInfo();
-		newTile.color = copyInfo[0];
-		newTile.value = copyInfo[1];
+		Tile newTile = new Tile(copyInfo[0], copyInfo[1]);
 		return newTile;
 	}
 	
@@ -117,7 +115,7 @@ public class Tile {
 	@Override
 	public String toString() {
 		if(isJoker) {
-			return color + "J";
+			return "J";
 		}
 		return color + value;
 	}

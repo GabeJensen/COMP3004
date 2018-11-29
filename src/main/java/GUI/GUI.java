@@ -62,6 +62,7 @@ public class GUI extends Application {
 	private final InnerShadow handPlayEffect = new InnerShadow(20, Color.RED);
 	private final InnerShadow tablePlayEffect = new InnerShadow(20, Color.BLUE);
 	private static ArrayList<Tile> tablePlayTiles;
+	public final static String regularDraw = "Regular Tile Draw";
 	private TileRummyGame rummyGame;
 	
 	@Override
@@ -171,7 +172,7 @@ public class GUI extends Application {
 		userCount.getItems().addAll(0, 1, 2, 3, 4);
 		
 		playerCount.getSelectionModel().selectFirst();
-		userCount.getSelectionModel().selectFirst();
+		userCount.getSelectionModel().select(1);
 		
 		pCount.setLabelFor(playerCount);
 		pCount.setStyle("-fx-background-color: white;");
@@ -223,7 +224,7 @@ public class GUI extends Application {
 	}
 	
 	private void music() {
-		Media media = new Media(Paths.get("src/main/resources/S.mp3").toUri().toString());
+		Media media = new Media(Paths.get("src/main/resources/o.mp3").toUri().toString());
 		m = new MediaPlayer(media);
 		m.setCycleCount(MediaPlayer.INDEFINITE);
 		m.play();
@@ -260,7 +261,6 @@ public class GUI extends Application {
 		canvas.setLeft(playMeldBox);
 		
 		rummyGame.initalizeGame(userCount.getValue(), strategySelection);
-		updateTileDrawDropdown(); // Must be called here because a deck exists after the previous line		
 		rummyGame.playGame();
 	}
 
@@ -291,6 +291,12 @@ public class GUI extends Application {
 			String[] imgInf = fileName.split(Pattern.quote("."));
 			imageLoc.put(imgInf[0], tileResources + tileImages[i].getName());
 		}
+		String jokerName = "J.png";
+		imageLoc.put("RJ", tileResources + jokerName);
+		imageLoc.put("BJ", tileResources + jokerName);
+		imageLoc.put("OJ", tileResources + jokerName);
+		imageLoc.put("GJ", tileResources + jokerName);
+//		imageLoc.put("J", tileResources + jokerName);
 	}
 
 	private void initMeldArea() {
@@ -370,6 +376,7 @@ public class GUI extends Application {
 		rigTileDrawLabel.setStyle("-fx-background-color: white;");
 		rigTileDrawLabel.setLabelFor(remainingDeckTileDropdown);
 		remainingDeckTileDropdown = new ComboBox<String>();
+		remainingDeckTileDropdown.getItems().add(regularDraw);
 		
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
@@ -377,10 +384,10 @@ public class GUI extends Application {
 		topCommandsBox.getChildren().addAll(endButton, time, rigTileDrawLabel, remainingDeckTileDropdown);
 	}
 	
-	public void updateTileDrawDropdown() {
+	public static void updateTileDrawDropdown(ArrayList<String> deckString) {
 		remainingDeckTileDropdown.getItems().clear();
-		remainingDeckTileDropdown.getItems().add("Regular Tile Draw");
-		for (String tile : rummyGame.getDeckToString()) {
+		remainingDeckTileDropdown.getItems().add(regularDraw);
+		for (String tile : deckString) {
 			remainingDeckTileDropdown.getItems().add(tile);
 		}
 		Platform.runLater(new Runnable() {
@@ -389,6 +396,13 @@ public class GUI extends Application {
 				remainingDeckTileDropdown.getSelectionModel().selectFirst();
 			}
 		});
+	}
+	
+	public static String getTileDrawStatus() {
+		if (remainingDeckTileDropdown.getValue() == null) {
+			return regularDraw;
+		}
+		return remainingDeckTileDropdown.getValue();
 	}
 	
 	public static void displayToConsole(String s) {
