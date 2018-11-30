@@ -34,7 +34,7 @@ public class TileRummyGame {
 	private Scanner fileReader;
 	private boolean fileRigging = false;
 
-	private final int turnDuration = 120;
+	private final int turnDuration = 121;
 	private int currentTurnTime;
 	private Timer timer;
 	private Thread timeThread;
@@ -277,16 +277,6 @@ public class TileRummyGame {
 		
 		next();
 		GUI.updateTileDrawDropdown(deck.getDeckString());
-		/*New Idea
-		 * Instead of loop we have a nextTurn function
-		 * Goes to next player in line and performs their action
-		 * if human do human stuff else do ai stuff
-		 * AI stuff we have implemented more or less
-		 * On human side we just update the playArea and have whatever user play their hand and end turn
-		 * NOTE: I am not sure how the GUI handles what player is playing and if the tiles in the play area would 
-		 * properly reflect the player who's tiles those belong to
-		 * */
-		
 		GUI.updateTime(turnDuration);
 		
 		if(currentPlayer.getName().contains("User")) {

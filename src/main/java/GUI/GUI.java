@@ -44,6 +44,8 @@ public class GUI extends Application {
 	private static TextArea consoleTextArea;
 	private Button startButton;
 	private static Button endButton;
+	private static Button audioToggle;
+	private boolean audioMuted = false;
 	private static Label rigTileDrawLabel;
 	private static ComboBox<String> remainingDeckTileDropdown;
 	private static Button playMeldButton;
@@ -362,6 +364,18 @@ public class GUI extends Application {
 				// Still tiles in the playMeldBox
 			}
 		});
+		
+		audioToggle = new Button("Toggle Audio");
+		audioToggle.addEventFilter(MouseEvent.MOUSE_CLICKED, ev -> {
+			audioMuted = !audioMuted;
+			if (audioMuted) {
+				audioToggle.setText("Unmute Audio");
+			}
+			else {
+				audioToggle.setText("Mute Audio");
+			}
+			m.setMute(audioMuted);
+		});
 		/*undoButton = new Button("Undo Turn");
 		undoButton.addEventHandler(MouseEvent.MOUSE_CLICKED, ev -> {
 			playMeldBox.getChildren().remove(1, playMeldBox.getChildren().size());
@@ -382,7 +396,7 @@ public class GUI extends Application {
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
 		
-		topCommandsBox.getChildren().addAll(endButton, time, rigTileDrawLabel, remainingDeckTileDropdown);
+		topCommandsBox.getChildren().addAll(endButton, audioToggle, time, rigTileDrawLabel, remainingDeckTileDropdown);
 	}
 	
 	public static void updateTileDrawDropdown(ArrayList<String> deckString) {
