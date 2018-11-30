@@ -56,11 +56,6 @@ public class Tile {
 		}	
 	}
 	
-	private Tile() {
-		this.handPlayed = false;
-		this.tablePlayed = false;
-	}
-	
 	public Tile copyTile(Tile t) {
 		String[] copyInfo = t.getInfo();
 		Tile newTile = new Tile(copyInfo[0], copyInfo[1]);

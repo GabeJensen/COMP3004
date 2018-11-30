@@ -76,16 +76,6 @@ public class Hand {
 		determineHandMeldsAndTilesForTableMelds();
 	}
 	
-	public Tile removeTile(int index) {
-		if(index + 1 > hand.size()) {
-			return null;
-		} else {
-			Tile rmTile = hand.remove(index);
-			determineHandMeldsAndTilesForTableMelds();
-			return rmTile;
-		}
-	}
-	
 	public Tile removeTile(Tile remove) {
 		int index = hand.indexOf(remove);
 		if(index == -1) {
@@ -95,21 +85,6 @@ public class Hand {
 			determineHandMeldsAndTilesForTableMelds();
 			return rmTile;
 		}
-	}
-	
-	public ArrayList<Tile> removeTiles(ArrayList<Integer> indices){
-		ArrayList<Tile> returnTiles = new ArrayList<Tile>();
-		for (Integer index : indices) {
-			if(index+1 > hand.size()) {
-				return null;
-			} else {
-				returnTiles.add(hand.get(index));	
-				hand.remove(index);
-			}
-		}
-		
-		determineHandMeldsAndTilesForTableMelds();
-		return returnTiles;
 	}
 	
 	private void sortTiles() {

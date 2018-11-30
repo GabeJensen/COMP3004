@@ -69,7 +69,7 @@ public class TileRummyGame {
 	}
 	
 	@Deprecated
-	public void initalizeGame() {
+	public void initializeGame() {
 		game = new Game();
 		originator = new Originator();
 		caretaker = new Caretaker();
@@ -83,7 +83,7 @@ public class TileRummyGame {
 		game.setPlayers(user, p1, p2, p3);
 	}
 	
-	public void initalizeGame(int userCount, ArrayList<String> strategySelection) {
+	public void initializeGame(int userCount, ArrayList<String> strategySelection) {
 		game = new Game();
 		originator = new Originator();
 		caretaker = new Caretaker();
