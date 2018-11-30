@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -43,6 +44,8 @@ public class GUI extends Application {
 	private static HashMap<ImageView, Tile> associatedTiles;
 	private static TextArea consoleTextArea;
 	private Button startButton;
+	private CheckBox modeCbox;
+	private static boolean mode;
 	private static Button endButton;
 	private static Button audioToggle;
 	private boolean audioMuted = false;
@@ -126,7 +129,6 @@ public class GUI extends Application {
 		
 		HBox fileElements = new HBox();
 		fileElements.setSpacing(10);
-		fileElements.getChildren().addAll(fRead, fileLocation);
 		fileElements.setAlignment(Pos.CENTER);
 		
 		
@@ -160,9 +162,16 @@ public class GUI extends Application {
 			if (!fileLocation.getText().equals("")) {
 				rummyGame.loadFile(fileLocation.getText());
 			}
+			mode = modeCbox.isSelected();
 			music();
 			initGameElements();
 		});
+		
+		Label gameMode = new Label("Testing Mode");
+		modeCbox = new CheckBox();
+		gameMode.setLabelFor(playerCount);
+		gameMode.setStyle("-fx-background-color: white;");
+		fileElements.getChildren().addAll(gameMode, modeCbox, fRead, fileLocation);		
 		
 		Label pCount = new Label("Players");
 		Label uCount = new Label("Users");
@@ -386,17 +395,21 @@ public class GUI extends Application {
 			
 			rummyGame.undoTurn();
 		});*/
-		
-		rigTileDrawLabel = new Label("Set Next Tile to Draw");
-		rigTileDrawLabel.setStyle("-fx-background-color: white;");
-		rigTileDrawLabel.setLabelFor(remainingDeckTileDropdown);
-		remainingDeckTileDropdown = new ComboBox<String>();
-		remainingDeckTileDropdown.getItems().add(regularDraw);
-		
 		time = new Label();
 		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
-		
-		topCommandsBox.getChildren().addAll(endButton, audioToggle, time, rigTileDrawLabel, remainingDeckTileDropdown);
+		topCommandsBox.getChildren().addAll(endButton, audioToggle, time);
+		if (mode) {
+			rigTileDrawLabel = new Label("Set Next Tile to Draw");
+			rigTileDrawLabel.setStyle("-fx-background-color: white;");
+			rigTileDrawLabel.setLabelFor(remainingDeckTileDropdown);
+			remainingDeckTileDropdown = new ComboBox<String>();
+			remainingDeckTileDropdown.getItems().add(regularDraw);
+			topCommandsBox.getChildren().addAll(rigTileDrawLabel, remainingDeckTileDropdown);
+		}		 
+	}
+	
+	public static boolean getGameMode() {
+		return mode;
 	}
 	
 	public static void updateTileDrawDropdown(ArrayList<String> deckString) {

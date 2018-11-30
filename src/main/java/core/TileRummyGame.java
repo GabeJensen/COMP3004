@@ -30,6 +30,7 @@ public class TileRummyGame {
 	private Caretaker caretaker;
 	private boolean emptyDeck;
 	private int drawTurns; //Counts the number of consecutive draws performed by players
+	private boolean gameType;
 	
 	private Scanner fileReader;
 	private boolean fileRigging = false;
@@ -115,7 +116,7 @@ public class TileRummyGame {
 		}
 		
 		timer = new Timer();
-
+		gameType = GUI.getGameMode();
 		game.setPlayers(players);
 	}
 	
@@ -276,7 +277,9 @@ public class TileRummyGame {
 		Tile tile;*/
 		
 		next();
-		GUI.updateTileDrawDropdown(deck.getDeckString());
+		if (gameType) {
+			GUI.updateTileDrawDropdown(deck.getDeckString());
+		}
 		GUI.updateTime(turnDuration);
 		
 		if(currentPlayer.getName().contains("User")) {
@@ -288,7 +291,9 @@ public class TileRummyGame {
 			originator.setState(game.getTable(), currentPlayer.getTiles());
 			caretaker.add(currentPlayer.getName(), originator.saveMemento());
 			GUI.displayToConsole(currentPlayer.getName() + "'s turn!");
-			displayOtherUserHands();
+			if (gameType) {
+				displayOtherUserHands();
+			}
 			
 			//Needs to wait for end turn input
 		} else {
@@ -300,7 +305,9 @@ public class TileRummyGame {
 				//last card of the deck but since everyone else tried drawing the game ends and they can't play their card
 				deckCountBeforePlay = deck.getTileCount();
 				aiVal = aiTurn();
-				GUI.updateTileDrawDropdown(deck.getDeckString());
+				if (gameType) {
+					GUI.updateTileDrawDropdown(deck.getDeckString());
+				}
 				
 				// AITurn returns -1 if someone won
 				if (aiVal == -1) {
@@ -342,7 +349,9 @@ public class TileRummyGame {
 		turnValue = currentPlayer.performStrategy();
 		if (turnValue == 0) {
 			drawTile();
-			GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
+			if (gameType) {
+				GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());
+			}
 			GUI.updateDisplayTable(game.getTable());
 			return 0;
 		}
@@ -356,7 +365,9 @@ public class TileRummyGame {
 				endScore();
 				return -1;
 			} else {
-				GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());				
+				if (gameType) {
+					GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());		
+				}
 			}
 		}
 		
@@ -510,19 +521,26 @@ public class TileRummyGame {
 			Tile tile;
 			// If there is a specific tile to draw, draw it.
 			// This is not applied to a user's penalty draws.
-			String specificTileDraw = GUI.getTileDrawStatus();
-			if (specificTileDraw.equals("Regular Tile Draw")) {
+			if (gameType) {
+				String specificTileDraw = GUI.getTileDrawStatus();
+				if (specificTileDraw.equals("Regular Tile Draw")) {
+					tile = deck.dealTile();
+				} else {
+					tile = deck.drawSpecific(specificTileDraw);
+					GUI.updateTileDrawDropdown(deck.getDeckString());
+				}
+			}
+			else {
 				tile = deck.dealTile();
-			} else {
-				tile = deck.drawSpecific(specificTileDraw);
-				GUI.updateTileDrawDropdown(deck.getDeckString());
 			}
 			if(tile == null) {
 				emptyDeck = true;
 				GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
 			} else {
 				currentPlayer.addTile(tile);
-				GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
+				if (gameType) {
+					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
+				}
 			}
 		} else {
 			GUI.displayToConsole(currentPlayer.getName() + " can't draw because the deck is empty!");
