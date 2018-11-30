@@ -141,6 +141,7 @@ public class Meld {
 				if(!existingSuit.contains(c)) {
 					joker.setColor(c);
 					joker.setValue(value);
+					existingSuit.add(c); //When adding the joker it adds in the suit it's replacing in existingSuit in order to avoid 2 jokers taking the same suit
 					break;
 				}
 			}
