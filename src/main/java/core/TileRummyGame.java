@@ -538,8 +538,11 @@ public class TileRummyGame {
 				GUI.displayToConsole(currentPlayer.getName() + " tried drawing, but the deck was empty!");
 			} else {
 				currentPlayer.addTile(tile);
-				if (gameType) {
+				if (gameType || currentPlayer.getName().contains("User")) {
 					GUI.displayToConsole(currentPlayer.getName() + " draws " + tile.toString() + "!" );
+				}
+				else {
+					GUI.displayToConsole(currentPlayer.getName() + " draws from the deck!" );
 				}
 			}
 		} else {
