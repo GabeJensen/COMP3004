@@ -35,6 +35,22 @@ public class Hand {
 		return tilesForTableMelds;
 	}
 	
+	public int getScore() {
+		int score = 0;
+		int tileValue;
+		for(Tile tile : hand) {
+			tileValue = tile.getValue();
+			if(tile.isJoker()) {
+				score -= 30;
+			} else if(tileValue == 1 || tileValue >= 10) {
+				score -= 10;
+			} else {
+				score -= tileValue;
+			}
+		}
+		return score;
+	}
+	
 	public String displayHand() {
 		StringBuilder sb = new StringBuilder(35);
 		sb.append("[");

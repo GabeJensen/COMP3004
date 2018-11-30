@@ -62,6 +62,10 @@ public class Player implements Observer {
 		return hand.getHand();
 	}
 	
+	public int getScore() {
+		return hand.getScore();
+	}
+	
 	public void setTiles(ArrayList<Tile> newHand) {
 		this.hand.setHand(newHand);
 	}

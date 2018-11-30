@@ -310,6 +310,7 @@ public class TileRummyGame {
 				//last card of the deck but since everyone else tried drawing the game ends and they can't play their card
 				deckCountBeforePlay = deck.getTileCount();
 				aiVal = aiTurn();
+				GUI.updateTileDrawDropdown(deck.getDeckString());
 				
 				// AITurn returns -1 if someone won
 				if (aiVal == -1) {
@@ -342,6 +343,7 @@ public class TileRummyGame {
 //				GUI.disableButtons();
 //			}
 //			nextTurn();
+			
 		}
 	}
 	
@@ -361,6 +363,7 @@ public class TileRummyGame {
 				GUI.updateDisplayTable(game.getTable());
 				GUI.disableButtons();
 				stopTimer();
+				endScore();
 				return -1;
 			} else {
 				GUI.displayToConsole(currentPlayer.getName() + "'s hand: " + currentPlayer.getHand());				
@@ -371,6 +374,19 @@ public class TileRummyGame {
 		return 1;
 	}
 	
+	private void endScore() {
+		int scoreSum = 0;
+		for(Player player : players) {
+			if(!player.equals(currentPlayer)) {
+				scoreSum += player.getScore();
+				GUI.displayToConsole(player.getName() + "'s score: " + player.getScore());
+			}
+		}
+		
+		scoreSum *= -1;
+		GUI.displayToConsole(currentPlayer.getName() + "'s score: " + scoreSum);
+	}
+
 	public int endTurn(ArrayList<Tile> currentTurnUserUsedTiles, List<ArrayList<Tile>> currentTurnMelds, List<ArrayList<Tile>> turnTableState, int numItemsInPlayMeldBox) {
 		/**
 		 * Function returns -1 if there are tiles in the "playMeldBox", otherwise returns 0.
@@ -457,6 +473,7 @@ public class TileRummyGame {
 			GUI.updateDisplayTable(game.getTable());
 			GUI.disableButtons();
 			stopTimer();
+			endScore();
 			return 0;
 		} else {
 			stopTimer();
