@@ -325,15 +325,29 @@ public class JokerTesting extends TestCase{
 		Tile ts3 = new Tile("O", "9");
 		Tile ts4 = new Tile("B", "9");
 		
+		//Testing 2 Jokers in the middle of a set
+		Tile joker5 = new Tile("O", "J");
+		Tile joker6 = new Tile("R", "J");
+		Tile ts6 = new Tile("G", "3");
+		Tile ts7 = new Tile("O", "3");
+		Tile ts8 = new Tile("B", "3");
+		
 		Tile[] melds1 = {ts1, joker4, ts2, ts3, ts4};
+		Tile[] melds2 = {ts6, joker5, joker6, ts7, ts8};
 		
 		ArrayList<Tile> ms1 = new ArrayList<Tile>();
+		ArrayList<Tile> ms2 = new ArrayList<Tile>();
 		
 		for(Tile tile : melds1) {
 			ms1.add(tile);
 		}
 		
+		for(Tile tile : melds2) {
+			ms2.add(tile);
+		}
+		
 		assertFalse(Meld.checkValidity(ms1));
+		assertFalse(Meld.checkValidity(ms2));
 	}
 	
 	public void testJokerInDeck() {
