@@ -475,4 +475,30 @@ public class HandTesting extends TestCase{
 	    assertEquals(remainingTiles, h.getHand());
 	    
 	}
+	
+	public void testGetEndScore(){
+		//Simple case
+		Hand hand = new Hand();		
+		hand.addTile(new Tile("R", "6"));
+		hand.addTile(new Tile("R", "2"));
+		assertEquals(-8, hand.getScore());
+		
+		//No tiles
+		hand = new Hand();
+		assertEquals(0, hand.getScore());
+		
+		//>10 and Ace tiles equal 1
+		hand = new Hand();		
+		hand.addTile(new Tile("O", "12"));
+		hand.addTile(new Tile("R", "11"));
+		hand.addTile(new Tile("O", "13"));
+		hand.addTile(new Tile("O", "1"));
+		assertEquals(-40, hand.getScore());
+		
+		//Joker equals 30 points
+		hand = new Hand();
+		hand.addTile(new Tile("B", "J"));
+		assertEquals(-30, hand.getScore());
+		
+	}
 }
