@@ -152,7 +152,7 @@ public class Hand {
 		}
 		
 		//Resets Joker values so they can be used properly for sets
-		if(handTiles.containsKey(-1)) {
+		if (handTiles.containsKey(-1)) {
 			for(Tile joker : handTiles.get(-1)) {
 				joker.setValue("-1");
 			}
@@ -194,7 +194,11 @@ public class Hand {
 					// remove tiles in tempMeld from search space
 					for (int i = 0; i < tempMeld.size(); ++i) {
 						Tile t = tempMeld.get(i);
-						handTiles.get(t.getValue()).remove(t);
+						if(!t.isJoker()) { 
+							handTiles.get(t.getValue()).remove(t);	
+						} else {
+							handTiles.get(-1).remove(t);
+						}
 					}
 					validMelds.add(tempMeld);
 				}
