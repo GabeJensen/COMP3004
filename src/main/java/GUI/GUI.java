@@ -53,6 +53,8 @@ public class GUI extends Application {
 	private static ComboBox<String> remainingDeckTileDropdown;
 	private static Button playMeldButton;
 	private static Label time;
+	private CheckBox timeCheckbox;
+	private static boolean useTimer;
 	private static VBox playMeldBox;
 	private static ScrollPane horizScroll;
 	private static HBox userTilesBox;
@@ -163,15 +165,22 @@ public class GUI extends Application {
 				rummyGame.loadFile(fileLocation.getText());
 			}
 			mode = modeCbox.isSelected();
+			useTimer = timeCheckbox.isSelected();
 			music();
 			initGameElements();
 		});
 		
 		Label gameMode = new Label("Testing Mode");
 		modeCbox = new CheckBox();
+		
+		Label timerOptionLabel = new Label("Use Timer for Users");
+		timeCheckbox = new CheckBox();
+		
 		gameMode.setLabelFor(playerCount);
+		timerOptionLabel.setLabelFor(timeCheckbox);
 		gameMode.setStyle("-fx-background-color: white;");
-		fileElements.getChildren().addAll(gameMode, modeCbox, fRead, fileLocation);		
+		timerOptionLabel.setStyle("-fx-background-color: white");
+		fileElements.getChildren().addAll(timerOptionLabel, timeCheckbox, gameMode, modeCbox, fRead, fileLocation);		
 		
 		Label pCount = new Label("Players");
 		Label uCount = new Label("Users");
@@ -395,9 +404,12 @@ public class GUI extends Application {
 			
 			rummyGame.undoTurn();
 		});*/
-		time = new Label();
-		time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
-		topCommandsBox.getChildren().addAll(endButton, audioToggle, time);
+		topCommandsBox.getChildren().addAll(endButton, audioToggle);
+		if (useTimer) {
+			time = new Label();
+			time.setStyle("-fx-background-color: white; -fx-padding: 5 10 5 10");
+			topCommandsBox.getChildren().addAll(time);
+		}
 		if (mode) {
 			rigTileDrawLabel = new Label("Set Next Tile to Draw");
 			rigTileDrawLabel.setStyle("-fx-background-color: white;");
@@ -406,6 +418,10 @@ public class GUI extends Application {
 			remainingDeckTileDropdown.getItems().add(regularDraw);
 			topCommandsBox.getChildren().addAll(rigTileDrawLabel, remainingDeckTileDropdown);
 		}		 
+	}
+	
+	public static boolean getTimeOption() {
+		return useTimer;
 	}
 	
 	public static boolean getGameMode() {

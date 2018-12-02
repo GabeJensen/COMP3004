@@ -31,6 +31,7 @@ public class TileRummyGame {
 	private boolean emptyDeck;
 	private int drawTurns; //Counts the number of consecutive draws performed by players
 	private boolean gameType;
+	private boolean usingTime;
 	
 	private Scanner fileReader;
 	private boolean fileRigging = false;
@@ -117,6 +118,7 @@ public class TileRummyGame {
 		
 		timer = new Timer();
 		gameType = GUI.getGameMode();
+		usingTime = GUI.getTimeOption();
 		game.setPlayers(players);
 	}
 	
@@ -280,16 +282,22 @@ public class TileRummyGame {
 		if (gameType) {
 			GUI.updateTileDrawDropdown(deck.getDeckString());
 		}
-		GUI.updateTime(turnDuration);
+		
+		if (usingTime) {
+			GUI.updateTime(turnDuration);
+		}
 		
 		if(currentPlayer.getName().contains("User")) {
 			resetDrawTurns(); //So the game doesnt draw if the AI are only drawing
-			startTimer();
+			if (usingTime) {
+				startTimer();
+			}
 			//User stuff
 			GUI.updateDisplayHand(currentPlayer.getTiles());
 			
 			originator.setState(game.getTable(), currentPlayer.getTiles());
 			caretaker.add(currentPlayer.getName(), originator.saveMemento());
+			GUI.updateDisplayTable(game.getTable());
 			GUI.displayToConsole(currentPlayer.getName() + "'s turn!");
 			if (gameType) {
 				displayOtherUserHands();
@@ -361,7 +369,9 @@ public class TileRummyGame {
 				GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
 				GUI.updateDisplayTable(game.getTable());
 				GUI.disableButtons();
-				stopTimer();
+				if (usingTime) {
+					stopTimer();
+				}
 				endScore();
 				return -1;
 			} else {
@@ -392,7 +402,7 @@ public class TileRummyGame {
 		/**
 		 * Function returns -1 if there are tiles in the "playMeldBox", otherwise returns 0.
 		 */
-		System.gc();
+		//System.gc();
 		
 		boolean appliedPlayerPenalty = false;
 		
@@ -473,11 +483,15 @@ public class TileRummyGame {
 			GUI.displayToConsole(currentPlayer.getName() + " says: 'RUMMIKUB!' They won the game!");
 			GUI.updateDisplayTable(game.getTable());
 			GUI.disableButtons();
-			stopTimer();
+			if (usingTime) {
+				stopTimer();
+			}
 			endScore();
 			return 0;
 		} else {
-			stopTimer();
+			if (usingTime) {
+				stopTimer();
+			}
 			nextTurn();
 		}
 		return 0;
