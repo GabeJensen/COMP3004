@@ -512,6 +512,7 @@ public class TileRummyGame {
 		
 		// deal "penalty" number of tiles to current player for invalid moves
 		ArrayList<Tile> startingHand = originator.getState().getHand();
+		currentPlayer.setTiles(startingHand);
 		for (int i = 0; i < penalty; ++i) {
 			Tile t = deck.dealTile();
 			if (t == null) {
@@ -519,15 +520,12 @@ public class TileRummyGame {
 				GUI.displayToConsole(currentPlayer.getName() + " tried drawing due to penalty, but the deck was empty!");
 				break;
 			} else {
-				startingHand.add(t);
+				currentPlayer.addTile(t);
 				GUI.displayToConsole(currentPlayer.getName() + " draws " + t.toString() + " due to penalty!" );
 			}
 		}
 		
 		GUI.undoTurn();
-		
-		Collections.sort(startingHand, new TileComparator());
-		currentPlayer.setTiles(startingHand);
 		GUI.updateDisplayHand(currentPlayer.getTiles());
 	}
 	
