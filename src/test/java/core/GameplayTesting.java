@@ -1063,8 +1063,8 @@ public class GameplayTesting extends TestCase{
 		Tile t16 = new Tile("G", "4");
 		
 		// Tiles in P4 hand
-		Tile userT1 = new Tile("R", "2"); // will get discarded, both R1 and R4 are seen on the table, making this meld unlikely to be completed
-		Tile userT2 = new Tile("R", "3"); // will get discarded, both R1 and R4 are seen on the table, making this meld unlikely to be completed
+		Tile userT1 = new Tile("R", "2"); // although for completing the run R2, R3 is unlikely (due to R1 and R4 being already on the table), these two tiles are
+		Tile userT2 = new Tile("R", "3"); // kept on hand as they look "promising" for the future to generate set meld of 2 or 3 because there are less than 5 tiles of each value on the table
 		Tile userT3 = new Tile("B", "6");
 		Tile userT4 = new Tile("O", "6");
 		Tile userT5 = new Tile("G", "5"); // will get discarded, 5 or more are on the table
@@ -1081,11 +1081,10 @@ public class GameplayTesting extends TestCase{
 		ArrayList<Tile> meld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16)); // G2, G3, G4
 		
 		// new table meld after start 4 is performed
-		ArrayList<Tile> newMeld1 = new ArrayList<Tile>(Arrays.asList(userT2, t1, t2, t3));
 		ArrayList<Tile> newMeld2 = new ArrayList<Tile>(Arrays.asList(userT9, t4, t5, t6));
 		ArrayList<Tile> newMeld5 = new ArrayList<Tile>(Arrays.asList(t14, t15, t16, userT5));
 		
-		ArrayList<Tile> p4RemainingTilesInHand = new ArrayList<Tile>(Arrays.asList(userT1, userT7, userT8, userT3, userT6, userT4)); // might need to add userT1 and userT2 in here if it does not get played as table meld R1,R2,R3
+		ArrayList<Tile> p4RemainingTilesInHand = new ArrayList<Tile>(Arrays.asList(userT1, userT2, userT7, userT8, userT3, userT6, userT4)); // might need to add userT1 and userT2 in here if it does not get played as table meld R1,R2,R3
 		
 		p4.addTile(userT1);
 		p4.addTile(userT2);
@@ -1112,7 +1111,6 @@ public class GameplayTesting extends TestCase{
 		//check if the start discarded the proper tiles
 		assertEquals(p4RemainingTilesInHand, p4.getTiles());
 		//check if table has the new melds
-		assertEquals(true, game.getTable().contains(newMeld1));
 		assertEquals(true, game.getTable().contains(newMeld2));
 		assertEquals(true, game.getTable().contains(newMeld5));
 	}

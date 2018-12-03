@@ -218,9 +218,9 @@ public class Strat4 implements PlayerStrategy {
 		
 		//remaining tiles, check if there are 5/8 of the tiles on the table already
 		for (int tileValue = 1; tileValue <= 13; ++tileValue) {
-			if (handTiles.containsKey(tileValue) && tilesOnTheTable.containsKey(tileValue)) {
+			if (handTiles.containsKey(tileValue) && tilesOnTheTable.containsKey(Integer.toString(tileValue))) {
 				int numTilesOnTable = tilesOnTheTable.get(Integer.toString(tileValue));
-				if (numTilesOnTable/8 >= 5/8) {
+				if (numTilesOnTable >= 5) {
 					// keep tiles in the search space, as it is an unworthy tile to keep in the hand
 				} else {
 					// remove from the search space, as it is worthy enough to keep in hand (there is not >= 5 of the tile value on the table)
