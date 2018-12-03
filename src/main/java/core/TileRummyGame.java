@@ -180,10 +180,6 @@ public class TileRummyGame {
 		// Loop for however many players, 0 being first player, 1 the 2nd, etc.
 		for (int i = 0; i < playerCount; i++) {
 			int v = orderDeck.dealTile().getValue();
-			// Redraw if value was drawn before or is joker
-			while ((values.contains(v)) || (v == -1)) {
-				v = orderDeck.dealTile().getValue();
-			}
 			if (players.get(i).getName().contains("User")) {
 				user++;
 				GUI.displayToConsole("User " + (user) + " has drawn a tile with a value of " + v + "!");
@@ -191,6 +187,11 @@ public class TileRummyGame {
 			else {
 				player++;
 				GUI.displayToConsole("Player " + (player) + " has drawn a tile with a value of " + v + "!");
+			}
+			// Redraw if value was drawn before or is joker
+			while ((values.contains(v)) || (v == -1)) {
+				v = orderDeck.dealTile().getValue();
+				GUI.displayToConsole("A redraw was needed! The new tile value is " + v + "!");
 			}
 			ordering.add(new int[] {i, v});
 			values.add(v);
