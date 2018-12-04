@@ -218,12 +218,17 @@ public class Strat4 implements PlayerStrategy {
 		
 		//remaining tiles, check if there are 5/8 of the tiles on the table already
 		for (int tileValue = 1; tileValue <= 13; ++tileValue) {
-			if (handTiles.containsKey(tileValue) && tilesOnTheTable.containsKey(Integer.toString(tileValue))) {
-				int numTilesOnTable = tilesOnTheTable.get(Integer.toString(tileValue));
-				if (numTilesOnTable >= 5) {
-					// keep tiles in the search space, as it is an unworthy tile to keep in the hand
+			if (handTiles.containsKey(tileValue)) {
+				if (tilesOnTheTable.containsKey(Integer.toString(tileValue))) {
+					int numTilesOnTable = tilesOnTheTable.get(Integer.toString(tileValue));
+					if (numTilesOnTable >= 5) {
+						// keep tiles in the search space, as it is an unworthy tile to keep in the hand
+					} else {
+						// remove from the search space, as it is worthy enough to keep in hand (there is not >= 5 of the tile value on the table)
+						handTiles.get(tileValue).clear();
+					}
 				} else {
-					// remove from the search space, as it is worthy enough to keep in hand (there is not >= 5 of the tile value on the table)
+					// remove from the search space, as it is worthy enough to keep in hand (there is no tiles on the table of the current tileValue)
 					handTiles.get(tileValue).clear();
 				}
 			}
